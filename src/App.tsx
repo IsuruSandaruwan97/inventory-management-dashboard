@@ -1,0 +1,93 @@
+/** @format */
+
+import { CSSProperties, ReactNode, useEffect } from "react";
+import "./App.css";
+import { Button, Layout, Result } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { Route, Routes, useNavigate, useLocation } from "react-router";
+import { BackwardOutlined } from "@ant-design/icons";
+import { ScrollToTop } from "@components/ScrollToTop";
+import isEmpty from "lodash/isEmpty";
+
+import Login from "@features/auth/login";
+
+import { useToastApi } from "@hooks/useToastApi";
+import { KEY_CODES } from "@configs/keycodes";
+import DashboardLayout from "@layouts/index";
+import { ROUTES } from "@configs/routes";
+
+type TPageWrapper = {
+  children: ReactNode;
+};
+const PageWrapper = ({ children }: TPageWrapper) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const toastApi = useToastApi();
+  useEffect(() => {
+    if (isEmpty(localStorage.getItem(KEY_CODES.AUTH_TOKEN))) {
+      toastApi.error("You should login to the system");
+      navigate("/");
+    }
+  }, [location?.pathname]);
+  return <DashboardLayout>{children}</DashboardLayout>;
+};
+
+function App() {
+  const styles = useStyles();
+  const navigate = useNavigate();
+
+  return (
+    <Layout style={styles.body}>
+      <Content style={styles.mainContainer}>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Login />} />
+
+          {ROUTES?.map(
+            (route, index) =>
+              route.path &&
+              route.component && (
+                <Route
+                  key={`route_${index}`}
+                  path={route.path}
+                  element={<PageWrapper children={route.component} />}
+                />
+              )
+          )}
+          <Route
+            path="*"
+            element={
+              <Result
+                status={"404"}
+                title="404"
+                subTitle="Sorry, the page you visited does not exist."
+                extra={
+                  <Button
+                    onClick={() => navigate(-1)}
+                    type="primary"
+                    icon={<BackwardOutlined />}
+                  >
+                    Go Back
+                  </Button>
+                }
+              />
+            }
+          />
+        </Routes>
+      </Content>
+    </Layout>
+  );
+}
+
+export default App;
+
+const useStyles = () => {
+  return {
+    body: {
+      backgroundColor: "white",
+    } as CSSProperties,
+    mainContainer: {
+      minHeight: "calc(100vh - 60px)",
+    } as CSSProperties,
+  };
+};

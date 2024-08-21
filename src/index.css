@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+ 
+:root {
+  font-family: 'Poppins', sans-serif!important;
+}
+  
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif!important;
+}
+
+.ant-table-title{
+  padding: 0 !important;
+}

@@ -1,0 +1,49 @@
+{
+  "name": "inventory-management-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.4.0",
+    "@tanem/react-nprogress": "^5.0.51",
+    "@tanstack/query-sync-storage-persister": "^5.51.24",
+    "@tanstack/react-query": "^5.51.24",
+    "@tanstack/react-query-persist-client": "^5.51.24",
+    "antd": "5.20.2",
+    "axios": "^1.7.4",
+    "dayjs": "^1.11.13",
+    "lodash": "^4.17.21",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-responsive": "^10.0.0",
+    "react-router": "^6.26.1",
+    "react-router-dom": "^6.26.1",
+    "react-transition-group": "^4.4.5",
+    "usehooks-ts": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.6",
+    "@types/node": "22.4.1",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@types/react-transition-group": "^4.4.11",
+    "@typescript-eslint/eslint-plugin": "8.2.0",
+    "@typescript-eslint/parser": "8.2.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "9.9.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "typescript": "^5.2.2",
+    "vite": "5.4.2",
+    "vite-tsconfig-paths": "5.0.1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

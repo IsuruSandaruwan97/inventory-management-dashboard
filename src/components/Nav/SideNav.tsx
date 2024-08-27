@@ -26,11 +26,11 @@ const getItem = (
   } as MenuItem;
 };
 
-const rootSubmenuKeys = ["dashboards", "corporate", "user-profile"];
+const rootSubmenuKeys = ["/settings", "corporate", "user-profile"];
 
 const getNavbarItems = (): MenuProps["items"] => {
   return ROUTES.map((route) => {
-    return getItem(route.name, route.path, route.icon);
+    return getItem(route.name, route.path, route.icon, route.children);
   });
   return [];
 };
@@ -93,6 +93,7 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
           onOpenChange={onOpenChange}
           selectedKeys={[current]}
           style={styles.menuContainer}
+          defaultOpenKeys={["settings", "/stock"]}
         />
       </ConfigProvider>
     </Sider>

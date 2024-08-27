@@ -24,6 +24,7 @@
       "@redux/*": ["./src/redux/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@services/*": ["./src/services/*"],
+      "@stylesheet": ["./src/configs/stylesheet/index"],
     },
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

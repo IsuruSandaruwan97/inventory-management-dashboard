@@ -13,3 +13,34 @@ body {
 .ant-table-title{
   padding: 0 !important;
 }
+
+/* Override the Ant design dropdown default button */
+.disable-dropdown-default-btn .ant-btn-compact-first-item {
+  background-color: #f5f5f5;
+}
+
+/* General row styling */
+.ant-table-tbody > tr.even-row > td {
+  background-color: #f5f5f5;
+}
+
+.ant-table-tbody > tr.odd-row > td {
+  background-color: #ffffff;
+}
+
+/* Fixed column row styling */
+.ant-table-fixed-left .ant-table-tbody > tr.even-row > td,
+.ant-table-fixed-right .ant-table-tbody > tr.even-row > td {
+  background-color: #f5f5f5;
+}
+
+.ant-table-fixed-left .ant-table-tbody > tr.odd-row > td,
+.ant-table-fixed-right .ant-table-tbody > tr.odd-row > td {
+  background-color: #ffffff;
+}
+
+html {
+  font-family: 'Poppins', sans-serif!important;
+}
+
+

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/colors": "^7.1.0",
     "@ant-design/icons": "^5.4.0",
     "@tanem/react-nprogress": "^5.0.51",
     "@tanstack/query-sync-storage-persister": "^5.51.24",
@@ -20,6 +21,7 @@
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
+    "react-countup": "^6.5.3",
     "react-dom": "^18.3.1",
     "react-responsive": "^10.0.0",
     "react-router": "^6.26.1",

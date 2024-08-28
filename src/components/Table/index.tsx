@@ -5,9 +5,9 @@ import {
   TableProps as AntdTableProps,
   Typography,
 } from "antd";
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 
-type defaultTypes = { title?: string };
+type defaultTypes = { title?: string | ReactNode };
 type TableProps = Omit<AntdTableProps, "title"> & defaultTypes;
 
 const { Title } = Typography;
@@ -16,11 +16,16 @@ const Table = ({ title, ...props }: TableProps) => {
   const styles = useStyles();
   return (
     <AntdTable
-      title={() => (
-        <Title style={styles.title} level={4}>
-          {title}
-        </Title>
-      )}
+      rowClassName={(_, index) => (index % 2 === 0 ? "even-row" : "odd-row")}
+      title={() =>
+        typeof title === "string" ? (
+          <Title style={styles.title} level={4}>
+            {title}
+          </Title>
+        ) : (
+          title
+        )
+      }
       scroll={{ x: "max-content" }}
       {...props}
     />

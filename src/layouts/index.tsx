@@ -8,9 +8,17 @@ import { NProgress } from "@components/Nprogress";
 import { PageHeader } from "@components/PageHeader/PageHeader";
 import Time from "@components/Time";
 import { ROUTES } from "@configs/routes";
-import { Button, Flex, Layout } from "antd";
+import { findRouteByPath } from "@utils/index";
+import { Breadcrumb, Button, Flex, Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  CSSProperties,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router";
 import {
@@ -48,6 +56,11 @@ const DashboardLayout = ({ children }: TLayout) => {
   }, []);
 
   const activePage = ROUTES.find((route) => route.path === pathname);
+
+  const breadcumbObj = useMemo(
+    () => findRouteByPath(ROUTES, pathname),
+    [activePage]
+  );
 
   return (
     <>
@@ -96,8 +109,12 @@ const DashboardLayout = ({ children }: TLayout) => {
                         title={activePage?.name || ""}
                         breadcrumbs={[
                           {
-                            title: <span>{activePage?.name}</span>,
-                            path: "/",
+                            title: <span>{breadcumbObj?.main?.name}</span>,
+                            path: breadcumbObj?.main?.path,
+                          },
+                          {
+                            title: <span>{breadcumbObj?.sub?.name}</span>,
+                            path: breadcumbObj?.sub?.path,
                           },
                         ]}
                       />
@@ -131,7 +148,7 @@ const useStyles = (collapsed: boolean, navFill: boolean) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      position: "sticky",
+      position: "relative",
       top: 0,
       zIndex: 1,
       gap: 8,

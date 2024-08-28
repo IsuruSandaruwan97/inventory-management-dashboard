@@ -17,3 +17,8 @@ export const TABLE_STATUS = [
   { label: "Pending", value: "pending", icon: <HourglassOutlined /> },
   { label: "History", value: "history", icon: <HistoryOutlined /> },
 ];
+
+export const PAGE_SIZES = {
+  INVENTORY: 5,
+  USERS: 6,
+};

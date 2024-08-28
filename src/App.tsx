@@ -47,11 +47,22 @@ function App() {
             (route, index) =>
               route.path &&
               route.component && (
-                <Route
-                  key={`route_${index}`}
-                  path={route.path}
-                  element={<PageWrapper children={route.component} />}
-                />
+                <>
+                  <Route
+                    key={`route_${index}`}
+                    path={route.path}
+                    element={<PageWrapper children={route.component} />}
+                  />
+                  {route?.children &&
+                    !isEmpty(route?.children) &&
+                    route?.children.map((item, i) => (
+                      <Route
+                        key={`sub_route_${i}`}
+                        path={item.key}
+                        element={<PageWrapper children={item.element} />}
+                      />
+                    ))}
+                </>
               )
           )}
           <Route

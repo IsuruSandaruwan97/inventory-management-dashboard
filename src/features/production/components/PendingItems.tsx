@@ -1,9 +1,8 @@
 /** @format */
 
-import { HistoryOutlined } from "@ant-design/icons";
 import Table from "@components/Table";
 import { PRODUCTION_DATA } from "@data/production";
-import { TableProps, Space, Button } from "antd";
+import { TableProps } from "antd";
 
 const columns: TableProps<any>["columns"] = [
   { title: "Item Code", dataIndex: "id", key: "id", responsive: ["lg"] },

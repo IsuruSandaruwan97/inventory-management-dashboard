@@ -29,7 +29,7 @@ const Production = () => {
                 Request Items
               </Button>
               <Button onClick={() => setShowDamageModal(true)}>
-                Damage Items
+                Damaged Items
               </Button>
             </Space>
 

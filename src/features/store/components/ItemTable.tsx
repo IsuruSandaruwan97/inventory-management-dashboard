@@ -10,9 +10,19 @@ const columns: TableProps<any>["columns"] = [
     key: "name",
   },
   {
+    title: "Image",
+    dataIndex: "image",
+    key: "image",
+  },
+  {
     title: "Category",
     dataIndex: "category",
     key: "category",
+  },
+  {
+    title: "Sub Category",
+    dataIndex: "subcategory",
+    key: "subcategory",
   },
   {
     title: "Quantity Available",

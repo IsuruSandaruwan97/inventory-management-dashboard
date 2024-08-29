@@ -1,50 +1,43 @@
 /** @format */
 
-import Table from "@components/Table";
-import { StyleSheet } from "@configs/stylesheet";
-import { KeyValuePair } from "@configs/types";
-import { Card, Space, DatePicker, Radio, Row } from "antd";
-import { TableProps } from "antd/es/table/InternalTable";
-const { RangePicker } = DatePicker;
+import DatePicker from '@components/DatePicker';
+import Table from '@components/Table';
+import { StyleSheet } from '@configs/stylesheet';
+import { Card, Space, Row } from 'antd';
+import { TableProps } from 'antd/es/table/InternalTable';
 
-const DateOptions: KeyValuePair[] = [
-  { label: "Today", value: "today" },
-  { label: "This Week", value: "week" },
-  { label: "This Month", value: "month" },
-];
-
-const columns: TableProps<any>["columns"] = [
-  { title: "Item Code", dataIndex: "id", key: "id", responsive: ["lg"] },
+const columns: TableProps<any>['columns'] = [
+  { title: 'Item Code', dataIndex: 'id', key: 'id', responsive: ['lg'] },
   {
-    title: "Image",
-    dataIndex: "image",
-    key: "image",
+    title: 'Image',
+    dataIndex: 'image',
+    key: 'image',
     render: (value) => <img src={value} height={40} width={40} />,
   },
   {
-    title: "Item Name",
-    dataIndex: "name",
-    key: "name",
+    title: 'Item Name',
+    dataIndex: 'name',
+    key: 'name',
   },
   {
-    title: "Item Category",
-    dataIndex: "category",
-    key: "category",
+    title: 'Item Category',
+    dataIndex: 'category',
+    key: 'category',
   },
   {
-    title: "Quantity",
-    dataIndex: "quantity",
-    key: "quantity",
+    title: 'Quantity',
+    dataIndex: 'quantity',
+    key: 'quantity',
   },
   {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
+    title: 'Date',
+    dataIndex: 'date',
+    key: 'date',
   },
   {
-    title: "Delivery By",
-    dataIndex: "deliveryBy",
-    key: "deliveryBy",
+    title: 'Delivery By',
+    dataIndex: 'deliveryBy',
+    key: 'deliveryBy',
   },
 ];
 
@@ -53,16 +46,7 @@ const Delivery = () => {
     <Space direction="vertical" style={styles.space}>
       <Card>
         <Row style={styles.actionBar}>
-          <Space>
-            <Radio.Group defaultValue={DateOptions[0].value}>
-              {DateOptions?.map((item) => (
-                <Radio.Button value={item.value} key={`option_${item}`}>
-                  {item?.label}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-            <RangePicker />
-          </Space>
+          <DatePicker onSelectDate={() => {}} />
         </Row>
       </Card>
       <Table columns={columns} dataSource={[]} />
@@ -74,10 +58,10 @@ export default Delivery;
 
 const styles = StyleSheet.create({
   space: {
-    width: "100%",
+    width: '100%',
   },
 
   actionBar: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
 });

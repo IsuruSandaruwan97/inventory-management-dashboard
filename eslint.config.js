@@ -3,6 +3,7 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
+import { fixupPluginRules } from "@eslint/compat";
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -14,11 +15,13 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
-      'react-hooks': reactHooks,
+      'react-hooks': fixupPluginRules(reactHooks),
       'react-refresh': reactRefresh,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+        "no-unused-vars": "error",
+        "no-undef": "error",
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

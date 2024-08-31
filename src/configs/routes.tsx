@@ -67,7 +67,6 @@ export const ROUTES: TRoutes[] = [
     name: 'Stock',
     path: PATH.STOCK,
     icon: <StockOutlined style={defaultIconStyle} />,
-    component: <Stock />,
     children: [
       { key: PATH.STOCK_REQUESTS, label: 'Requests', element: <Stock /> },
       { key: PATH.INVENTORY, label: 'Inventory', element: <Inventory /> },
@@ -101,7 +100,6 @@ export const ROUTES: TRoutes[] = [
     name: 'settings',
     path: PATH.SETTINGS,
     icon: <SettingOutlined style={defaultIconStyle} />,
-    component: <Categories />,
     children: [
       { key: PATH.CATEGORIES, label: 'Category', element: <Categories /> },
       {

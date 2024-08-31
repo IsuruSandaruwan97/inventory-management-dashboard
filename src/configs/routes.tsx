@@ -1,12 +1,12 @@
 /** @format */
-
-import Dashboard from "@features/dashboard";
-import Stock from "@features/stock/Requests";
-import Users from "@features/users";
-import Inventory from "@features/stock/Inventory";
-import Production from "@features/production";
-import Store from "@features/store";
-
+import { lazy } from "react";
+const Dashboard = lazy(() => import("@features/dashboard"));
+const Stock = lazy(() => import("@features/stock/Requests"));
+const Users = lazy(() => import("@features/users"));
+const Inventory = lazy(() => import("@features/stock/Inventory"));
+const Production = lazy(() => import("@features/production"));
+const Store = lazy(() => import("@features/store"));
+const Delivery = lazy(() => import("@features/delivery"));
 import {
   AreaChartOutlined,
   SettingOutlined,
@@ -17,7 +17,6 @@ import {
   UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { ReactNode } from "react";
-import Delivery from "@features/delivery";
 
 const defaultIconStyle = { fontSize: 20 };
 

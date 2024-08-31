@@ -1,6 +1,6 @@
 /** @format */
 
-import { CSSProperties, ReactNode, useEffect } from "react";
+import { CSSProperties, ReactNode, Suspense, useEffect } from "react";
 import "./App.css";
 import { Button, Layout, Result } from "antd";
 import { Content } from "antd/es/layout/layout";
@@ -29,7 +29,11 @@ const PageWrapper = ({ children }: TPageWrapper) => {
       navigate("/");
     }
   }, [location?.pathname]);
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return (
+    <DashboardLayout>
+      <Suspense>{children}</Suspense>
+    </DashboardLayout>
+  );
 };
 
 function App() {

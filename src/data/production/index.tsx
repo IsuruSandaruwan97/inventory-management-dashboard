@@ -25,6 +25,7 @@ export const PRODUCTION_DATA = [
     category: "Drinking Water",
     subCategory: "Small Size",
     quantity: 250,
+    unitPrice: 50,
   },
   {
     key: "2",
@@ -35,6 +36,7 @@ export const PRODUCTION_DATA = [
     category: "Drinking Water",
     subCategory: "Medium Size",
     quantity: 180,
+    unitPrice: 120,
   },
   {
     key: "3",
@@ -44,7 +46,8 @@ export const PRODUCTION_DATA = [
     name: "19L Water Bottle",
     category: "Drinking Water",
     subCategory: "Large Size",
-    quantity: 60,
+    quantity: 600,
+    unitPrice: 1800,
   },
   {
     key: "4",
@@ -55,6 +58,7 @@ export const PRODUCTION_DATA = [
     category: "Sparkling Water",
     subCategory: "Small Size",
     quantity: 120,
+    unitPrice: 50,
   },
   {
     key: "5",
@@ -65,6 +69,7 @@ export const PRODUCTION_DATA = [
     category: "Sparkling Water",
     subCategory: "Medium Size",
     quantity: 90,
+    unitPrice: 120,
   },
   {
     key: "6",
@@ -75,6 +80,7 @@ export const PRODUCTION_DATA = [
     category: "Sparkling Water",
     subCategory: "Large Size",
     quantity: 30,
+    unitPrice: 800,
   },
   {
     key: "7",
@@ -85,6 +91,7 @@ export const PRODUCTION_DATA = [
     category: "Flavored Water",
     subCategory: "Small Size",
     quantity: 200,
+    unitPrice: 70,
   },
   {
     key: "8",
@@ -95,6 +102,7 @@ export const PRODUCTION_DATA = [
     category: "Flavored Water",
     subCategory: "Medium Size",
     quantity: 150,
+    unitPrice: 210,
   },
   {
     key: "9",
@@ -105,6 +113,7 @@ export const PRODUCTION_DATA = [
     category: "Flavored Water",
     subCategory: "Small Size",
     quantity: 220,
+    unitPrice: 70,
   },
   {
     key: "10",
@@ -115,5 +124,6 @@ export const PRODUCTION_DATA = [
     category: "Flavored Water",
     subCategory: "Medium Size",
     quantity: 140,
+    unitPrice: 180,
   },
 ];

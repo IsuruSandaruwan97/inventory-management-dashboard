@@ -48,8 +48,8 @@ const columns: (setEditItem: (item: any) => void) => TableProps<any>['columns'] 
     render: (_, record) => {
       return (
         <Space size="middle">
-          <Button size="small" icon={<EditOutlined />} onClick={() => setEditItem(record)}></Button>
-          <Button size="small" icon={<DeleteOutlined />} danger></Button>
+          <Button type="text" size="small" icon={<EditOutlined />} onClick={() => setEditItem(record)}></Button>
+          <Button type="text" size="small" icon={<DeleteOutlined />} danger></Button>
         </Space>
       );
     },

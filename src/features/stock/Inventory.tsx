@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { StyleSheet } from '@configs/stylesheet';
 import { formatDate } from '@utils/index';
+import ItemForm from '@features/stock/components/forms/ItemForm';
+import { stockData } from '@data/stock/stock_items';
 
 const { Search } = Input;
 
@@ -30,7 +32,7 @@ export type TStockData = {
 
 const inventoryTableColumns: TableProps<any>['columns'] = [
   {
-    title: 'Item ID',
+    title: 'Item Code',
     dataIndex: 'itemId',
     key: 'itemId',
     fixed: 'left',
@@ -112,14 +114,16 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    width: 100,
     responsive: ['md'],
-    render: (_, { status, itemId }) => (
-      <div key={`user_status_${itemId}`}>
+    render: (_, { status, itemId, reorderlevel, quantity }) => (
+      <Space direction="vertical" key={`user_status_${itemId}`}>
         <Tag color={status ? 'green' : 'red'}>
           {status ? 'Active' : 'InActive'}
         </Tag>
-      </div>
+        {reorderlevel && quantity && quantity < reorderlevel && (
+          <Tag color="orange">Low Stock</Tag>
+        )}
+      </Space>
     ),
   },
   {
@@ -137,7 +141,6 @@ const Inventory = () => {
   const [lodaing, setLoading] = useState<boolean>(false);
   const [itemFormVisible, setItemFormVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<TStockData | null>(null);
-  const [showReleaseItem, setShowReleasteItem] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
 
   const onSearch = (value: string | null) => {
@@ -184,7 +187,7 @@ const Inventory = () => {
             }}
             rowKey={'itemId'}
             columns={inventoryTableColumns}
-            dataSource={[]}
+            dataSource={stockData}
             rowClassName={(item) =>
               item.quantity < item.reorderlevel ? 'reorder-row' : ''
             }
@@ -197,6 +200,17 @@ const Inventory = () => {
           />
         </Space>
       </Card>
+      {itemFormVisible && (
+        <ItemForm
+          item={selectedItem}
+          visible={itemFormVisible}
+          isUpdate={!isEmpty(selectedItem)}
+          onCancel={() => {
+            setItemFormVisible(false);
+            setSelectedItem(null);
+          }}
+        />
+      )}
     </>
   );
 };

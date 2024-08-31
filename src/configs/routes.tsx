@@ -1,12 +1,18 @@
 /** @format */
-import { lazy } from "react";
-const Dashboard = lazy(() => import("@features/dashboard"));
-const Stock = lazy(() => import("@features/stock/Requests"));
-const Users = lazy(() => import("@features/users"));
-const Inventory = lazy(() => import("@features/stock/Inventory"));
-const Production = lazy(() => import("@features/production"));
-const Store = lazy(() => import("@features/store"));
-const Delivery = lazy(() => import("@features/delivery"));
+import { lazy } from 'react';
+const Dashboard = lazy(() => import('@features/dashboard'));
+const Stock = lazy(() => import('@features/stock/Requests'));
+const Users = lazy(() => import('@features/users'));
+const Inventory = lazy(() => import('@features/stock/Inventory'));
+const Production = lazy(() => import('@features/production'));
+const Store = lazy(() => import('@features/store'));
+const Delivery = lazy(() => import('@features/delivery'));
+
+const Categories = lazy(() => import('@features/configurations/categories'));
+const SubCategories = lazy(
+  () => import('@features/configurations/subCategories')
+);
+
 import {
   AreaChartOutlined,
   SettingOutlined,
@@ -15,8 +21,8 @@ import {
   SyncOutlined,
   TruckOutlined,
   UsergroupAddOutlined,
-} from "@ant-design/icons";
-import { ReactNode } from "react";
+} from '@ant-design/icons';
+import { ReactNode } from 'react';
 
 const defaultIconStyle = { fontSize: 20 };
 
@@ -35,69 +41,72 @@ export type TRoutes = {
 
 export const PATH = {
   //Main paths
-  DASHBOARD: "/dashboard",
-  STOCK: "/stock",
-  PRODUCTION: "/production",
-  STORE: "/store",
-  USERS: "/users",
-  CATEGORIES: "/categories",
-  DELIVERY: "/delivery",
-  SUB_CATEGORIES: "/sub-categories",
-  SETTINGS: "/settings",
+  DASHBOARD: '/dashboard',
+  STOCK: '/stock',
+  PRODUCTION: '/production',
+  STORE: '/store',
+  USERS: '/users',
+  CATEGORIES: '/categories',
+  DELIVERY: '/delivery',
+  SUB_CATEGORIES: '/sub-categories',
+  SETTINGS: '/settings',
 
   //Sub paths
-  STOCK_REQUESTS: "/requests",
-  INVENTORY: "/inventory",
+  STOCK_REQUESTS: '/requests',
+  INVENTORY: '/inventory',
 };
 
 export const ROUTES: TRoutes[] = [
   {
-    name: "Dashboard",
+    name: 'Dashboard',
     path: PATH.DASHBOARD,
     icon: <AreaChartOutlined style={defaultIconStyle} />,
     component: <Dashboard />,
   },
   {
-    name: "Stock",
+    name: 'Stock',
     path: PATH.STOCK,
     icon: <StockOutlined style={defaultIconStyle} />,
-    component: <Stock />,
     children: [
-      { key: PATH.STOCK_REQUESTS, label: "Requests", element: <Stock /> },
-      { key: PATH.INVENTORY, label: "Inventory", element: <Inventory /> },
+      { key: PATH.STOCK_REQUESTS, label: 'Requests', element: <Stock /> },
+      { key: PATH.INVENTORY, label: 'Inventory', element: <Inventory /> },
     ],
   },
   {
-    name: "Store",
+    name: 'Store',
     path: PATH.STORE,
     icon: <ShopOutlined style={defaultIconStyle} />,
     component: <Store />,
   },
   {
-    name: "Production",
+    name: 'Production',
     path: PATH.PRODUCTION,
     icon: <SyncOutlined style={defaultIconStyle} />,
     component: <Production />,
   },
   {
-    name: "Delivery",
+    name: 'Delivery',
     path: PATH.DELIVERY,
     icon: <TruckOutlined style={defaultIconStyle} />,
     component: <Delivery />,
   },
   {
-    name: "Users",
+    name: 'Users',
     path: PATH.USERS,
     icon: <UsergroupAddOutlined style={defaultIconStyle} />,
     component: <Users />,
   },
   {
-    name: "settings",
+    name: 'settings',
     path: PATH.SETTINGS,
     icon: <SettingOutlined style={defaultIconStyle} />,
     children: [
-      { key: PATH.CATEGORIES, label: "Category", element: <></> },
-      { key: PATH.SUB_CATEGORIES, label: "Sub-Category", element: <></> },
+      { key: PATH.CATEGORIES, label: 'Category', element: <Categories /> },
+      {
+        key: PATH.SUB_CATEGORIES,
+        label: 'Sub-Category',
+        element: <SubCategories />,
+      },
     ],
   },
 ];

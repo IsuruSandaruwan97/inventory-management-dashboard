@@ -40,14 +40,25 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
   const nodeRef = useRef(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [openKeys, setOpenKeys] = useState<string[]>();
   const [current, setCurrent] = useState<string>('');
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key) navigate(key);
   };
 
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys?.indexOf(key) === -1);
+    if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
+      setOpenKeys(keys);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    }
+  };
+
   useEffect(() => {
     const paths = pathname.split('/');
+    setOpenKeys(paths);
     setCurrent(`/${paths[paths.length - 1]}`);
   }, [pathname]);
 
@@ -76,7 +87,8 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
           mode="inline"
           items={getNavbarItems()}
           onClick={onClick}
-          openKeys={rootSubmenuKeys}
+          openKeys={!collapsed ? rootSubmenuKeys : openKeys}
+          onOpenChange={onOpenChange}
           selectedKeys={[current]}
           style={styles.menuContainer}
         />

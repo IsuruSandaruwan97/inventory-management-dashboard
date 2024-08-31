@@ -1,11 +1,11 @@
 /** @format */
 
-import { Button, Card, Row, Segmented, Space } from "antd";
-import ItemTable from "@features/store/components/ItemTable";
-import { StyleSheet } from "@configs/stylesheet";
-import { useState } from "react";
-import ReturnItemsFormModal from "@features/store/components/forms/ReturnItemsForm";
-const options = ["Store", "Delivery"];
+import { Button, Card, Row, Segmented, Space } from 'antd';
+import ItemTable from '@features/store/components/ItemTable';
+import { StyleSheet } from '@configs/stylesheet';
+import { useState } from 'react';
+import ReturnItemsFormModal from '@features/store/components/forms/ReturnItemsForm';
+const options = ['Store', 'Delivery'];
 const Store = () => {
   const [option, setOption] = useState<string>(options[0]);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
@@ -14,7 +14,8 @@ const Store = () => {
       <Card>
         <Row style={styles.actionBar}>
           <Space>
-            <Button>Add for Delivery</Button>
+            <Button>Delivery Order</Button>
+            <Button>Invoice</Button>
             <Button onClick={() => setShowReturnModal(true)}>
               Return Items
             </Button>
@@ -45,5 +46,5 @@ const styles = StyleSheet.create({
   itemTableCard: {
     marginTop: 8,
   },
-  actionBar: { justifyContent: "space-between" },
+  actionBar: { justifyContent: 'space-between' },
 });

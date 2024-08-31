@@ -1,16 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
- 
 :root {
-  font-family: 'Poppins', sans-serif!important;
-}
-  
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif!important;
+  font-family: 'Poppins', sans-serif !important;
 }
 
-.ant-table-title{
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.ant-table-title {
   padding: 0 !important;
 }
 
@@ -39,12 +38,21 @@ body {
   background-color: #ffffff;
 }
 
-.ant-space{
-  width: '100%'!important;
+.ant-space {
+  width: '100%' !important;
 }
 
 html {
-  font-family: 'Poppins', sans-serif!important;
+  font-family: 'Poppins', sans-serif !important;
 }
 
+.ant-input-number-wrapper,
+.ant-input-number-group-wrapper,
+.ant-input-number {
+  width: 100% !important;
+}
 
+.reorder-row {
+  color: #ff0000 !important;
+  font-weight: 600;
+}

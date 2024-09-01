@@ -38,9 +38,9 @@ const DashboardLayout = ({ children }: TLayout) => {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 5) {
         setNavFill(true);
-      } else {
-        setNavFill(false);
+        return;
       }
+      setNavFill(false);
     });
   }, []);
 

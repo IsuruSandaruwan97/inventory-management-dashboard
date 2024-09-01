@@ -38,12 +38,12 @@ const Login = ({}: Props) => {
 
   const directToDashboard = () => {
     localStorage.setItem(KEY_CODES.AUTH_TOKEN, 'abcd');
+    navigate('/dashboard');
     if (form.getFieldValue('remember')) {
       localStorage.setItem(KEY_CODES.REMEMBER, JSON.stringify(form.getFieldsValue()));
-    } else {
-      localStorage.removeItem(KEY_CODES.REMEMBER);
+      return;
     }
-    navigate('/dashboard');
+    localStorage.removeItem(KEY_CODES.REMEMBER);
   };
 
   return (

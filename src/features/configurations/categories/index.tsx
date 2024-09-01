@@ -1,12 +1,12 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { ProductsCategoriesDataType } from '@features/configurations/configs/types';
+import Table from '@components/Table';
+import { StyleSheet } from '@configs/stylesheet';
 import { productCategoriesData } from '@data/configurations/product_categories';
+import { ProductsCategoriesDataType } from '@features/configurations/configs/types';
 import { Button, Row, TableProps, Tag } from 'antd';
+import { findIndex } from 'lodash';
 import { useState } from 'react';
 import ProductCategoriesForm from './components/ProductCategoriesForm';
-import { findIndex } from 'lodash';
-import { StyleSheet } from '@configs/stylesheet';
-import Table from '@components/Table';
 
 const columns: TableProps<any>['columns'] = [
   {
@@ -30,9 +30,7 @@ const columns: TableProps<any>['columns'] = [
     dataIndex: 'status',
     render: (_, { status, itemId }) => (
       <div key={itemId}>
-        <Tag
-          color={status ? 'green' : 'red'}
-          key={`product_categtory_${itemId}`}>
+        <Tag color={status ? 'green' : 'red'} key={`product_categtory_${itemId}`}>
           {status ? 'Active' : 'InActive'}
         </Tag>
       </div>
@@ -41,13 +39,9 @@ const columns: TableProps<any>['columns'] = [
 ];
 
 const ProductCategory = () => {
-  const [productCategories, setProductCategories] = useState<
-    ProductsCategoriesDataType[]
-  >(productCategoriesData);
-  const [showProdCategoryModal, setShowProdCategoryModal] =
-    useState<boolean>(false);
-  const [selectedProdCategoty, setSelectedProdCategory] =
-    useState<ProductsCategoriesDataType | null>(null);
+  const [productCategories, setProductCategories] = useState<ProductsCategoriesDataType[]>(productCategoriesData);
+  const [showProdCategoryModal, setShowProdCategoryModal] = useState<boolean>(false);
+  const [selectedProdCategoty, setSelectedProdCategory] = useState<ProductsCategoriesDataType | null>(null);
   return (
     <div>
       <Row style={styles.searchRow}>

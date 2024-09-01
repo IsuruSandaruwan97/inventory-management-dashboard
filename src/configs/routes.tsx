@@ -1,18 +1,4 @@
 /** @format */
-import { lazy } from 'react';
-const Dashboard = lazy(() => import('@features/dashboard'));
-const Stock = lazy(() => import('@features/stock/Requests'));
-const Users = lazy(() => import('@features/users'));
-const Inventory = lazy(() => import('@features/stock/Inventory'));
-const Production = lazy(() => import('@features/production'));
-const Store = lazy(() => import('@features/store'));
-const Delivery = lazy(() => import('@features/delivery'));
-
-const Categories = lazy(() => import('@features/configurations/categories'));
-const SubCategories = lazy(
-  () => import('@features/configurations/subCategories')
-);
-
 import {
   AreaChartOutlined,
   SettingOutlined,
@@ -22,7 +8,18 @@ import {
   TruckOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { ReactNode } from 'react';
+import { lazy, ReactNode } from 'react';
+
+const Dashboard = lazy(() => import('@features/dashboard'));
+const Stock = lazy(() => import('@features/stock/Requests'));
+const Users = lazy(() => import('@features/users'));
+const Inventory = lazy(() => import('@features/stock/Inventory'));
+const Production = lazy(() => import('@features/production'));
+const Store = lazy(() => import('@features/store'));
+const Delivery = lazy(() => import('@features/delivery'));
+
+const Categories = lazy(() => import('@features/configurations/categories'));
+const SubCategories = lazy(() => import('@features/configurations/subCategories'));
 
 const defaultIconStyle = { fontSize: 20 };
 

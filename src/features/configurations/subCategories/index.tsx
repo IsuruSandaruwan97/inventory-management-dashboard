@@ -1,11 +1,11 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { ProductSubCategoriesDataType } from '@features/configurations/configs/types';
-import { productSubCategoriesData } from '@data/configurations/product_categories';
-import { Button, Row, TableProps, Tag } from 'antd';
-import { useState, CSSProperties } from 'react';
-import ProductSubCategoriesForm from '@features/configurations/subCategories/components/ProductSubCategoriesForm';
-import { findIndex } from 'lodash';
 import Table from '@components/Table';
+import { productSubCategoriesData } from '@data/configurations/product_categories';
+import { ProductSubCategoriesDataType } from '@features/configurations/configs/types';
+import ProductSubCategoriesForm from '@features/configurations/subCategories/components/ProductSubCategoriesForm';
+import { Button, Row, TableProps, Tag } from 'antd';
+import { findIndex } from 'lodash';
+import { CSSProperties, useState } from 'react';
 
 const columns: TableProps<any>['columns'] = [
   {
@@ -34,9 +34,7 @@ const columns: TableProps<any>['columns'] = [
     dataIndex: 'status',
     render: (_, { status, itemId }) => (
       <div key={itemId}>
-        <Tag
-          color={status ? 'green' : 'red'}
-          key={`product_subcategory_${itemId}`}>
+        <Tag color={status ? 'green' : 'red'} key={`product_subcategory_${itemId}`}>
           {status ? 'Active' : 'InActive'}
         </Tag>
       </div>
@@ -46,20 +44,15 @@ const columns: TableProps<any>['columns'] = [
 
 const ProductSubCategory = () => {
   const styles = useStyles();
-  const [productSubCategories, setProductSubCategories] = useState<
-    ProductSubCategoriesDataType[]
-  >(productSubCategoriesData);
-  const [showProdSubCategoryModal, setShowProdSubCategoryModal] =
-    useState<boolean>(false);
-  const [selectedProdSubCategory, setSelectedProdSubCategory] =
-    useState<ProductSubCategoriesDataType | null>(null);
+  const [productSubCategories, setProductSubCategories] =
+    useState<ProductSubCategoriesDataType[]>(productSubCategoriesData);
+  const [showProdSubCategoryModal, setShowProdSubCategoryModal] = useState<boolean>(false);
+  const [selectedProdSubCategory, setSelectedProdSubCategory] = useState<ProductSubCategoriesDataType | null>(null);
 
   return (
     <>
       <Row style={styles.searchRow}>
-        <Button
-          onClick={() => setShowProdSubCategoryModal(true)}
-          type="primary">
+        <Button onClick={() => setShowProdSubCategoryModal(true)} type="primary">
           <PlusCircleOutlined /> Add new subcategory
         </Button>
       </Row>
@@ -83,10 +76,7 @@ const ProductSubCategory = () => {
             setSelectedProdSubCategory(null);
           }}
           onInsertSubCategory={(productSubCategory) => {
-            setProductSubCategories([
-              productSubCategory,
-              ...productSubCategories,
-            ]);
+            setProductSubCategories([productSubCategory, ...productSubCategories]);
           }}
           onUpdateSubCategory={(productSubCategory) => {
             const productSubCategoriesIndex = findIndex(

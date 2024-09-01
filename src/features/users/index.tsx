@@ -1,13 +1,12 @@
 /** @format */
 
-import Table from "@components/Table";
-import { StyleSheet } from "@stylesheet";
-import { TableProps, Tag } from "antd";
-import { useState } from "react";
-import findIndex from "lodash/findIndex";
-import UserForm from "./components/UserForm";
-import { PAGE_SIZES } from "@configs/index";
-import { userData } from "@data/users";
+import Table from '@components/Table';
+import { PAGE_SIZES } from '@configs/index';
+import { userData } from '@data/users';
+import { TableProps, Tag } from 'antd';
+import findIndex from 'lodash/findIndex';
+import { useState } from 'react';
+import UserForm from './components/UserForm';
 
 export type TUsers = {
   empId: string;
@@ -17,38 +16,36 @@ export type TUsers = {
   status: boolean;
 };
 
-const columns: TableProps<any>["columns"] = [
+const columns: TableProps<any>['columns'] = [
   {
-    title: "Emp ID",
-    dataIndex: "empId",
-    key: "empId",
+    title: 'Emp ID',
+    dataIndex: 'empId',
+    key: 'empId',
   },
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
   },
   {
-    title: "Mobile",
-    dataIndex: "mobile",
-    key: "mobile",
-    responsive: ["md"],
+    title: 'Mobile',
+    dataIndex: 'mobile',
+    key: 'mobile',
+    responsive: ['md'],
   },
   {
-    title: "Role",
-    dataIndex: "role",
-    key: "role",
-    responsive: ["md"],
+    title: 'Role',
+    dataIndex: 'role',
+    key: 'role',
+    responsive: ['md'],
   },
   {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
+    title: 'Status',
+    key: 'status',
+    dataIndex: 'status',
     render: (_, { status, empId }) => (
       <div key={`user_status_${empId}`}>
-        <Tag color={status ? "green" : "red"}>
-          {status ? "Active" : "InActive"}
-        </Tag>
+        <Tag color={status ? 'green' : 'red'}>{status ? 'Active' : 'InActive'}</Tag>
       </div>
     ),
   },
@@ -73,7 +70,7 @@ const Users = () => {
             setSelectedUser(record as TUsers);
           },
         })}
-        rowKey={"empId"}
+        rowKey={'empId'}
         dataSource={users}
       />
       {showUserModal && (
@@ -88,17 +85,10 @@ const Users = () => {
             setUsers([user, ...users]);
           }}
           onUpdateUser={(user) => {
-            const userIndex = findIndex(
-              users,
-              (item) => item.empId === user.empId
-            );
+            const userIndex = findIndex(users, (item) => item.empId === user.empId);
 
             if (userIndex !== -1) {
-              const updatedUsers = [
-                ...users.slice(0, userIndex),
-                user,
-                ...users.slice(userIndex + 1),
-              ];
+              const updatedUsers = [...users.slice(0, userIndex), user, ...users.slice(userIndex + 1)];
               setUsers(updatedUsers);
             }
           }}
@@ -109,11 +99,3 @@ const Users = () => {
 };
 
 export default Users;
-
-const styles = StyleSheet.create({
-  searchRow: {
-    float: "right",
-    marginTop: 8,
-    marginBottom: 8,
-  },
-});

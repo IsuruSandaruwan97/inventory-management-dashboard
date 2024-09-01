@@ -1,31 +1,20 @@
 /** @format */
 
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import FooterNav from "@components/Nav/FooterNav";
-import HeaderNav from "@components/Nav/HeaderNav";
-import SideNav from "@components/Nav/SideNav";
-import { NProgress } from "@components/Nprogress";
-import { PageHeader } from "@components/PageHeader/PageHeader";
-import Time from "@components/Time";
-import { ROUTES } from "@configs/routes";
-import { findRouteByPath } from "@utils/index";
-import { Breadcrumb, Button, Flex, Layout } from "antd";
-import { Content } from "antd/es/layout/layout";
-import {
-  CSSProperties,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useMediaQuery } from "react-responsive";
-import { useLocation } from "react-router";
-import {
-  CSSTransition,
-  SwitchTransition,
-  TransitionGroup,
-} from "react-transition-group";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import FooterNav from '@components/Nav/FooterNav';
+import HeaderNav from '@components/Nav/HeaderNav';
+import SideNav from '@components/Nav/SideNav';
+import { NProgress } from '@components/Nprogress';
+import { PageHeader } from '@components/PageHeader/PageHeader';
+import Time from '@components/Time';
+import { ROUTES } from '@configs/routes';
+import { findRouteByPath } from '@utils/index';
+import { Button, Flex, Layout } from 'antd';
+import { Content } from 'antd/es/layout/layout';
+import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useLocation } from 'react-router';
+import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
 
 type TLayout = {
   children: ReactNode;
@@ -46,7 +35,7 @@ const DashboardLayout = ({ children }: TLayout) => {
   }, [isMobile]);
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
+    window.addEventListener('scroll', () => {
       if (window.scrollY > 5) {
         setNavFill(true);
       } else {
@@ -57,10 +46,7 @@ const DashboardLayout = ({ children }: TLayout) => {
 
   const activePage = ROUTES.find((route) => route.path === pathname);
 
-  const breadcumbObj = useMemo(
-    () => findRouteByPath(ROUTES, pathname),
-    [activePage]
-  );
+  const breadcumbObj = useMemo(() => findRouteByPath(ROUTES, pathname), [activePage]);
 
   return (
     <>
@@ -106,7 +92,7 @@ const DashboardLayout = ({ children }: TLayout) => {
                   {() => (
                     <div ref={nodeRef} style={styles.childrenContainer}>
                       <PageHeader
-                        title={activePage?.name || ""}
+                        title={activePage?.name || ''}
                         breadcrumbs={[
                           {
                             title: <span>{breadcumbObj?.main?.name}</span>,
@@ -138,51 +124,51 @@ export default DashboardLayout;
 const useStyles = (collapsed: boolean, navFill: boolean) => {
   return {
     mainLayout: {
-      minHeight: "100vh",
+      minHeight: '100vh',
     } as CSSProperties,
     headerNav: {
-      marginLeft: collapsed ? "50px" : "200px",
-      padding: "0 10px 0 0",
-      background: "white",
-      backdropFilter: navFill ? "blur(8px)" : "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      position: "relative",
+      marginLeft: collapsed ? '50px' : '200px',
+      padding: '0 10px 0 0',
+      background: 'white',
+      backdropFilter: navFill ? 'blur(8px)' : 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      position: 'relative',
       top: 0,
       zIndex: 1,
       gap: 8,
-      transition: "all .25s",
+      transition: 'all .25s',
     } as CSSProperties,
     childrenContainer: {
-      marginLeft: collapsed ? "40px" : 0,
-      background: "transparent",
+      marginLeft: collapsed ? '40px' : 0,
+      background: 'transparent',
     },
     sideNav: {
-      overflow: "hidden",
-      position: "fixed",
+      overflow: 'hidden',
+      position: 'fixed',
       left: 0,
       top: 0,
       bottom: 0,
-      background: "none",
-      border: "none",
-      transition: "all .2s",
+      background: 'none',
+      border: 'none',
+      transition: 'all .2s',
     } as CSSProperties,
     content: {
-      margin: `0 0 0 ${collapsed ? 0 : "200px"}`,
-      transition: "all .25s",
-      padding: "10px 32px",
+      margin: `0 0 0 ${collapsed ? 0 : '200px'}`,
+      transition: 'all .25s',
+      padding: '10px 32px',
       borderTopRightRadius: 10,
       borderTopLeftRadius: 10,
       borderBottomLeftRadius: 10,
       borderBottomRightRadius: 10,
-      backgroundColor: "rgb(235, 237, 240)",
+      backgroundColor: 'rgb(235, 237, 240)',
     } as CSSProperties,
-    collapsButton: { fontSize: "16px", width: 64, height: 64 } as CSSProperties,
+    collapsButton: { fontSize: '16px', width: 64, height: 64 } as CSSProperties,
     footer: {
-      textAlign: "center",
-      marginLeft: collapsed ? 0 : "200px",
-      background: "white",
+      textAlign: 'center',
+      marginLeft: collapsed ? 0 : '200px',
+      background: 'white',
     } as CSSProperties,
   };
 };

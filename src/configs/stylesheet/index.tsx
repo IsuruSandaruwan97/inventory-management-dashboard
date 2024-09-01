@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React from 'react';
 
 type CSSProperties = {
   [key: string]: React.CSSProperties;

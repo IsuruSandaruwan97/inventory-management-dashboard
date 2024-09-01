@@ -1,7 +1,4 @@
-import {
-  ProductsCategoriesDataType,
-  ProductSubCategoriesDataType,
-} from '@features/configurations/configs/types';
+import { ProductsCategoriesDataType, ProductSubCategoriesDataType } from '@features/configurations/configs/types';
 
 export const productCategoriesData: ProductsCategoriesDataType[] = [
   {

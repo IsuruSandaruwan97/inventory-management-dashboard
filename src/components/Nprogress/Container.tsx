@@ -1,6 +1,6 @@
 /** @format */
 
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 type Props = {
   animationDuration: number;
@@ -8,15 +8,11 @@ type Props = {
   children: ReactNode;
 };
 
-export const NContainer = ({
-  animationDuration,
-  children,
-  isFinished,
-}: Props) => (
+export const NContainer = ({ animationDuration, children, isFinished }: Props) => (
   <div
     style={{
       opacity: isFinished ? 0 : 1,
-      pointerEvents: "none",
+      pointerEvents: 'none',
       transition: `opacity ${animationDuration}ms linear`,
     }}
   >

@@ -3,7 +3,7 @@
 import DatePicker from '@components/DatePicker';
 import Table from '@components/Table';
 import { StyleSheet } from '@configs/stylesheet';
-import { Card, Space, Row } from 'antd';
+import { Card, Row, Space } from 'antd';
 import { TableProps } from 'antd/es/table/InternalTable';
 
 const columns: TableProps<any>['columns'] = [

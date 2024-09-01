@@ -1,7 +1,7 @@
 /** @format */
 
-import { useNProgress } from "@tanem/react-nprogress";
-import { NSpinner, NContainer, Bar } from "@components/Nprogress";
+import { Bar, NContainer, NSpinner } from '@components/Nprogress';
+import { useNProgress } from '@tanem/react-nprogress';
 
 type Props = {
   isAnimating?: boolean;

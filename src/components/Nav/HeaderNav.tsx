@@ -1,15 +1,15 @@
 /** @format */
 
-import { Layout } from "antd";
-import { useRef } from "react";
+import { Layout } from 'antd';
+import { HTMLAttributes, useRef } from 'react';
 
 const { Header } = Layout;
 
 type HeaderNavProps = {
   navFill?: boolean;
-} & React.HTMLAttributes<HTMLDivElement>;
+} & HTMLAttributes<HTMLDivElement>;
 
-const HeaderNav = ({ navFill, ...others }: HeaderNavProps) => {
+const HeaderNav = ({ ...others }: HeaderNavProps) => {
   const nodeRef = useRef(null);
 
   return <Header ref={nodeRef} {...others} />;

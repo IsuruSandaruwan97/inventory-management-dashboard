@@ -1,14 +1,14 @@
 /** @format */
-import { Typography } from "antd";
-import { useEffect, useState } from "react";
-import dayjs from "dayjs";
+import { Typography } from 'antd';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 const { Text } = Typography;
 
 const Time = () => {
-  const [date, setDate] = useState<string>(dayjs().format("hh:mm:ss A"));
+  const [date, setDate] = useState<string>(dayjs().format('hh:mm:ss A'));
   useEffect(() => {
-    var timer = setInterval(() => setDate(dayjs().format("hh:mm:ss A")), 1000);
+    const timer = setInterval(() => setDate(dayjs().format('hh:mm:ss A')), 1000);
     return function cleanup() {
       clearInterval(timer);
     };

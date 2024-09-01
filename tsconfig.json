@@ -1,5 +1,7 @@
 {
-  "files": ["./tsconfig.node.json"],
+  "files": [
+    "./tsconfig.node.json"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
@@ -8,23 +10,53 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "paths": {
-      "@features/*": ["./src/features/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@components/*": ["./src/components/*"],
-      "@configs/*": ["./src/configs/*"],
-      "@context/*": ["./src/context/*"],
-      "@layouts/*": ["./src/layouts/*"],
-      "@data/*": ["./src/data/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@routes": ["./src/routes/index"],
-      "@redux/*": ["./src/redux/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
-      "@stylesheet": ["./src/configs/stylesheet/index"],
+      "@features/*": [
+        "./src/features/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@configs/*": [
+        "./src/configs/*"
+      ],
+      "@context/*": [
+        "./src/context/*"
+      ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@data/*": [
+        "./src/data/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@routes": [
+        "./src/routes/index"
+      ],
+      "@redux/*": [
+        "./src/redux/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ],
+      "@stylesheet": [
+        "./src/configs/stylesheet/index"
+      ]
     },
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -37,5 +69,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

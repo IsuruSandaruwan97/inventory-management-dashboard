@@ -1,12 +1,12 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { DEFAULT_CURRENCY } from '@configs/index';
 import { invoice_line_items } from '@data/stock/invoice_line_items';
+import InvoiceTable from '@features/stock/components/InvoiceTable';
 import { formatCurrency } from '@utils/index';
 import { Button, Card, Col, Flex, Form, Input, Modal, ModalProps, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useEffect, useState } from 'react';
 import InvoiceLineItemForm from './forms/InvoiceLineItemForm';
-import InvoiceTable from './InvoiceTable';
 
 type TInvoiceModalProps = {} & ModalProps;
 

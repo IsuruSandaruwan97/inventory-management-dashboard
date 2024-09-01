@@ -63,12 +63,7 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
   }, [pathname]);
 
   return (
-    <Sider
-      ref={nodeRef}
-      breakpoint="lg"
-      collapsedWidth="50"
-      collapsed={collapsed}
-      {...others}>
+    <Sider ref={nodeRef} breakpoint="lg" collapsedWidth="50" collapsed={collapsed} {...others}>
       <div style={styles.logo}>
         <ExperimentOutlined style={{ fontSize: 26 }} />
       </div>
@@ -81,7 +76,8 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
               itemSelectedColor: COLOR['600'],
             },
           },
-        }}>
+        }}
+      >
         <Menu
           key={'key'}
           mode="inline"

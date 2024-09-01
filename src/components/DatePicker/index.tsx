@@ -1,17 +1,10 @@
 import { KeyValuePair } from '@configs/types';
-import {
-  DatePickerProps,
-  DatePicker as AntdDatePicker,
-  Row,
-  Col,
-  Radio,
-  Space,
-  RadioChangeEvent,
-} from 'antd';
+import { Col, DatePicker as AntdDatePicker, DatePickerProps, Radio, RadioChangeEvent, Row, Space } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker/generatePicker/interface';
 
 import dayjs from 'dayjs';
 import { Key, useMemo, useState } from 'react';
+
 const { RangePicker } = AntdDatePicker;
 
 type TDatePicker = {
@@ -31,12 +24,8 @@ const selectOptions: KeyValuePair[] = [
 ];
 
 const DatePicker = ({ value, onSelectDate, ...others }: TDatePicker) => {
-  const [option, setOption] = useState<Key | undefined>(
-    selectOptions[0].value as Key
-  );
-  const [selectedDate, setSelectedDate] = useState<string[] | undefined>(
-    defaultDate
-  );
+  const [option, setOption] = useState<Key | undefined>(selectOptions[0].value as Key);
+  const [selectedDate, setSelectedDate] = useState<string[] | undefined>(defaultDate);
 
   const onChangeOption = (e: RadioChangeEvent) => {
     const { value } = e?.target;
@@ -68,16 +57,9 @@ const DatePicker = ({ value, onSelectDate, ...others }: TDatePicker) => {
     const [startDate, endDate] = values;
     const diff = today.diff(startDate, 'day');
 
-    setSelectedDate([
-      dayjs(startDate).format(defaultFormat),
-      dayjs(endDate).format(defaultFormat),
-    ]);
+    setSelectedDate([dayjs(startDate).format(defaultFormat), dayjs(endDate).format(defaultFormat)]);
 
-    setOption(
-      endDate.isSame(today, 'day') && [0, 1, 7, 30].includes(diff)
-        ? diff
-        : undefined
-    );
+    setOption(endDate.isSame(today, 'day') && [0, 1, 7, 30].includes(diff) ? diff : undefined);
   };
 
   const formatToDate: any = useMemo(() => {

@@ -1,12 +1,10 @@
 /** @format */
 
-import { DeleteOutlined, DownloadOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { DEFAULT_CURRENCY } from '@configs/index';
-import { invoice_line_items } from '@data/stock/invoice_line_items';
 import { formatCurrency } from '@utils/index';
-import { Button, Card, Flex, Form, Input, Space, TableProps, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { Button, Space, TableProps } from 'antd';
 
 const columns: (setEditItem: (item: any) => void) => TableProps<any>['columns'] = (setEditItem) => [
   {
@@ -56,7 +54,7 @@ const columns: (setEditItem: (item: any) => void) => TableProps<any>['columns'] 
   },
 ];
 type InvoiceTableProps = {
-  setEditItem: (item: any) => void;
+  setEditItem: () => void;
   dataSource: any[];
 };
 const InvoiceTable = (props: InvoiceTableProps) => {

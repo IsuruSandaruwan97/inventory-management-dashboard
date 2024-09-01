@@ -1,18 +1,10 @@
-import {
-  Card,
-  CardProps,
-  Col,
-  Select,
-  Row,
-  Space,
-  Typography,
-  Flex,
-} from 'antd';
 import { Line } from '@ant-design/charts';
-import { useState } from 'react';
-import { KeyValuePair } from '@configs/types';
 import { StyleSheet } from '@configs/stylesheet';
+import { KeyValuePair } from '@configs/types';
+import { Card, CardProps, Col, Row, Select, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
+import { useState } from 'react';
+
 const today = dayjs();
 
 const TypeIndicatorData = [
@@ -76,24 +68,16 @@ const ProductionProgressCard = ({ ...others }: Props) => {
   return (
     <Card
       title="Production Progress"
-      extra={
-        <Select
-          value={filter}
-          style={{ width: 120 }}
-          onChange={(value) => setFilter(value)}
-          options={items}
-        />
-      }
-      {...others}>
+      extra={<Select value={filter} style={{ width: 120 }} onChange={(value) => setFilter(value)} options={items} />}
+      {...others}
+    >
       <RadialChart />
 
       <Row style={styles.indicatorRow}>
         {TypeIndicatorData?.map((data, index) => (
           <Col key={index} span={8}>
             <Space>
-              <div
-                style={{ ...styles.colorLabel, backgroundColor: data.color }}
-              />
+              <div style={{ ...styles.colorLabel, backgroundColor: data.color }} />
               <Typography.Text>{data.title}</Typography.Text>
             </Space>
           </Col>

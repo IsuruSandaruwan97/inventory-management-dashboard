@@ -1,7 +1,7 @@
 import { ProductsCategoriesDataType } from '@features/configurations/configs/types';
-import { Modal, Divider, Form, Input, Switch, Flex, Button } from 'antd';
+import { Button, Divider, Flex, Form, Input, Modal, Switch } from 'antd';
 import { isEmpty } from 'lodash';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type ProductCategoriesFormProps = {
   visible: boolean;
@@ -49,37 +49,21 @@ const ProductCategoriesForm = ({
       onClose={onClose}
       title={!isUpdate ? 'Add new product category' : `Update ${category.name}`}
       footer={null}
-      closeIcon={false}>
+      closeIcon={false}
+    >
       <Divider />
-      <Form
-        form={form}
-        layout="horizontal"
-        onFinish={onFinish}
-        {...{ labelCol: { span: 6 } }}>
-        <Form.Item
-          label={'ID'}
-          name={'itemId'}
-          rules={[{ required: true, message: 'Category ID is required' }]}>
+      <Form form={form} layout="horizontal" onFinish={onFinish} {...{ labelCol: { span: 6 } }}>
+        <Form.Item label={'ID'} name={'itemId'} rules={[{ required: true, message: 'Category ID is required' }]}>
           <Input disabled={isUpdate} />
         </Form.Item>
-        <Form.Item
-          label={'Name'}
-          name={'name'}
-          rules={[{ required: true, message: 'Category name is required' }]}>
+        <Form.Item label={'Name'} name={'name'} rules={[{ required: true, message: 'Category name is required' }]}>
           <Input />
         </Form.Item>
-        <Form.Item
-          label={'Code'}
-          name={'code'}
-          rules={[{ required: true, message: 'Code is required' }]}>
+        <Form.Item label={'Code'} name={'code'} rules={[{ required: true, message: 'Code is required' }]}>
           <Input />
         </Form.Item>
         <Form.Item label={'Status'} name={'status'}>
-          <Switch
-            defaultValue={true}
-            checkedChildren="Active"
-            unCheckedChildren="Inactive"
-          />
+          <Switch defaultValue={true} checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
         <Flex justify="end" gap={8}>
           <Form.Item style={{ marginBottom: '4px' }}>
@@ -97,7 +81,8 @@ const ProductCategoriesForm = ({
                   .validateFields()
                   .then(() => {})
                   .catch(() => {});
-              }}>
+              }}
+            >
               {isUpdate ? 'Update' : 'Submit'}
             </Button>
           </Form.Item>

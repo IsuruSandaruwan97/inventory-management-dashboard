@@ -1,24 +1,21 @@
 /** @format */
 
-import { TABLE_STATUS } from "@configs/index";
-import { Card, Collapse, Pagination, Space, Tag } from "antd";
-import { CSSProperties, useState } from "react";
-import FilterItems from "@components/FilterItems";
-import { TListType } from "@configs/types";
-import { PlusOutlined } from "@ant-design/icons";
-import { stock_requests } from "@data/stock/stock_requests";
-import { useMediaQuery } from "react-responsive";
-import ActionButtons from "./components/ActionButtons";
-import ItemContent from "./components/ItemContent";
-export type TFilter = "requests" | "all" | "return" | "damaged";
+import { PlusOutlined } from '@ant-design/icons';
+import FilterItems from '@components/FilterItems';
+import { TABLE_STATUS } from '@configs/index';
+import { TListType } from '@configs/types';
+import { stock_requests } from '@data/stock/stock_requests';
+import { Card, Collapse, Pagination, Space, Tag } from 'antd';
+import { CSSProperties, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import ActionButtons from './components/ActionButtons';
+import ItemContent from './components/ItemContent';
 
 const maxCount: number = 5;
 const Stock = () => {
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const styles = useStyles();
-  const [listType, setListType] = useState<TListType>(
-    TABLE_STATUS[0].value as TListType
-  );
+  const [listType, setListType] = useState<TListType>(TABLE_STATUS[0].value as TListType);
 
   return (
     <Space direction="vertical" style={styles.space}>
@@ -45,7 +42,7 @@ const Stock = () => {
                       {item.title}
                       <Tag color="orange">New</Tag>
                     </Space>
-                    {!isMobile && listType !== "history" && <ActionButtons />}
+                    {!isMobile && listType !== 'history' && <ActionButtons />}
                   </div>
                 ),
                 children: (
@@ -61,12 +58,7 @@ const Stock = () => {
               };
             })}
           />
-          <Pagination
-            style={styles.pagination}
-            defaultCurrent={1}
-            pageSize={maxCount}
-            total={stock_requests.length}
-          />
+          <Pagination style={styles.pagination} defaultCurrent={1} pageSize={maxCount} total={stock_requests.length} />
         </Space>
       </Card>
     </Space>
@@ -77,30 +69,30 @@ export default Stock;
 
 const useStyles = () => ({
   space: {
-    width: "100%",
+    width: '100%',
   } as CSSProperties,
   stockFilters: {
-    display: "flex",
-    justifyContent: "flex-end",
+    display: 'flex',
+    justifyContent: 'flex-end',
   } as CSSProperties,
 
-  collaps: { width: "100%" } as CSSProperties,
-  pagination: { justifyContent: "center" } as CSSProperties,
+  collaps: { width: '100%' } as CSSProperties,
+  pagination: { justifyContent: 'center' } as CSSProperties,
   label: {
-    flexDirection: "row",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   } as CSSProperties,
   description: {
-    display: "flex",
+    display: 'flex',
     marginTop: -5,
     marginBottom: 10,
     fontSize: 12,
-    alignContent: "center",
+    alignContent: 'center',
   } as CSSProperties,
   mobileActionButtons: {
     marginTop: 12,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   } as CSSProperties,
 });

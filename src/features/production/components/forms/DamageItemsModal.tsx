@@ -1,10 +1,10 @@
 /** @format */
 
-import { StyleSheet } from "@configs/stylesheet";
-import { Button, Flex, Form, Input, Modal } from "antd";
-import { useForm } from "antd/es/form/Form";
-import { ModalProps } from "antd/es/modal/interface";
-import { useState } from "react";
+import { StyleSheet } from '@configs/stylesheet';
+import { Button, Flex, Form, Input, Modal } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import { ModalProps } from 'antd/es/modal/interface';
+import { useState } from 'react';
 
 const { TextArea } = Input;
 type TDamageItemsModal = {
@@ -42,40 +42,19 @@ const DamageItemsModal = ({ onCancel, ...others }: TDamageItemsModal) => {
     <>
       <Modal
         footer={null}
-        title={"Mark Damaged Items"}
+        title={'Mark Damaged Items'}
         onCancel={() => onCancelForm()}
         onClose={() => onCancelForm()}
         {...others}
       >
-        <Form
-          initialValues={{ quantity: 1 }}
-          {...formItemLayout}
-          style={styles.form}
-          onFinish={onSubmit}
-        >
-          <Form.Item
-            label="Item"
-            name="item"
-            rules={[{ required: true, message: "Please select an Item!" }]}
-          >
+        <Form initialValues={{ quantity: 1 }} {...formItemLayout} style={styles.form} onFinish={onSubmit}>
+          <Form.Item label="Item" name="item" rules={[{ required: true, message: 'Please select an Item!' }]}>
             <Input placeholder="Select Item" style={styles.fullWidth} />
           </Form.Item>
-          <Form.Item
-            label="Quantity"
-            name="quantity"
-            rules={[{ required: true, message: "Please select Quantity!" }]}
-          >
-            <Input
-              placeholder="Select Quantity"
-              type="number"
-              style={styles.fullWidth}
-            />
+          <Form.Item label="Quantity" name="quantity" rules={[{ required: true, message: 'Please select Quantity!' }]}>
+            <Input placeholder="Select Quantity" type="number" style={styles.fullWidth} />
           </Form.Item>
-          <Form.Item
-            label="Reason"
-            name="reason"
-            rules={[{ required: true, message: "Please type Reason!" }]}
-          >
+          <Form.Item label="Reason" name="reason" rules={[{ required: true, message: 'Please type Reason!' }]}>
             <TextArea placeholder="Reason" style={styles.fullWidth} />
           </Form.Item>
 
@@ -112,12 +91,12 @@ export default DamageItemsModal;
 
 const styles = StyleSheet.create({
   fullWidth: {
-    width: "100%",
+    width: '100%',
   },
   form: {
-    width: "100%",
+    width: '100%',
   },
   formButton: {
-    marginBottom: "4px",
+    marginBottom: '4px',
   },
 });

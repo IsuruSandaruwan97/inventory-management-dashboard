@@ -14,7 +14,7 @@ type InvoiceLineItemFormProps = {
 
 const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [, setSelectedItem] = useState<any>(null);
   const [unitPrice, setUnitPrice] = useState<number>(0);
 
   const [form] = useForm();

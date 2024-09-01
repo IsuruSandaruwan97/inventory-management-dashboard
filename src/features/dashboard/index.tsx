@@ -4,12 +4,12 @@ import DatePicker from '@components/DatePicker';
 import { StyleSheet } from '@configs/stylesheet';
 import { KeyValuePair } from '@configs/types';
 import {
+  DeliveryTable,
   ProductionProgressCard,
+  ProductionTable,
+  RecentActivities,
   StockTable,
   StoreTable,
-  ProductionTable,
-  DeliveryTable,
-  RecentActivities,
 } from '@features/dashboard/components';
 import { Card, Col, Flex, Radio, Row, Space } from 'antd';
 import { Key, useMemo, useState } from 'react';
@@ -37,14 +37,9 @@ const renderTable = (type: TFilter) => {
 };
 
 const Dashboard = () => {
-  const [tableFilter, setTableFilter] = useState<Key>(
-    dataTableFilters[0].value as Key
-  );
+  const [tableFilter, setTableFilter] = useState<Key>(dataTableFilters[0].value as Key);
 
-  const SelectedTable = useMemo(
-    () => renderTable(tableFilter as TFilter),
-    [tableFilter]
-  );
+  const SelectedTable = useMemo(() => renderTable(tableFilter as TFilter), [tableFilter]);
 
   return (
     <Space size={'large'} style={styles.fullWidth} direction="vertical">
@@ -67,7 +62,8 @@ const Dashboard = () => {
               <Radio.Group
                 defaultValue={tableFilter}
                 onChange={(e) => setTableFilter(e?.target?.value)}
-                style={styles.tableTitle}>
+                style={styles.tableTitle}
+              >
                 {dataTableFilters.map((item: KeyValuePair, index: number) => (
                   <Radio.Button value={item.value} key={index}>
                     {item.label}

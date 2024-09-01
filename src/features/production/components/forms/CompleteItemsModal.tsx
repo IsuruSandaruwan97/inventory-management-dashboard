@@ -1,10 +1,10 @@
 /** @format */
 
-import { StyleSheet } from "@configs/stylesheet";
-import { Button, Flex, Form, Input, Modal } from "antd";
-import { useForm } from "antd/es/form/Form";
-import { ModalProps } from "antd/es/modal/interface";
-import { useState } from "react";
+import { StyleSheet } from '@configs/stylesheet';
+import { Button, Flex, Form, Input, Modal } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import { ModalProps } from 'antd/es/modal/interface';
+import { useState } from 'react';
 
 const { TextArea } = Input;
 type TCompleteItemsModal = {
@@ -42,29 +42,17 @@ const CompleteItemsModal = ({ onCancel, ...others }: TCompleteItemsModal) => {
     <>
       <Modal
         footer={null}
-        title={"Mark Damaged Items"}
+        title={'Mark Damaged Items'}
         onCancel={() => onCancelForm()}
         onClose={() => onCancelForm()}
         {...others}
       >
         <Form {...formItemLayout} style={styles.form} onFinish={onSubmit}>
-          <Form.Item
-            label="Item"
-            name="item"
-            rules={[{ required: true, message: "Please select an Item!" }]}
-          >
+          <Form.Item label="Item" name="item" rules={[{ required: true, message: 'Please select an Item!' }]}>
             <Input placeholder="Select Item" style={styles.fullWidth} />
           </Form.Item>
-          <Form.Item
-            label="Quantity"
-            name="quantity"
-            rules={[{ required: true, message: "Please select Quantity!" }]}
-          >
-            <Input
-              placeholder="Quantity"
-              type="number"
-              style={styles.fullWidth}
-            />
+          <Form.Item label="Quantity" name="quantity" rules={[{ required: true, message: 'Please select Quantity!' }]}>
+            <Input placeholder="Quantity" type="number" style={styles.fullWidth} />
           </Form.Item>
           <Form.Item label="Description" name="description">
             <TextArea placeholder="Description" style={styles.fullWidth} />
@@ -103,12 +91,12 @@ export default CompleteItemsModal;
 
 const styles = StyleSheet.create({
   fullWidth: {
-    width: "100%",
+    width: '100%',
   },
   form: {
-    width: "100%",
+    width: '100%',
   },
   formButton: {
-    marginBottom: "4px",
+    marginBottom: '4px',
   },
 });

@@ -1,17 +1,17 @@
 /** @format */
 
-import { PlusOutlined, DropboxOutlined } from '@ant-design/icons';
+import { DropboxOutlined, PlusOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { PAGE_SIZES } from '@configs/index';
+import { StyleSheet } from '@configs/stylesheet';
+import { stockData } from '@data/stock/stock_items';
+import ItemForm from '@features/stock/components/forms/ItemForm';
 import useScreenSize from '@hooks/useScreenSize';
-import { Card, Row, Col, Space, Button, Input, TableProps, Tag } from 'antd';
+import { formatDate } from '@utils/index';
+import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { StyleSheet } from '@configs/stylesheet';
-import { formatDate } from '@utils/index';
-import ItemForm from '@features/stock/components/forms/ItemForm';
-import { stockData } from '@data/stock/stock_items';
 
 const { Search } = Input;
 
@@ -117,12 +117,8 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     responsive: ['md'],
     render: (_, { status, itemId, reorderlevel, quantity }) => (
       <Space direction="vertical" key={`user_status_${itemId}`}>
-        <Tag color={status ? 'green' : 'red'}>
-          {status ? 'Active' : 'InActive'}
-        </Tag>
-        {reorderlevel && quantity && quantity < reorderlevel && (
-          <Tag color="orange">Low Stock</Tag>
-        )}
+        <Tag color={status ? 'green' : 'red'}>{status ? 'Active' : 'InActive'}</Tag>
+        {reorderlevel && quantity && quantity < reorderlevel && <Tag color="orange">Low Stock</Tag>}
       </Space>
     ),
   },
@@ -141,7 +137,6 @@ const Inventory = () => {
   const [lodaing, setLoading] = useState<boolean>(false);
   const [itemFormVisible, setItemFormVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<TStockData | null>(null);
-  const [page, setPage] = useState<number>(1);
 
   const onSearch = (value: string | null) => {
     if (isEmpty(value) || !value) {
@@ -157,30 +152,22 @@ const Inventory = () => {
           <Row style={styles.headerRow}>
             <Col>
               <Space>
-                <Button
-                  icon={<PlusOutlined />}
-                  onClick={() => setItemFormVisible(true)}>
+                <Button icon={<PlusOutlined />} onClick={() => setItemFormVisible(true)}>
                   New Item
                 </Button>
               </Space>
             </Col>
             <Col style={styles.search}>
-              <Search
-                placeholder="Search..."
-                onSearch={onSearch}
-                enterKeyHint="search"
-                allowClear
-              />
+              <Search placeholder="Search..." onSearch={onSearch} enterKeyHint="search" allowClear />
             </Col>
           </Row>
           <Table
+            loading={lodaing}
             scroll={{ x: 1000 }}
             pagination={{
               pageSize: PAGE_SIZES.INVENTORY,
               total: 100,
-              onChange: (page) => {
-                setPage(page);
-              },
+              onChange: () => {},
             }}
             style={{
               maxWidth: width - (isMobile ? 65 : 250),
@@ -188,9 +175,7 @@ const Inventory = () => {
             rowKey={'itemId'}
             columns={inventoryTableColumns}
             dataSource={stockData}
-            rowClassName={(item) =>
-              item.quantity < item.reorderlevel ? 'reorder-row' : ''
-            }
+            rowClassName={(item) => (item.quantity < item.reorderlevel ? 'reorder-row' : '')}
             onRow={(record) => ({
               onClick: () => {
                 setItemFormVisible(true);

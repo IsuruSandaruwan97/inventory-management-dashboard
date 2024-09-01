@@ -3,7 +3,8 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { TStockData } from '@features/stock/Inventory';
 
-import { Button, Divider, Flex, Form, Input, InputNumber, Modal, Switch, Upload } from 'antd';
+import NumberInput from '@components/NumberInput.tsx';
+import { Button, Divider, Flex, Form, Input, Modal, Switch, Upload } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 
@@ -82,24 +83,24 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
           name={'reOrderLevel'}
           rules={[{ required: true, message: 'Reorder Level is required' }]}
         >
-          <InputNumber />
+          <NumberInput />
         </Form.Item>
         <Form.Item
           label={'Unit Price'}
           name={'unitPrice'}
           rules={[{ required: true, message: 'Unit Price is required' }]}
         >
-          <InputNumber addonBefore={'Rs'} />
+          <NumberInput addonBefore={'Rs'} />
         </Form.Item>
         <Form.Item
           label={'Total Price'}
           name={'totalPrice'}
           rules={[{ required: true, message: 'Total Price is required' }]}
         >
-          <InputNumber addonBefore={'Rs'} />
+          <NumberInput addonBefore={'Rs'} />
         </Form.Item>
         <Form.Item label={'Quantity'} name={'quantity'} rules={[{ required: true, message: 'Quantity is required' }]}>
-          <InputNumber addonBefore={'Rs'} />
+          <NumberInput addonBefore={'Rs'} />
         </Form.Item>
         <Form.Item label={'Image'} name={'image'} rules={[{ required: true, message: 'Item image is required' }]}>
           <Upload name="avatar" listType="picture-card" className="avatar-uploader" showUploadList={false}>

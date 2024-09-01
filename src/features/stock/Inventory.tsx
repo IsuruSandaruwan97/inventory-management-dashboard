@@ -167,7 +167,6 @@ const Inventory = () => {
             pagination={{
               pageSize: PAGE_SIZES.INVENTORY,
               total: 100,
-              onChange: () => {},
             }}
             style={{
               maxWidth: width - (isMobile ? 65 : 250),

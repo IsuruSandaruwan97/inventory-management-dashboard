@@ -9,6 +9,7 @@ import { useForm } from 'antd/es/form/Form';
 import { useEffect, useState } from 'react';
 import InvoiceLineItemForm from './forms/InvoiceLineItemForm';
 import InvoicePdf from './pdf/invoicePdf';
+
 type TInvoiceModalProps = {} & ModalProps;
 
 const InvoiceModal = (props: TInvoiceModalProps) => {
@@ -40,7 +41,7 @@ const InvoiceModal = (props: TInvoiceModalProps) => {
       open={props.open}
       onClose={props.onClose}
       onCancel={props.onClose}
-      style={{ minWidth: '100%' }}
+      style={{ minWidth: '80%' }}
       styles={{ content: { backgroundColor: '#f5f4f7' }, header: { backgroundColor: '#f5f4f7' } }}
       footer={false}
     >

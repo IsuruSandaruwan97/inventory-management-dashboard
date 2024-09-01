@@ -22,3 +22,5 @@ export const PAGE_SIZES = {
   INVENTORY: 5,
   USERS: 6,
 };
+
+export const DEFAULT_CURRENCY = "Rs";

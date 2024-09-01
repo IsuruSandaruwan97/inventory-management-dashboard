@@ -5,17 +5,19 @@ import ItemTable from '@features/store/components/ItemTable';
 import { StyleSheet } from '@configs/stylesheet';
 import { useState } from 'react';
 import ReturnItemsFormModal from '@features/store/components/forms/ReturnItemsForm';
+import InvoiceModal from '@features/stock/components/InvoiceModal';
 const options = ['Store', 'Delivery'];
 const Store = () => {
   const [option, setOption] = useState<string>(options[0]);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
+  const [showInvoiceModal,setShowInvoiceModal] = useState<boolean>(false);
   return (
     <>
       <Card>
         <Row style={styles.actionBar}>
           <Space>
             <Button>Delivery Order</Button>
-            <Button>Invoice</Button>
+            <Button onClick={() => setShowInvoiceModal(true)}>Invoice</Button>
             <Button onClick={() => setShowReturnModal(true)}>
               Return Items
             </Button>
@@ -34,6 +36,12 @@ const Store = () => {
         <ReturnItemsFormModal
           open={showReturnModal}
           onCancel={() => setShowReturnModal(false)}
+        />
+      )}
+       {showInvoiceModal && (
+        <InvoiceModal
+          open={showInvoiceModal}
+          onClose={() => setShowInvoiceModal(false)}
         />
       )}
     </>

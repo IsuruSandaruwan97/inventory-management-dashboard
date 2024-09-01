@@ -60,7 +60,9 @@ type InvoiceTableProps = {
   dataSource: any[];
 };
 const InvoiceTable = (props: InvoiceTableProps) => {
-  return <Table columns={columns(props?.setEditItem)} dataSource={props.dataSource} pagination={false} />;
+  return (
+    <Table scroll={{ y: 400 }} columns={columns(props?.setEditItem)} dataSource={props.dataSource} pagination={false} />
+  );
 };
 
 export default InvoiceTable;

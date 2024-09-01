@@ -14,6 +14,7 @@ import { Content } from 'antd/es/layout/layout';
 import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
 
 type TLayout = {
@@ -46,7 +47,19 @@ const DashboardLayout = ({ children }: TLayout) => {
 
   const activePage = ROUTES.find((route) => route.path === pathname);
 
-  const breadcrumbObj = useMemo(() => findRouteByPath(ROUTES, pathname), [pathname]);
+  const breadcrumbObj = useMemo(() => {
+    const routes = findRouteByPath(ROUTES, pathname);
+    return [
+      {
+        title:
+          routes?.sub?.path && routes?.sub?.name ? (
+            <Link to={routes?.sub?.path}>{routes?.sub?.name}</Link>
+          ) : (
+            <Link to={routes?.main?.path}>{routes?.main?.name}</Link>
+          ),
+      },
+    ];
+  }, [pathname]);
 
   return (
     <>
@@ -91,19 +104,7 @@ const DashboardLayout = ({ children }: TLayout) => {
                 >
                   {() => (
                     <div ref={nodeRef} style={styles.childrenContainer}>
-                      <PageHeader
-                        title={activePage?.name || ''}
-                        breadcrumbs={[
-                          {
-                            title: <span>{breadcrumbObj?.main?.name}</span>,
-                            path: breadcrumbObj?.main?.path,
-                          },
-                          {
-                            title: <span>{breadcrumbObj?.sub?.name}</span>,
-                            path: breadcrumbObj?.sub?.path,
-                          },
-                        ]}
-                      />
+                      <PageHeader title={activePage?.name || ''} breadcrumbs={breadcrumbObj} />
                       {children}
                     </div>
                   )}

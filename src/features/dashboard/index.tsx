@@ -72,11 +72,7 @@ const Dashboard = () => {
               </Radio.Group>
             </Col>
             <Col>
-              <DatePicker
-                onSelectDate={function (date: string): void {
-                  console.log(date);
-                }}
-              />
+              <DatePicker onSelectDate={function (): void {}} />
             </Col>
           </Row>
         </Flex>

@@ -1,5 +1,3 @@
-/** @format */
-
 import { ExperimentOutlined } from '@ant-design/icons';
 import { COLOR } from '@configs/colors';
 import { ROUTES } from '@configs/routes';

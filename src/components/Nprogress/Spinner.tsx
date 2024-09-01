@@ -1,5 +1,3 @@
-/** @format */
-
 import '@components/Nprogress/spinner.css';
 import { StyleSheet } from '@configs/stylesheet';
 

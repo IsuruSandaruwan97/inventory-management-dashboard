@@ -1,5 +1,3 @@
-/** @format */
-
 import { StyleSheet } from '@configs/stylesheet';
 import { Button, Flex, Form, Input, Modal } from 'antd';
 import { useForm } from 'antd/es/form/Form';

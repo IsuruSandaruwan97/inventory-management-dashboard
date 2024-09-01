@@ -1,5 +1,3 @@
-/** @format */
-
 import { KEY_CODES } from '@configs/keycodes';
 import { Button, Card, Checkbox, Flex, Form, Input, theme, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -8,14 +6,12 @@ import { CSSProperties, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router';
 
-type Props = {};
-
 type FieldType = {
   username?: string;
   password?: string;
   remember?: string;
 };
-const Login = ({}: Props) => {
+const Login = () => {
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const navigate = useNavigate();
   const styles = useStyle();

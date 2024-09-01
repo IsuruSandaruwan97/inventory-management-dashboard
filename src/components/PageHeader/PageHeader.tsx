@@ -1,5 +1,3 @@
-/** @format */
-
 import { HomeOutlined } from '@ant-design/icons';
 import '@components/PageHeader/styles.css';
 import { Breadcrumb, BreadcrumbProps, Divider, Space, Typography } from 'antd';

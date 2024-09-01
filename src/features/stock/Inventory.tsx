@@ -1,5 +1,3 @@
-/** @format */
-
 import { DropboxOutlined, PlusOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { PAGE_SIZES } from '@configs/index';

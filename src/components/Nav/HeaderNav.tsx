@@ -1,5 +1,3 @@
-/** @format */
-
 import { Layout } from 'antd';
 import { HTMLAttributes, useRef } from 'react';
 

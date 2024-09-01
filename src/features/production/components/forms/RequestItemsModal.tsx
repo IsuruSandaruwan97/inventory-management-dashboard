@@ -1,5 +1,3 @@
-/** @format */
-
 import { HistoryOutlined, PlusCircleFilled } from '@ant-design/icons';
 import Table from '@components/Table';
 import { StyleSheet } from '@configs/stylesheet';

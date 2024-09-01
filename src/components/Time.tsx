@@ -1,4 +1,3 @@
-/** @format */
 import { Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';

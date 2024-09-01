@@ -1,5 +1,3 @@
-/** @format */
-
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { TStockData } from '@features/stock/Inventory';
 

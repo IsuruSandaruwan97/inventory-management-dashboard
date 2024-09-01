@@ -1,5 +1,3 @@
-/** @format */
-
 import { Bar, NContainer, NSpinner } from '@components/Nprogress';
 import { useNProgress } from '@tanem/react-nprogress';
 

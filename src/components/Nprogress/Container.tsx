@@ -1,5 +1,3 @@
-/** @format */
-
 import { ReactNode } from 'react';
 
 type Props = {

@@ -1,5 +1,3 @@
-/** @format */
-
 import { AimOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { TListType } from '@configs/types';
 import { Card, Flex, Space, Table, TableProps, Typography } from 'antd';

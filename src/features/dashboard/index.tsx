@@ -1,5 +1,3 @@
-/** @format */
-
 import DatePicker from '@components/DatePicker';
 import { StyleSheet } from '@configs/stylesheet';
 import { KeyValuePair } from '@configs/types';

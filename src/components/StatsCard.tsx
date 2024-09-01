@@ -1,5 +1,3 @@
-/** @format */
-
 import { green, red } from '@ant-design/colors';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { Card, CardProps, Flex, Typography } from 'antd';

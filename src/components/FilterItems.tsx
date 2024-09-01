@@ -1,5 +1,3 @@
-/** @format */
-
 import { KeyValuePair } from '@configs/types';
 import { Badge, Dropdown, MenuProps, Radio, Space } from 'antd';
 import { CSSProperties, ReactNode, useMemo } from 'react';

@@ -1,5 +1,3 @@
-/** @format */
-
 import { HistoryOutlined, HourglassOutlined } from '@ant-design/icons/lib/icons';
 import { KeyValuePair } from '@configs/types';
 

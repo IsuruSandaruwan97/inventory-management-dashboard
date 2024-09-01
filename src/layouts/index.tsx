@@ -1,5 +1,3 @@
-/** @format */
-
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import FooterNav from '@components/Nav/FooterNav';
 import HeaderNav from '@components/Nav/HeaderNav';

@@ -1,5 +1,3 @@
-/** @format */
-
 import { persister, queryClient } from '@configs/react-query.config';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { ReactNode } from 'react';

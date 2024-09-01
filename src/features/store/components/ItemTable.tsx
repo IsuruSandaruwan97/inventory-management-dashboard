@@ -1,5 +1,3 @@
-/** @format */
-
 import Table from '@components/Table';
 import { Space, TableProps } from 'antd';
 

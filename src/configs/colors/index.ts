@@ -1,5 +1,3 @@
-/** @format */
-
 export const COLOR = {
   50: '#e0f1ff',
   100: '#b0d2ff',

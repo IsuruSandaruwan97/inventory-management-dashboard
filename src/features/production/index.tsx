@@ -1,5 +1,3 @@
-/** @format */
-
 import { StyleSheet } from '@configs/stylesheet';
 import PendingItems from '@features/production/components/PendingItems';
 import ProductionItems from '@features/production/components/ProductionItems';

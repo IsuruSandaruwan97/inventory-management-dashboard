@@ -1,21 +1,13 @@
 /** @format */
 
-import {
-  Button,
-  Card,
-  Checkbox,
-  Flex,
-  Form,
-  Input,
-  theme,
-  Typography,
-} from "antd";
-import { CSSProperties, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-import { useForm } from "antd/es/form/Form";
-import { useNavigate } from "react-router";
-import isEmpty from "lodash/isEmpty";
-import { KEY_CODES } from "@configs/keycodes";
+import { KEY_CODES } from '@configs/keycodes';
+import { Button, Card, Checkbox, Flex, Form, Input, theme, Typography } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import isEmpty from 'lodash/isEmpty';
+import { CSSProperties, useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useNavigate } from 'react-router';
+
 type Props = {};
 
 type FieldType = {
@@ -29,13 +21,13 @@ const Login = ({}: Props) => {
   const styles = useStyle();
   const { Title, Text } = Typography;
   const {
-    token: { "blue-6": primary },
+    token: { 'blue-6': primary },
   } = theme.useToken();
   const [form] = useForm();
 
   useEffect(() => {
     if (localStorage.getItem(KEY_CODES.AUTH_TOKEN)) {
-      navigate("/dashboard");
+      navigate('/dashboard');
       return;
     }
     const isRemember = localStorage.getItem(KEY_CODES.REMEMBER);
@@ -45,43 +37,35 @@ const Login = ({}: Props) => {
   }, []);
 
   const directToDashboard = () => {
-    localStorage.setItem(KEY_CODES.AUTH_TOKEN, "abcd");
-    if (form.getFieldValue("remember")) {
-      localStorage.setItem(
-        KEY_CODES.REMEMBER,
-        JSON.stringify(form.getFieldsValue())
-      );
+    localStorage.setItem(KEY_CODES.AUTH_TOKEN, 'abcd');
+    if (form.getFieldValue('remember')) {
+      localStorage.setItem(KEY_CODES.REMEMBER, JSON.stringify(form.getFieldsValue()));
     } else {
       localStorage.removeItem(KEY_CODES.REMEMBER);
     }
-    navigate("/dashboard");
+    navigate('/dashboard');
   };
 
   return (
     <Flex style={styles.container}>
       <Card style={styles.card}>
-        <Flex
-          style={styles.loginContainer}
-          justify="space-between"
-          gap={"16px"}
-        >
+        <Flex style={styles.loginContainer} justify="space-between" gap={'16px'}>
           {!isMobile && (
             <Flex
               vertical
               style={{
-                width: "50%",
+                width: '50%',
                 backgroundColor: primary,
-                borderRadius: "8px",
-                paddingLeft: "16px",
+                borderRadius: '8px',
+                paddingLeft: '16px',
               }}
               justify="center"
             >
-              <Title level={2} style={{ color: "white" }}>
+              <Title level={2} style={{ color: 'white' }}>
                 Start your journey with us.
               </Title>
-              <Text style={{ color: "white" }}>
-                It brings together your tasks, projects, timelines, files, and
-                more
+              <Text style={{ color: 'white' }}>
+                It brings together your tasks, projects, timelines, files, and more
               </Text>
             </Flex>
           )}
@@ -89,11 +73,11 @@ const Login = ({}: Props) => {
           <Flex
             vertical
             style={{
-              width: !isMobile ? "50%" : "100%",
-              justifyContent: "center",
+              width: !isMobile ? '50%' : '100%',
+              justifyContent: 'center',
             }}
           >
-            <Flex vertical style={{ textAlign: "center" }}>
+            <Flex vertical style={{ textAlign: 'center' }}>
               <Title level={2} style={{ margin: 0, color: primary }}>
                 Welcome Back!
               </Title>
@@ -104,9 +88,7 @@ const Login = ({}: Props) => {
               <Form.Item<FieldType>
                 label="Username"
                 name="username"
-                rules={[
-                  { required: true, message: "Please input your username!" },
-                ]}
+                rules={[{ required: true, message: 'Please input your username!' }]}
               >
                 <Input />
               </Form.Item>
@@ -114,9 +96,7 @@ const Login = ({}: Props) => {
               <Form.Item<FieldType>
                 label="Password"
                 name="password"
-                rules={[
-                  { required: true, message: "Please input your password!" },
-                ]}
+                rules={[{ required: true, message: 'Please input your password!' }]}
               >
                 <Input.Password />
               </Form.Item>
@@ -129,9 +109,7 @@ const Login = ({}: Props) => {
                 <Button
                   type="primary"
                   style={styles.button}
-                  onClick={() =>
-                    form.validateFields().then(() => directToDashboard())
-                  }
+                  onClick={() => form.validateFields().then(() => directToDashboard())}
                 >
                   Login
                 </Button>
@@ -148,32 +126,32 @@ const Login = ({}: Props) => {
 const useStyle = () => {
   return {
     container: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     } as CSSProperties,
     card: {
-      width: "1100px",
-      height: "650px",
-      alignContent: "center",
+      width: '1100px',
+      height: '650px',
+      alignContent: 'center',
     } as CSSProperties,
     loginContainer: {
-      width: "100%",
-      height: "68vh",
+      width: '100%',
+      height: '68vh',
     },
     loginLeft: {
       flex: 1,
-      background: "red",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+      background: 'red',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     } as CSSProperties,
     leftContent: {
-      textAlign: "center",
-      padding: "20px",
-      color: "#1677ff",
+      textAlign: 'center',
+      padding: '20px',
+      color: '#1677ff',
     } as CSSProperties,
-    button: { width: "100%" } as CSSProperties,
+    button: { width: '100%' } as CSSProperties,
   };
 };
 

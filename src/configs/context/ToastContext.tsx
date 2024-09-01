@@ -1,8 +1,8 @@
 /** @format */
 
-import React, { createContext } from "react";
-import { message } from "antd";
-import { MessageInstance } from "antd/es/message/interface";
+import { message } from 'antd';
+import { MessageInstance } from 'antd/es/message/interface';
+import React, { createContext } from 'react';
 
 export const ToastContext = createContext<{
   messageApi: MessageInstance;

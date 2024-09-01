@@ -1,13 +1,13 @@
 /** @format */
 
-import { CSSProperties, HTMLAttributes } from "react";
-import { Breadcrumb, BreadcrumbProps, Divider, Space, Typography } from "antd";
-import "@components/PageHeader/styles.css";
-import { HomeOutlined } from "@ant-design/icons";
+import { HomeOutlined } from '@ant-design/icons';
+import '@components/PageHeader/styles.css';
+import { Breadcrumb, BreadcrumbProps, Divider, Space, Typography } from 'antd';
+import { CSSProperties, HTMLAttributes } from 'react';
 
 type Props = {
   title: string;
-  breadcrumbs: BreadcrumbProps["items"];
+  breadcrumbs: BreadcrumbProps['items'];
 } & HTMLAttributes<HTMLDivElement>;
 
 const deafultItem = [
@@ -18,7 +18,7 @@ const deafultItem = [
         <span>home</span>
       </>
     ),
-    path: "/",
+    path: '/',
   },
 ];
 
@@ -30,13 +30,10 @@ export const PageHeader = ({ breadcrumbs, title, ...others }: Props) => {
         <Typography.Title level={4} style={styles.title}>
           {title}
         </Typography.Title>
-        <Breadcrumb
-          items={[...deafultItem, ...(breadcrumbs || [])]}
-          className="page-header-breadcrumbs"
-        />
+        <Breadcrumb items={[...deafultItem, ...(breadcrumbs || [])]} className="page-header-breadcrumbs" />
       </Space>
       <Divider orientation="right" plain>
-        <span style={{ textTransform: "capitalize" }}>{title}</span>
+        <span style={{ textTransform: 'capitalize' }}>{title}</span>
       </Divider>
     </div>
   );
@@ -47,7 +44,7 @@ const useStyles = () => {
     title: {
       padding: 0,
       margin: 0,
-      textTransform: "capitalize",
+      textTransform: 'capitalize',
     } as CSSProperties,
   };
 };

@@ -1,10 +1,10 @@
 /** @format */
 
-import { AimOutlined, ClockCircleOutlined } from "@ant-design/icons";
-import { TListType } from "@configs/types";
-import { TableProps, Card, Space, Table, Flex, Typography } from "antd";
-import dayjs from "dayjs";
-import ActionButtons from "./ActionButtons";
+import { AimOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { TListType } from '@configs/types';
+import { Card, Flex, Space, Table, TableProps, Typography } from 'antd';
+import dayjs from 'dayjs';
+import ActionButtons from './ActionButtons';
 
 export type TItemContent = {
   isMobile: boolean;
@@ -17,41 +17,34 @@ export type TItemContent = {
 
 const { Text } = Typography;
 
-const ItemContent = ({
-  isMobile,
-  items,
-  styles,
-  title,
-  date,
-  listType,
-}: TItemContent) => {
-  const columns: TableProps<any>["columns"] = [
+const ItemContent = ({ isMobile, items, styles, title, date, listType }: TItemContent) => {
+  const columns: TableProps<any>['columns'] = [
     {
-      title: "Item Name",
-      dataIndex: "item",
-      key: "item",
+      title: 'Item Name',
+      dataIndex: 'item',
+      key: 'item',
     },
     {
-      title: "Request Id",
-      dataIndex: "id",
-      key: "id",
-      responsive: ["md"],
+      title: 'Request Id',
+      dataIndex: 'id',
+      key: 'id',
+      responsive: ['md'],
     },
     {
-      title: "Request Date",
-      dataIndex: "date",
-      key: "date",
-      responsive: ["md"],
-      render: (item: Date | string) => <>{dayjs(item).format("LLLL")}</>,
+      title: 'Request Date',
+      dataIndex: 'date',
+      key: 'date',
+      responsive: ['md'],
+      render: (item: Date | string) => <>{dayjs(item).format('LLLL')}</>,
     },
     {
-      title: "Item Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
+      title: 'Item Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
     },
     {
-      title: "Actions",
-      key: "actions",
+      title: 'Actions',
+      key: 'actions',
       render: (_item: any) => {
         return <ActionButtons iconsOnly />;
       },
@@ -66,20 +59,11 @@ const ItemContent = ({
         </Text>
         <Text style={{ ...styles.description, marginLeft: 2 }}>
           <ClockCircleOutlined style={{ fontSize: 13 }} />
-          &nbsp;{dayjs(date).format("LLLL")}
+          &nbsp;{dayjs(date).format('LLLL')}
         </Text>
       </Space>
-      <Table
-        pagination={false}
-        rowKey={"id"}
-        columns={columns}
-        dataSource={items}
-      />
-      {listType === "pending" && (
-        <Flex style={styles.mobileActionButtons}>
-          {isMobile && <ActionButtons />}
-        </Flex>
-      )}
+      <Table pagination={false} rowKey={'id'} columns={columns} dataSource={items} />
+      {listType === 'pending' && <Flex style={styles.mobileActionButtons}>{isMobile && <ActionButtons />}</Flex>}
     </Card>
   );
 };

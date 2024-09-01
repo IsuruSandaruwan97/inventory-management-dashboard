@@ -1,21 +1,21 @@
 /** @format */
 
-import { ExperimentOutlined } from "@ant-design/icons";
-import { COLOR } from "@configs/colors";
-import { ROUTES } from "@configs/routes";
-import { ConfigProvider, Menu, MenuProps, SiderProps } from "antd";
-import Sider from "antd/es/layout/Sider";
-import { CSSProperties, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { ExperimentOutlined } from '@ant-design/icons';
+import { COLOR } from '@configs/colors';
+import { ROUTES } from '@configs/routes';
+import { ConfigProvider, Menu, MenuProps, SiderProps } from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type SideNavProps = SiderProps & { collapsed: boolean };
-type MenuItem = Required<MenuProps>["items"][number];
+type MenuItem = Required<MenuProps>['items'][number];
 const getItem = (
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: "group"
+  type?: 'group'
 ): MenuItem => {
   return {
     key,
@@ -26,9 +26,9 @@ const getItem = (
   } as MenuItem;
 };
 
-const rootSubmenuKeys = ["/settings", "corporate", "user-profile"];
+const rootSubmenuKeys = ['/settings', '/stock', '/user-profile'];
 
-const getNavbarItems = (): MenuProps["items"] => {
+const getNavbarItems = (): MenuProps['items'] => {
   return ROUTES.map((route) => {
     return getItem(route.name, route.path, route.icon, route.children);
   });
@@ -40,15 +40,15 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
   const nodeRef = useRef(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [openKeys, setOpenKeys] = useState<string[]>([""]);
-  const [current, setCurrent] = useState<string>("");
+  const [openKeys, setOpenKeys] = useState<string[]>();
+  const [current, setCurrent] = useState<string>('');
 
-  const onClick: MenuProps["onClick"] = ({ key }) => {
+  const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key) navigate(key);
   };
 
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys?.indexOf(key) === -1);
     if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
     } else {
@@ -57,19 +57,13 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
   };
 
   useEffect(() => {
-    const paths = pathname.split("/");
+    const paths = pathname.split('/');
     setOpenKeys(paths);
     setCurrent(`/${paths[paths.length - 1]}`);
   }, [pathname]);
 
   return (
-    <Sider
-      ref={nodeRef}
-      breakpoint="lg"
-      collapsedWidth="50"
-      collapsed={collapsed}
-      {...others}
-    >
+    <Sider ref={nodeRef} breakpoint="lg" collapsedWidth="50" collapsed={collapsed} {...others}>
       <div style={styles.logo}>
         <ExperimentOutlined style={{ fontSize: 26 }} />
       </div>
@@ -77,23 +71,22 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
         theme={{
           components: {
             Menu: {
-              itemSelectedBg: COLOR["100"],
-              itemHoverBg: COLOR["50"],
-              itemSelectedColor: COLOR["600"],
+              itemSelectedBg: COLOR['100'],
+              itemHoverBg: COLOR['50'],
+              itemSelectedColor: COLOR['600'],
             },
           },
         }}
       >
         <Menu
-          key={"key"}
+          key={'key'}
           mode="inline"
           items={getNavbarItems()}
           onClick={onClick}
-          openKeys={openKeys}
+          openKeys={!collapsed ? rootSubmenuKeys : openKeys}
           onOpenChange={onOpenChange}
           selectedKeys={[current]}
           style={styles.menuContainer}
-          defaultOpenKeys={["settings", "/stock"]}
         />
       </ConfigProvider>
     </Sider>
@@ -105,16 +98,16 @@ export default SideNav;
 const useStyles = () => {
   return {
     menuContainer: {
-      border: "none",
-      minHeight: "100vh",
+      border: 'none',
+      minHeight: '100vh',
     } as CSSProperties,
     logo: {
-      height: "5em",
-      backgroundColor: "white",
-      textAlign: "center",
+      height: '5em',
+      backgroundColor: 'white',
+      textAlign: 'center',
       flex: 1,
-      alignContent: "center",
-      alignItems: "center",
+      alignContent: 'center',
+      alignItems: 'center',
     } as CSSProperties,
   };
 };

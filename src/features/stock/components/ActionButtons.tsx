@@ -1,11 +1,11 @@
 /** @format */
 
-import { DeleteOutlined, CheckOutlined } from "@ant-design/icons";
-import { Space, Popconfirm, Button } from "antd";
+import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Space } from 'antd';
 
 const ActionButtons = ({ iconsOnly }: { iconsOnly?: boolean }) => {
   return (
-    <Space {...(iconsOnly && { size: "large" })}>
+    <Space {...(iconsOnly && { size: 'large' })}>
       <Popconfirm
         title="Reject the request"
         description="Are you sure to reject this request?"
@@ -13,7 +13,7 @@ const ActionButtons = ({ iconsOnly }: { iconsOnly?: boolean }) => {
         cancelText="No"
       >
         {iconsOnly ? (
-          <DeleteOutlined style={{ color: "red" }} />
+          <DeleteOutlined style={{ color: 'red' }} />
         ) : (
           <Button danger>
             <DeleteOutlined />
@@ -29,7 +29,7 @@ const ActionButtons = ({ iconsOnly }: { iconsOnly?: boolean }) => {
         cancelText="No"
       >
         {iconsOnly ? (
-          <CheckOutlined style={{ color: "blue" }} />
+          <CheckOutlined style={{ color: 'blue' }} />
         ) : (
           <Button type="primary">
             <CheckOutlined />

@@ -1,18 +1,18 @@
 /** @format */
 
-import { StyleSheet } from "@configs/stylesheet";
-import { Button, Card, Row, Segmented, Space } from "antd";
-import ProdutionItems from "@features/production/components/ProductionItems";
-import { useState } from "react";
-import PendingItems from "@features/production/components/PendingItems";
-import RequestItemsModal from "@features/production/components/forms/RequestItemsModal";
-import DamageItemsModal from "@features/production/components/forms/DamageItemsModal";
-import CompleteItemsModal from "@features/production/components/forms/CompleteItemsModal";
+import { StyleSheet } from '@configs/stylesheet';
+import PendingItems from '@features/production/components/PendingItems';
+import ProductionItems from '@features/production/components/ProductionItems';
+import CompleteItemsModal from '@features/production/components/forms/CompleteItemsModal';
+import DamageItemsModal from '@features/production/components/forms/DamageItemsModal';
+import RequestItemsModal from '@features/production/components/forms/RequestItemsModal';
+import { Button, Card, Row, Segmented, Space } from 'antd';
+import { useState } from 'react';
 
-const options = ["Production", "Pending"];
+const options = ['Production', 'Pending'];
 
 const Production = () => {
-  const [option, setOption] = useState<string>("Production");
+  const [option, setOption] = useState<string>('Production');
   const [completeItemsModal, setCompleteItemsModal] = useState<boolean>(false);
   const [requestModal, setRequestModal] = useState<boolean>(false);
   const [showDamageModal, setShowDamageModal] = useState<boolean>(false);
@@ -22,45 +22,22 @@ const Production = () => {
         <Card>
           <Row style={styles.actionBar}>
             <Space>
-              <Button onClick={() => setCompleteItemsModal(true)}>
-                Complete Items
-              </Button>
-              <Button onClick={() => setRequestModal(true)}>
-                Request Items
-              </Button>
-              <Button onClick={() => setShowDamageModal(true)}>
-                Damage Items
-              </Button>
+              <Button onClick={() => setCompleteItemsModal(true)}>Complete Items</Button>
+              <Button onClick={() => setRequestModal(true)}>Request Items</Button>
+              <Button onClick={() => setShowDamageModal(true)}>Damaged Items</Button>
             </Space>
 
-            <Segmented
-              value={option}
-              onChange={(value) => setOption(value)}
-              options={options}
-            />
+            <Segmented value={option} onChange={(value) => setOption(value)} options={options} />
           </Row>
         </Card>
 
-        {option === "Production" ? <ProdutionItems /> : <PendingItems />}
+        {option === 'Production' ? <ProductionItems /> : <PendingItems />}
       </Space>
       {completeItemsModal && (
-        <CompleteItemsModal
-          open={completeItemsModal}
-          onCancel={() => setCompleteItemsModal(false)}
-        />
+        <CompleteItemsModal open={completeItemsModal} onCancel={() => setCompleteItemsModal(false)} />
       )}
-      {showDamageModal && (
-        <DamageItemsModal
-          open={showDamageModal}
-          onCancel={() => setShowDamageModal(false)}
-        />
-      )}
-      {requestModal && (
-        <RequestItemsModal
-          open={requestModal}
-          onCancel={() => setRequestModal(false)}
-        />
-      )}
+      {showDamageModal && <DamageItemsModal open={showDamageModal} onCancel={() => setShowDamageModal(false)} />}
+      {requestModal && <RequestItemsModal open={requestModal} onCancel={() => setRequestModal(false)} />}
     </>
   );
 };
@@ -69,9 +46,9 @@ export default Production;
 
 const styles = StyleSheet.create({
   space: {
-    width: "100%",
+    width: '100%',
   },
   actionBar: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
 });

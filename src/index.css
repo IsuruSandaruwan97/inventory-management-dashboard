@@ -1,46 +1,58 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
- 
 :root {
-  font-family: 'Poppins', sans-serif!important;
-}
-  
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif!important;
+    font-family: 'Poppins', sans-serif !important;
 }
 
-.ant-table-title{
-  padding: 0 !important;
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.ant-table-title {
+    padding: 0 !important;
 }
 
 /* Override the Ant design dropdown default button */
 .disable-dropdown-default-btn .ant-btn-compact-first-item {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 /* General row styling */
 .ant-table-tbody > tr.even-row > td {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 .ant-table-tbody > tr.odd-row > td {
-  background-color: #ffffff;
+    background-color: #ffffff;
 }
 
 /* Fixed column row styling */
 .ant-table-fixed-left .ant-table-tbody > tr.even-row > td,
 .ant-table-fixed-right .ant-table-tbody > tr.even-row > td {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 .ant-table-fixed-left .ant-table-tbody > tr.odd-row > td,
 .ant-table-fixed-right .ant-table-tbody > tr.odd-row > td {
-  background-color: #ffffff;
+    background-color: #ffffff;
+}
+
+.ant-space {
+    width: '100%' !important;
 }
 
 html {
-  font-family: 'Poppins', sans-serif!important;
+    font-family: 'Poppins', sans-serif !important;
 }
 
+.ant-input-number-wrapper,
+.ant-input-number-group-wrapper,
+.ant-input-number {
+    width: 100% !important;
+}
 
+.reorder-row {
+    color: #ff0000 !important;
+    font-weight: 600;
+}

@@ -6,6 +6,7 @@ import { DEFAULT_CURRENCY } from '@configs/index';
 import { formatCurrency } from '@utils/index';
 import { Button, Space, TableProps } from 'antd';
 
+// eslint-disable-next-line no-unused-vars
 const columns: (setEditItem: (item: any) => void) => TableProps<any>['columns'] = (setEditItem) => [
   {
     title: 'Item Name',
@@ -54,7 +55,8 @@ const columns: (setEditItem: (item: any) => void) => TableProps<any>['columns'] 
   },
 ];
 type InvoiceTableProps = {
-  setEditItem: () => void;
+  // eslint-disable-next-line no-unused-vars
+  setEditItem: (value: any) => void;
   dataSource: any[];
 };
 const InvoiceTable = (props: InvoiceTableProps) => {

@@ -23,10 +23,10 @@ const InvoiceModal = (props: TInvoiceModalProps) => {
       subTotal,
       total: subTotal,
     });
-  }, [dataSource]);
+  }, [dataSource, form]);
 
   const onValuesChange = (changeValues: any) => {
-    if (changeValues.hasOwnProperty('discount')) {
+    if (Object.prototype.hasOwnProperty.call(changeValues, 'quantity')) {
       const subTotal = form.getFieldValue('subTotal');
       const discount = form.getFieldValue('discount');
       form.setFieldsValue({ total: parseFloat(formatCurrency(subTotal - (subTotal * discount) / 100)) });

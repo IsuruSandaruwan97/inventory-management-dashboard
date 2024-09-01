@@ -55,10 +55,10 @@ const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
   const onCancel = () => {};
 
   const onValueChange = (changeValues: any) => {
-    if (changeValues.hasOwnProperty('quantity')) {
+    if (Object.prototype.hasOwnProperty.call(changeValues, 'quantity')) {
       form.setFieldsValue({ amount: changeValues.quantity * unitPrice });
     }
-    if (changeValues.hasOwnProperty('itemName')) {
+    if (Object.prototype.hasOwnProperty.call(changeValues, 'itemName')) {
       form.setFieldsValue({
         unitPrice: formatCurrency(PRODUCTION_DATA.find((item) => item.id === changeValues.itemName)?.unitPrice || 0),
       });

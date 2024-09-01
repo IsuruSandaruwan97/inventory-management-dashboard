@@ -45,7 +45,7 @@ const ItemContent = ({ isMobile, items, styles, title, date, listType }: TItemCo
     {
       title: 'Actions',
       key: 'actions',
-      render: (_item: any) => {
+      render: () => {
         return <ActionButtons iconsOnly />;
       },
     },

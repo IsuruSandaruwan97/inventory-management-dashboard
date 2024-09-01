@@ -46,7 +46,7 @@ const DashboardLayout = ({ children }: TLayout) => {
 
   const activePage = ROUTES.find((route) => route.path === pathname);
 
-  const breadcumbObj = useMemo(() => findRouteByPath(ROUTES, pathname), [activePage]);
+  const breadcrumbObj = useMemo(() => findRouteByPath(ROUTES, pathname), [pathname]);
 
   return (
     <>
@@ -95,12 +95,12 @@ const DashboardLayout = ({ children }: TLayout) => {
                         title={activePage?.name || ''}
                         breadcrumbs={[
                           {
-                            title: <span>{breadcumbObj?.main?.name}</span>,
-                            path: breadcumbObj?.main?.path,
+                            title: <span>{breadcrumbObj?.main?.name}</span>,
+                            path: breadcrumbObj?.main?.path,
                           },
                           {
-                            title: <span>{breadcumbObj?.sub?.name}</span>,
-                            path: breadcumbObj?.sub?.path,
+                            title: <span>{breadcrumbObj?.sub?.name}</span>,
+                            path: breadcrumbObj?.sub?.path,
                           },
                         ]}
                       />

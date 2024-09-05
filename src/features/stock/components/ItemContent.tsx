@@ -1,5 +1,3 @@
-/** @format */
-
 import { AimOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { TListType } from '@configs/types';
 import { Card, Flex, Space, Table, TableProps, Typography } from 'antd';
@@ -45,7 +43,7 @@ const ItemContent = ({ isMobile, items, styles, title, date, listType }: TItemCo
     {
       title: 'Actions',
       key: 'actions',
-      render: (_item: any) => {
+      render: () => {
         return <ActionButtons iconsOnly />;
       },
     },

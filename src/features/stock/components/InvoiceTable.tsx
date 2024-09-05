@@ -1,5 +1,3 @@
-/** @format */
-
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { DEFAULT_CURRENCY } from '@configs/index';
@@ -60,7 +58,9 @@ type InvoiceTableProps = {
   dataSource: any[];
 };
 const InvoiceTable = (props: InvoiceTableProps) => {
-  return <Table columns={columns(props?.setEditItem)} dataSource={props.dataSource} pagination={false} />;
+  return (
+    <Table scroll={{ y: 400 }} columns={columns(props?.setEditItem)} dataSource={props.dataSource} pagination={false} />
+  );
 };
 
 export default InvoiceTable;

@@ -1,5 +1,3 @@
-/** @format */
-
 export { Bar } from '@components/Nprogress/Bar';
 export { NContainer } from '@components/Nprogress/Container';
 export { NProgress } from '@components/Nprogress/Progress';

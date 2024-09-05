@@ -1,5 +1,3 @@
-/** @format */
-
 import { ReactNode } from 'react';
 
 export type KeyValuePair = {

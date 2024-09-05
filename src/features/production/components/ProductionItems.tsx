@@ -1,5 +1,3 @@
-/** @format */
-
 import { HistoryOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { PRODUCTION_DATA } from '@data/production';
@@ -11,7 +9,7 @@ const columns: TableProps<any>['columns'] = [
     title: 'Image',
     dataIndex: 'image',
     key: 'image',
-    render: (value) => <img src={value} height={40} width={40} />,
+    render: (value) => <img src={value} height={40} width={40} alt={'item_image'} />,
   },
   {
     title: 'Item Name',

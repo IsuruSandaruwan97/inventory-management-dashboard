@@ -1,5 +1,3 @@
-/** @format */
-
 import { TUsers } from '@features/users';
 
 export const userData: TUsers[] = [

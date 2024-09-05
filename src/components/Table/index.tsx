@@ -1,5 +1,3 @@
-/** @format */
-
 import { Table as AntdTable, TableProps as AntdTableProps, Typography } from 'antd';
 import { CSSProperties, ReactNode } from 'react';
 

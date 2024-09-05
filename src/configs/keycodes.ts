@@ -1,5 +1,3 @@
-/** @format */
-
 export const KEY_CODES = {
   REMEMBER: 'KEY_01',
   AUTH_TOKEN: 'KEY_02',

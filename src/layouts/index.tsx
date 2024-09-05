@@ -1,5 +1,3 @@
-/** @format */
-
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import FooterNav from '@components/Nav/FooterNav';
 import HeaderNav from '@components/Nav/HeaderNav';
@@ -14,6 +12,7 @@ import { Content } from 'antd/es/layout/layout';
 import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
 
 type TLayout = {
@@ -38,15 +37,27 @@ const DashboardLayout = ({ children }: TLayout) => {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 5) {
         setNavFill(true);
-      } else {
-        setNavFill(false);
+        return;
       }
+      setNavFill(false);
     });
   }, []);
 
   const activePage = ROUTES.find((route) => route.path === pathname);
 
-  const breadcumbObj = useMemo(() => findRouteByPath(ROUTES, pathname), [activePage]);
+  const breadcrumbObj = useMemo(() => {
+    const routes = findRouteByPath(ROUTES, pathname);
+    return [
+      {
+        title:
+          routes?.sub?.path && routes?.sub?.name ? (
+            <Link to={routes?.sub?.path}>{routes?.sub?.name}</Link>
+          ) : (
+            <Link to={routes?.main?.path}>{routes?.main?.name}</Link>
+          ),
+      },
+    ];
+  }, [pathname]);
 
   return (
     <>
@@ -91,19 +102,7 @@ const DashboardLayout = ({ children }: TLayout) => {
                 >
                   {() => (
                     <div ref={nodeRef} style={styles.childrenContainer}>
-                      <PageHeader
-                        title={activePage?.name || ''}
-                        breadcrumbs={[
-                          {
-                            title: <span>{breadcumbObj?.main?.name}</span>,
-                            path: breadcumbObj?.main?.path,
-                          },
-                          {
-                            title: <span>{breadcumbObj?.sub?.name}</span>,
-                            path: breadcumbObj?.sub?.path,
-                          },
-                        ]}
-                      />
+                      <PageHeader title={activePage?.name || ''} breadcrumbs={breadcrumbObj} />
                       {children}
                     </div>
                   )}

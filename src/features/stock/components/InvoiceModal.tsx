@@ -2,11 +2,13 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { DEFAULT_CURRENCY } from '@configs/index';
 import { invoice_line_items } from '@data/stock/invoice_line_items';
 import InvoiceTable from '@features/stock/components/InvoiceTable';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { formatCurrency } from '@utils/index';
 import { Button, Card, Col, Flex, Form, Input, Modal, ModalProps, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useEffect, useState } from 'react';
 import InvoiceLineItemForm from './forms/InvoiceLineItemForm';
+import InvoicePdf from './pdf/invoicePdf';
 
 type TInvoiceModalProps = {} & ModalProps;
 
@@ -19,17 +21,17 @@ const InvoiceModal = (props: TInvoiceModalProps) => {
     dataSource.forEach((item) => {
       subTotal += item.unitPrice * item.quantity;
     });
+    subTotal = parseFloat(formatCurrency(subTotal));
     form.setFieldsValue({
       subTotal,
       total: subTotal,
     });
-  }, [dataSource]);
+  }, [dataSource, form]);
 
   const onValuesChange = (changeValues: any) => {
-    if (changeValues.hasOwnProperty('discount')) {
+    if (Object.prototype.hasOwnProperty.call(changeValues, 'discount')) {
       const subTotal = form.getFieldValue('subTotal');
-      const discount = form.getFieldValue('discount');
-      form.setFieldsValue({ total: parseFloat(formatCurrency(subTotal - (subTotal * discount) / 100)) });
+      form.setFieldsValue({ total: parseFloat(formatCurrency(subTotal - (subTotal * changeValues.discount) / 100)) });
     }
   };
   return (
@@ -39,7 +41,7 @@ const InvoiceModal = (props: TInvoiceModalProps) => {
       open={props.open}
       onClose={props.onClose}
       onCancel={props.onClose}
-      style={{ minWidth: '100%' }}
+      style={{ minWidth: '80%' }}
       styles={{ content: { backgroundColor: '#f5f4f7' }, header: { backgroundColor: '#f5f4f7' } }}
       footer={false}
     >
@@ -59,7 +61,7 @@ const InvoiceModal = (props: TInvoiceModalProps) => {
                   <Input prefix={DEFAULT_CURRENCY} disabled type="number" style={{ textAlign: 'right' }} />
                 </Form.Item>
                 <Form.Item label="Discount (%)" name="discount">
-                  <Input type="number" max={100} min={100} />
+                  <Input type="number" max={100} min={0} />
                 </Form.Item>
                 <Form.Item label="Total" name="total">
                   <Input prefix={DEFAULT_CURRENCY} disabled type="number" />
@@ -69,7 +71,9 @@ const InvoiceModal = (props: TInvoiceModalProps) => {
 
             <Flex justify="flex-end">
               <Button type="primary" icon={<DownloadOutlined />}>
-                Save Invoice
+                <PDFDownloadLink document={<InvoicePdf invoice={dataSource} />} fileName={'PDF_REPORT.pdf'}>
+                  Save Invoice
+                </PDFDownloadLink>
               </Button>
             </Flex>
           </Card>

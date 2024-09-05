@@ -1,5 +1,3 @@
-/** @format */
-
 export const stock_requests = [
   {
     title: '10 water bottles have been requested by John Doe (stock manager)',

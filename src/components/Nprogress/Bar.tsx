@@ -1,5 +1,3 @@
-/** @format */
-
 import { CSSProperties } from 'react';
 
 type Props = {

@@ -1,22 +1,14 @@
-/** @format */
-
 import { ExperimentOutlined } from '@ant-design/icons';
 import { COLOR } from '@configs/colors';
 import { ROUTES } from '@configs/routes';
 import { ConfigProvider, Menu, MenuProps, SiderProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { CSSProperties, Key, ReactNode, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 type SideNavProps = SiderProps & { collapsed: boolean };
 type MenuItem = Required<MenuProps>['items'][number];
-const getItem = (
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: 'group'
-): MenuItem => {
+const getItem = (label: ReactNode, key: Key, icon?: ReactNode, children?: MenuItem[], type?: 'group'): MenuItem => {
   return {
     key,
     icon,
@@ -32,7 +24,6 @@ const getNavbarItems = (): MenuProps['items'] => {
   return ROUTES.map((route) => {
     return getItem(route.name, route.path, route.icon, route.children);
   });
-  return [];
 };
 
 const SideNav = ({ collapsed, ...others }: SideNavProps) => {
@@ -51,9 +42,9 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
     const latestOpenKey = keys.find((key) => openKeys?.indexOf(key) === -1);
     if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+      return;
     }
+    setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
   };
 
   useEffect(() => {

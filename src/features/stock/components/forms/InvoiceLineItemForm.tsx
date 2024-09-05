@@ -5,6 +5,7 @@ import { invoice_line_items } from '@data/stock/invoice_line_items';
 import { formatCurrency } from '@utils/index';
 import { Button, Card, Flex, Form, Input, Select, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import TextArea from 'antd/es/input/TextArea';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 
@@ -55,10 +56,10 @@ const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
   const onCancel = () => {};
 
   const onValueChange = (changeValues: any) => {
-    if (changeValues.hasOwnProperty('quantity')) {
+    if (Object.prototype.hasOwnProperty.call(changeValues, 'quantity')) {
       form.setFieldsValue({ amount: changeValues.quantity * unitPrice });
     }
-    if (changeValues.hasOwnProperty('itemName')) {
+    if (Object.prototype.hasOwnProperty.call(changeValues, 'itemName')) {
       form.setFieldsValue({
         unitPrice: formatCurrency(PRODUCTION_DATA.find((item) => item.id === changeValues.itemName)?.unitPrice || 0),
       });
@@ -84,6 +85,9 @@ const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
             }}
           />
         </Form.Item>
+        <Form.Item style={{}} label="Description" name="description">
+          <TextArea placeholder="Enter Description" maxLength={100} />
+        </Form.Item>
         <Flex gap={8}>
           <Form.Item label="Unit Price" name="unitPrice">
             <Input
@@ -103,7 +107,7 @@ const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
         </Form.Item>
         <Flex justify="end" gap={8}>
           <Form.Item>
-            <Button type="default" onClick={onCancel} loading={loading}>
+            <Button type="default" onClick={onCancel} loading={loading} htmlType="reset">
               Cancel
             </Button>
           </Form.Item>

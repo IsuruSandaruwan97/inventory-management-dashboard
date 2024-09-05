@@ -1,5 +1,3 @@
-/** @format */
-
 import { PlusOutlined } from '@ant-design/icons';
 import FilterItems from '@components/FilterItems';
 import { TABLE_STATUS } from '@configs/index';

@@ -1,10 +1,13 @@
 import { KEY_CODES } from '@configs/keycodes';
+import { TUserLoginRequest } from '@configs/types/api.types.ts';
+import { useMutation } from '@tanstack/react-query';
 import { Button, Card, Checkbox, Flex, Form, Input, theme, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router';
+import { userLogin } from './services/auth.service.ts';
 
 type FieldType = {
   username?: string;
@@ -21,6 +24,18 @@ const Login = () => {
   } = theme.useToken();
   const [form] = useForm();
 
+  const loginMutation = useMutation({
+    mutationFn: ({ username, password }: TUserLoginRequest) => userLogin({ username, password }),
+    onSuccess: (data) => {
+      if (data.token) directToDashboard(data.token);
+      form.resetFields();
+    },
+    onError: (error) => {
+      console.log('error', error);
+      form.resetFields();
+    },
+  });
+
   useEffect(() => {
     if (localStorage.getItem(KEY_CODES.AUTH_TOKEN)) {
       navigate('/dashboard');
@@ -32,14 +47,20 @@ const Login = () => {
     }
   }, []);
 
-  const directToDashboard = () => {
-    localStorage.setItem(KEY_CODES.AUTH_TOKEN, 'abcd');
+  const directToDashboard = (token: string) => {
+    localStorage.setItem(KEY_CODES.AUTH_TOKEN, token);
     navigate('/dashboard');
     if (form.getFieldValue('remember')) {
       localStorage.setItem(KEY_CODES.REMEMBER, JSON.stringify(form.getFieldsValue()));
       return;
     }
     localStorage.removeItem(KEY_CODES.REMEMBER);
+  };
+
+  const onLogin = async () => {
+    const payload = form.getFieldsValue();
+    delete payload.remember;
+    loginMutation.mutate(payload);
   };
 
   return (
@@ -80,7 +101,7 @@ const Login = () => {
               <Text>Sign in to continue</Text>
             </Flex>
 
-            <Form layout="vertical" form={form}>
+            <Form layout="vertical" form={form} onFinish={onLogin}>
               <Form.Item<FieldType>
                 label="Username"
                 name="username"
@@ -104,8 +125,14 @@ const Login = () => {
               <Form.Item>
                 <Button
                   type="primary"
+                  htmlType={'submit'}
                   style={styles.button}
-                  onClick={() => form.validateFields().then(() => directToDashboard())}
+                  onClick={() =>
+                    form
+                      .validateFields()
+                      .then(() => {})
+                      .catch(() => {})
+                  }
                 >
                   Login
                 </Button>

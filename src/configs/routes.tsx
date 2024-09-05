@@ -8,13 +8,14 @@ import {
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { lazy, ReactNode } from 'react';
-
+// eslint-disable-next-line react-refresh/only-export-components
 const Dashboard = lazy(() => import('@features/dashboard'));
 const Stock = lazy(() => import('@features/stock/Requests'));
 const Users = lazy(() => import('@features/users'));
 const Inventory = lazy(() => import('@features/stock/Inventory'));
 const Production = lazy(() => import('@features/production'));
 const Store = lazy(() => import('@features/store'));
+
 const Delivery = lazy(() => import('@features/delivery'));
 
 const Categories = lazy(() => import('@features/configurations/categories'));

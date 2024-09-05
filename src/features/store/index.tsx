@@ -1,5 +1,3 @@
-/** @format */
-
 import { StyleSheet } from '@configs/stylesheet';
 import InvoiceModal from '@features/stock/components/InvoiceModal';
 import ReturnItemsFormModal from '@features/store/components/forms/ReturnItemsForm';

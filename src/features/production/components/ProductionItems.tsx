@@ -1,5 +1,3 @@
-/** @format */
-
 import { HistoryOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { PRODUCTION_DATA } from '@data/production';

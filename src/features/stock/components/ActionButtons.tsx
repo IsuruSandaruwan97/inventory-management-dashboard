@@ -1,5 +1,3 @@
-/** @format */
-
 import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Space } from 'antd';
 

@@ -1,5 +1,3 @@
-/** @format */
-
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { DEFAULT_CURRENCY } from '@configs/index';

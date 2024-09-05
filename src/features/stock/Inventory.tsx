@@ -1,5 +1,3 @@
-/** @format */
-
 import { DropboxOutlined, PlusOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { PAGE_SIZES } from '@configs/index';
@@ -167,7 +165,6 @@ const Inventory = () => {
             pagination={{
               pageSize: PAGE_SIZES.INVENTORY,
               total: 100,
-              onChange: () => {},
             }}
             style={{
               maxWidth: width - (isMobile ? 65 : 250),

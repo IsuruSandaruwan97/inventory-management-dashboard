@@ -8,6 +8,7 @@ import { CSSProperties, ReactNode, Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import './App.css';
 
+import { NSpinner } from '@components/Nprogress';
 import { KEY_CODES } from '@configs/keycodes';
 import { ROUTES } from '@configs/routes';
 import Login from '@features/auth/login';
@@ -29,7 +30,7 @@ const PageWrapper = ({ children }: TPageWrapper) => {
   }, [location?.pathname]);
   return (
     <DashboardLayout>
-      <Suspense>{children}</Suspense>
+      <Suspense fallback={<NSpinner />}>{children}</Suspense>
     </DashboardLayout>
   );
 };

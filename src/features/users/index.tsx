@@ -1,5 +1,3 @@
-/** @format */
-
 import Table from '@components/Table';
 import { PAGE_SIZES } from '@configs/index';
 import { userData } from '@data/users';

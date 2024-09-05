@@ -1,5 +1,3 @@
-/** @format */
-
 import { ToastContext } from '@configs/context/ToastContext';
 import { useContext } from 'react';
 

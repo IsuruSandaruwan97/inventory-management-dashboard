@@ -1,5 +1,3 @@
-/** @format */
-
 import DatePicker from '@components/DatePicker';
 import Table from '@components/Table';
 import { StyleSheet } from '@configs/stylesheet';

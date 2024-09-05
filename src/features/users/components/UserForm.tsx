@@ -1,5 +1,3 @@
-/** @format */
-
 import { Button, Divider, Flex, Form, Input, message, Modal, Select, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 

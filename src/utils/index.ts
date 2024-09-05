@@ -1,5 +1,3 @@
-/** @format */
-
 import { DEFAULT_CURRENCY } from '@configs/index';
 import dayjs from 'dayjs';
 

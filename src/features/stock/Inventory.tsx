@@ -2,14 +2,19 @@ import { DropboxOutlined, PlusOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { PAGE_SIZES } from '@configs/index';
 import { StyleSheet } from '@configs/stylesheet';
-import { stockData } from '@data/stock/stock_items';
 import ItemForm from '@features/stock/components/forms/ItemForm';
 import useScreenSize from '@hooks/useScreenSize';
+import { useQuery } from '@tanstack/react-query';
 import { formatDate } from '@utils/index';
 import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { DEFAULT_FILTERS } from '../../configs/constants';
+import { DEFAULT_ERROR_MESSAGE } from '../../configs/constants/api.constants.ts';
+import { TCommonFilters } from '../../configs/types/api.types.ts';
+import { useToastApi } from '../../hooks/useToastApi.tsx';
+import { fetchStockItems } from './services';
 
 const { Search } = Input;
 
@@ -21,7 +26,7 @@ export type TStockData = {
   subCategory: string;
   description: string;
   quantity: number;
-  reorderlevel: number;
+  reorderLevel: number;
   unitPrice: number;
   totalPrice: number;
   status: boolean;
@@ -78,8 +83,8 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
 
   {
     title: 'Reorder level',
-    dataIndex: 'reorderlevel',
-    key: 'reorderlevel',
+    dataIndex: 'reorderLevel',
+    key: 'reorderLevel',
     width: 100,
     responsive: ['md'],
   },
@@ -113,10 +118,10 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     dataIndex: 'status',
     key: 'status',
     responsive: ['md'],
-    render: (_, { status, itemId, reorderlevel, quantity }) => (
+    render: (_, { status, itemId, reorderLevel, quantity }) => (
       <Space direction="vertical" key={`user_status_${itemId}`}>
         <Tag color={status ? 'green' : 'red'}>{status ? 'Active' : 'InActive'}</Tag>
-        {reorderlevel && quantity && quantity < reorderlevel && <Tag color="orange">Low Stock</Tag>}
+        {reorderLevel && quantity && quantity < reorderLevel && <Tag color="orange">Low Stock</Tag>}
       </Space>
     ),
   },
@@ -132,16 +137,33 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
 const Inventory = () => {
   const { width } = useScreenSize();
   const isMobile = useMediaQuery({ maxWidth: 769 });
-  const [lodaing, setLoading] = useState<boolean>(false);
+  const toastApi = useToastApi();
   const [itemFormVisible, setItemFormVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<TStockData | null>(null);
-
+  const [filters, setFilter] = useState<TCommonFilters>(DEFAULT_FILTERS);
   const onSearch = (value: string | null) => {
     if (isEmpty(value) || !value) {
-      setLoading(false);
       return;
     }
   };
+
+  const {
+    data: stockItems,
+    isLoading: stockItemLoading,
+    error: stockItemError,
+  } = useQuery({
+    queryKey: ['stock-items'],
+    queryFn: () => fetchStockItems(filters),
+  });
+
+  useEffect(() => {
+    if (stockItemError) {
+      toastApi.open({
+        content: stockItemError?.message || DEFAULT_ERROR_MESSAGE,
+        type: 'error',
+      });
+    }
+  }, [stockItemError]);
 
   return (
     <>
@@ -150,7 +172,7 @@ const Inventory = () => {
           <Row style={styles.headerRow}>
             <Col>
               <Space>
-                <Button icon={<PlusOutlined />} onClick={() => setItemFormVisible(true)}>
+                <Button loading={stockItemLoading} icon={<PlusOutlined />} onClick={() => setItemFormVisible(true)}>
                   New Item
                 </Button>
               </Space>
@@ -160,7 +182,7 @@ const Inventory = () => {
             </Col>
           </Row>
           <Table
-            loading={lodaing}
+            loading={stockItemLoading}
             scroll={{ x: 1000 }}
             pagination={{
               pageSize: PAGE_SIZES.INVENTORY,
@@ -171,8 +193,8 @@ const Inventory = () => {
             }}
             rowKey={'itemId'}
             columns={inventoryTableColumns}
-            dataSource={stockData}
-            rowClassName={(item) => (item.quantity < item.reorderlevel ? 'reorder-row' : '')}
+            dataSource={stockItems}
+            rowClassName={(item) => (item.quantity < item.reorderLevel ? 'reorder-row' : '')}
             onRow={(record) => ({
               onClick: () => {
                 setItemFormVisible(true);

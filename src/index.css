@@ -39,7 +39,8 @@ body {
 }
 
 .ant-space {
-    width: '100%' !important;
+    width: 100% !important;
+}
 
 html {
     font-family: 'Poppins', sans-serif !important;

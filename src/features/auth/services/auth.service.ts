@@ -7,4 +7,3 @@ export const userLogin = async (payload: TUserLoginRequest) => {
     return response?.data?.data;
   });
 };
-console.log(Api);

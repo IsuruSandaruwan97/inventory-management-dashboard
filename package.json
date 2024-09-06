@@ -20,6 +20,7 @@
     "@tanstack/react-query-persist-client": "^5.51.24",
     "antd": "5.20.3",
     "axios": "1.7.7",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
+    "@types/crypto-js": "^4.2.2",
     "@types/lodash": "^4.17.6",
     "@types/node": "22.5.2",
     "@types/react": "^18.2.66",

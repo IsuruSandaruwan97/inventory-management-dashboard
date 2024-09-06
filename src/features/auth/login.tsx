@@ -1,8 +1,11 @@
+import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { KEY_CODES } from '@configs/keycodes';
 import { TUserLoginRequest } from '@configs/types/api.types.ts';
+import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Card, Checkbox, Flex, Form, Input, theme, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import CryptoJS from 'crypto-js';
 import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -23,6 +26,7 @@ const Login = () => {
     token: { 'blue-6': primary },
   } = theme.useToken();
   const [form] = useForm();
+  const toast = useToastApi();
 
   const loginMutation = useMutation({
     mutationFn: ({ username, password }: TUserLoginRequest) => userLogin({ username, password }),
@@ -31,7 +35,11 @@ const Login = () => {
       form.resetFields();
     },
     onError: (error) => {
-      console.log('error', error);
+      toast.open({
+        type: 'error',
+        content: error.message || DEFAULT_ERROR_MESSAGE,
+        duration: 4,
+      });
       form.resetFields();
     },
   });
@@ -41,17 +49,26 @@ const Login = () => {
       navigate('/dashboard');
       return;
     }
-    const isRemember = localStorage.getItem(KEY_CODES.REMEMBER);
-    if (isRemember && !isEmpty(isRemember)) {
-      form.setFieldsValue(JSON.parse(isRemember));
-    }
+    try {
+      let isRemember = localStorage.getItem(KEY_CODES.REMEMBER);
+      if (isRemember && !isEmpty(isRemember)) {
+        const rememberBytes = CryptoJS.AES.decrypt(isRemember, import.meta.env.VITE_SECRET).toString(CryptoJS.enc.Utf8);
+        const data = JSON.parse(rememberBytes);
+        form.setFieldsValue(data);
+      }
+    } catch (e) {}
   }, []);
 
   const directToDashboard = (token: string) => {
     localStorage.setItem(KEY_CODES.AUTH_TOKEN, token);
     navigate('/dashboard');
     if (form.getFieldValue('remember')) {
-      localStorage.setItem(KEY_CODES.REMEMBER, JSON.stringify(form.getFieldsValue()));
+      let rememberValues = form.getFieldsValue();
+
+      localStorage.setItem(
+        KEY_CODES.REMEMBER,
+        CryptoJS.AES.encrypt(JSON.stringify(rememberValues), import.meta.env.VITE_SECRET).toString()
+      );
       return;
     }
     localStorage.removeItem(KEY_CODES.REMEMBER);
@@ -124,6 +141,7 @@ const Login = () => {
 
               <Form.Item>
                 <Button
+                  loading={loginMutation.isPending}
                   type="primary"
                   htmlType={'submit'}
                   style={styles.button}

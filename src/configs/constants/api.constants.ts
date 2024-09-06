@@ -5,3 +5,4 @@ export const API_PATH = {
 };
 
 export const DEFAULT_ERROR_MESSAGE = 'Something went wrong!';
+export const DEFAULT_SUCCESS_MESSAGE = 'Success!';

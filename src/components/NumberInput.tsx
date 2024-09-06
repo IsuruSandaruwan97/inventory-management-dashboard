@@ -1,6 +1,6 @@
 import { InputNumber, InputNumberProps } from 'antd';
 
-const NumberInput = ({ ...props }: InputNumberProps) => {
+const NumberInput = ({ currency, ...props }: InputNumberProps & { currency?: boolean }) => {
   return (
     <InputNumber
       onKeyDown={(event) => {
@@ -9,6 +9,8 @@ const NumberInput = ({ ...props }: InputNumberProps) => {
         }
       }}
       {...props}
+      value={typeof props.value === 'number' ? parseFloat(String(props.value)) : props.value}
+      precision={currency ? 2 : 0}
     />
   );
 };

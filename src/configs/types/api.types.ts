@@ -10,3 +10,16 @@ export type TCommonFilters = {
   to?: string | null;
   search?: string | null;
 };
+
+export type TStockItems = {
+  id: number;
+  name?: string;
+  image?: string;
+  category?: number;
+  sub_category?: number;
+  description?: string;
+  reorder_level?: number;
+  unit_price?: number;
+  last_order?: Date;
+  quantity?: number;
+};

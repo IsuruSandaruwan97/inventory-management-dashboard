@@ -39,7 +39,7 @@ body {
 }
 
 .ant-space {
-    width: '100%' !important;
+    width: 100% !important;
 }
 
 html {
@@ -50,6 +50,10 @@ html {
 .ant-input-number-group-wrapper,
 .ant-input-number {
     width: 100% !important;
+}
+
+.ant-input-number-handler-wrap{
+    display: none!important;
 }
 
 .reorder-row {

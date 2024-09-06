@@ -1,24 +1,25 @@
-import { DropboxOutlined, PlusOutlined } from '@ant-design/icons';
+import { DropboxOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
+import { DEFAULT_FILTERS } from '@configs/constants';
+import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { PAGE_SIZES } from '@configs/index';
 import { StyleSheet } from '@configs/stylesheet';
+import { TCommonFilters } from '@configs/types/api.types.ts';
 import ItemForm from '@features/stock/components/forms/ItemForm';
 import useScreenSize from '@hooks/useScreenSize';
+import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { formatDate } from '@utils/index';
-import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
+import { Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { DEFAULT_FILTERS } from '../../configs/constants';
-import { DEFAULT_ERROR_MESSAGE } from '../../configs/constants/api.constants.ts';
-import { TCommonFilters } from '../../configs/types/api.types.ts';
-import { useToastApi } from '../../hooks/useToastApi.tsx';
 import { fetchStockItems } from './services';
 
 const { Search } = Input;
 
 export type TStockData = {
+  id?: number;
   itemId: string;
   name: string;
   image: string;
@@ -140,19 +141,15 @@ const Inventory = () => {
   const toastApi = useToastApi();
   const [itemFormVisible, setItemFormVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<TStockData | null>(null);
-  const [filters, setFilter] = useState<TCommonFilters>(DEFAULT_FILTERS);
-  const onSearch = (value: string | null) => {
-    if (isEmpty(value) || !value) {
-      return;
-    }
-  };
+  const [filters, setFilter] = useState<TCommonFilters>({ ...DEFAULT_FILTERS, limit: PAGE_SIZES.INVENTORY });
 
   const {
     data: stockItems,
     isLoading: stockItemLoading,
     error: stockItemError,
+    refetch: refetchStockItems,
   } = useQuery({
-    queryKey: ['stock-items'],
+    queryKey: ['stock-items', filters.search, filters.page],
     queryFn: () => fetchStockItems(filters),
   });
 
@@ -165,35 +162,49 @@ const Inventory = () => {
     }
   }, [stockItemError]);
 
+  const onSearch = async (search: string | null) => {
+    if (isEmpty(search) || !search) {
+      return;
+    }
+    setFilter((prevState) => ({ ...prevState, search }));
+    await refetchStockItems();
+  };
+
   return (
     <>
       <Card>
         <Space style={styles.space} size={'middle'} direction="vertical">
           <Row style={styles.headerRow}>
-            <Col>
-              <Space>
-                <Button loading={stockItemLoading} icon={<PlusOutlined />} onClick={() => setItemFormVisible(true)}>
-                  New Item
-                </Button>
-              </Space>
-            </Col>
+            <Col />
             <Col style={styles.search}>
-              <Search placeholder="Search..." onSearch={onSearch} enterKeyHint="search" allowClear />
+              <Search
+                placeholder="Search..."
+                onSearch={onSearch}
+                onChange={(e) => {
+                  if (isEmpty(e.target.value)) setFilter((prev) => ({ ...prev, search: null }));
+                }}
+                enterKeyHint="search"
+                allowClear
+              />
             </Col>
           </Row>
           <Table
             loading={stockItemLoading}
             scroll={{ x: 1000 }}
             pagination={{
+              current: filters.page,
               pageSize: PAGE_SIZES.INVENTORY,
-              total: 100,
+              total: stockItems?.total,
+              onChange: (page: number) => {
+                setFilter((prev) => ({ ...prev, page }));
+              },
             }}
             style={{
               maxWidth: width - (isMobile ? 65 : 250),
             }}
             rowKey={'itemId'}
             columns={inventoryTableColumns}
-            dataSource={stockItems}
+            dataSource={stockItems?.records}
             rowClassName={(item) => (item.quantity < item.reorderLevel ? 'reorder-row' : '')}
             onRow={(record) => ({
               onClick: () => {

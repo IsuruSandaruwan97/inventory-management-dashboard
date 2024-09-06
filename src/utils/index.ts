@@ -33,7 +33,8 @@ export const findRouteByPath = (routes: any[], path: string): any => {
   return undefined;
 };
 
-export const formatCurrency = (value: number, showSymbol: boolean = false): string => {
+export const formatCurrency = (value: number | string, showSymbol: boolean = false): string => {
+  if (typeof value === 'string') value = parseFloat(value);
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'LKR',

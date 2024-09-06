@@ -1,3 +1,6 @@
+<p align="center">
+Inventory Management Dashboard built with React, TypeScript, and Vite, offering a fast, intuitive UI for managing product stock, tracking stages, and handling returns. Integrated with a NestJS API, it provides role-based access and real-time data visualization, ensuring efficient inventory monitoring and control with Ant Design.
+<p/>
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

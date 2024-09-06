@@ -4,7 +4,7 @@ import { Button, Layout, Result } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import isEmpty from 'lodash/isEmpty';
 
-import { CSSProperties, ReactNode, Suspense, useEffect } from 'react';
+import React, { CSSProperties, ReactNode, Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import './App.css';
 
@@ -50,7 +50,7 @@ function App() {
             (route, index) =>
               route.path &&
               (route.component || (isEmpty(route.component) && !isEmpty(route.children))) && (
-                <>
+                <React.Fragment key={`item_${index}`}>
                   <Route
                     key={`route_${index}`}
                     path={route.path}
@@ -61,7 +61,7 @@ function App() {
                     route?.children.map((item, i) => (
                       <Route key={`sub_route_${i}`} path={item.key} element={<PageWrapper children={item.element} />} />
                     ))}
-                </>
+                </React.Fragment>
               )
           )}
           <Route

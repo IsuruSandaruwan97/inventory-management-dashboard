@@ -35,3 +35,4 @@ export const updateStockItems = async (payload: TStockItems): Promise<void> => {
     return response?.data;
   });
 };
+

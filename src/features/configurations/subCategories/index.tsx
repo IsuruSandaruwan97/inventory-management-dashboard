@@ -1,16 +1,18 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
-import { productSubCategoriesData } from '@data/configurations/product_categories';
-import { ProductSubCategoriesDataType } from '@features/configurations/configs/types';
+import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants';
+import { TProductSubCategories } from '@features/configurations/configs/types';
 import ProductSubCategoriesForm from '@features/configurations/subCategories/components/ProductSubCategoriesForm';
+import { useToastApi } from '@hooks/useToastApi';
+import { useQuery } from '@tanstack/react-query';
 import { Button, Row, TableProps, Tag } from 'antd';
-import { findIndex } from 'lodash';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
+import { fetchSubCategories } from './services';
 
 const columns: TableProps<any>['columns'] = [
   {
     title: 'ID',
-    dataIndex: 'itemId',
+    dataIndex: 'id',
     key: 'id',
   },
   {
@@ -20,8 +22,8 @@ const columns: TableProps<any>['columns'] = [
   },
   {
     title: 'Category',
-    dataIndex: 'catName',
-    key: 'name',
+    dataIndex: 'ategory',
+    key: 'category',
   },
   {
     title: 'Category Code',
@@ -44,10 +46,26 @@ const columns: TableProps<any>['columns'] = [
 
 const ProductSubCategory = () => {
   const styles = useStyles();
-  const [productSubCategories, setProductSubCategories] =
-    useState<ProductSubCategoriesDataType[]>(productSubCategoriesData);
+  const toast = useToastApi();
   const [showProdSubCategoryModal, setShowProdSubCategoryModal] = useState<boolean>(false);
-  const [selectedProdSubCategory, setSelectedProdSubCategory] = useState<ProductSubCategoriesDataType | null>(null);
+  const [selectedProdSubCategory, setSelectedProdSubCategory] = useState<TProductSubCategories | null>(null);
+
+  const {
+    data: subCategories,
+    isLoading: subCategoriesIsLoading,
+    error: subCategoriesError,
+  } = useQuery({
+    queryKey: ['subCategories'],
+    queryFn: () => fetchSubCategories(1),
+  });
+  useEffect(() => {
+    if (subCategoriesError) {
+      toast.open({
+        content: subCategoriesError?.message || DEFAULT_ERROR_MESSAGE,
+        type: 'error',
+      });
+    }
+  }, [subCategoriesError]);
 
   return (
     <>
@@ -63,9 +81,10 @@ const ProductSubCategory = () => {
             setSelectedProdSubCategory(record as any);
           },
         })}
+        loading={subCategoriesIsLoading}
         rowKey={'id'}
         columns={columns}
-        dataSource={productSubCategories}
+        dataSource={subCategories}
       />
       {showProdSubCategoryModal && (
         <ProductSubCategoriesForm
@@ -74,24 +93,6 @@ const ProductSubCategory = () => {
           onCancel={() => {
             setShowProdSubCategoryModal(false);
             setSelectedProdSubCategory(null);
-          }}
-          onInsertSubCategory={(productSubCategory) => {
-            setProductSubCategories([productSubCategory, ...productSubCategories]);
-          }}
-          onUpdateSubCategory={(productSubCategory) => {
-            const productSubCategoriesIndex = findIndex(
-              productSubCategories,
-              (item) => item.itemId === productSubCategory.itemId
-            );
-
-            if (productSubCategoriesIndex !== -1) {
-              const updatedProductSubCategories = [
-                ...productSubCategories.slice(0, productSubCategoriesIndex),
-                productSubCategory,
-                ...productSubCategories.slice(productSubCategoriesIndex + 1),
-              ];
-              setProductSubCategories(updatedProductSubCategories);
-            }
           }}
         />
       )}

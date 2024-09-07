@@ -1,5 +1,7 @@
 import { DEFAULT_CURRENCY } from '@configs/index';
 import dayjs from 'dayjs';
+import { jwtDecode } from 'jwt-decode';
+import { KEY_CODES } from '../configs/keycodes.ts';
 
 export const randomPassword = (passwordLength: number = 12): string => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -41,4 +43,16 @@ export const formatCurrency = (value: number | string, showSymbol: boolean = fal
   })
     .format(value)
     .replace('LKR', showSymbol ? DEFAULT_CURRENCY : '');
+};
+
+export const getJwtData = (): any => {
+  try {
+    const token = localStorage.getItem(KEY_CODES.AUTH_TOKEN);
+
+    if (!token) return null;
+    return jwtDecode(token);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e: any) {
+    return null;
+  }
 };

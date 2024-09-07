@@ -1,6 +1,6 @@
 export const API_PATH = {
   LOGIN: 'auth/login',
-
+  LOGOUT: 'auth/logout',
   STOCK_ITEMS: 'stock',
   CATEGORIES: 'categories',
   SUB_CATEGORIES: 'subcategories',

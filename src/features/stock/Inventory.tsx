@@ -150,7 +150,7 @@ const Inventory = () => {
     refetch: refetchStockItems,
   } = useQuery({
     queryKey: ['stock-items', filters.search, filters.page],
-    queryFn: () => fetchStockItems(filters),
+    queryFn: () => fetchStockItems(filters, 'stock'),
   });
 
   useEffect(() => {

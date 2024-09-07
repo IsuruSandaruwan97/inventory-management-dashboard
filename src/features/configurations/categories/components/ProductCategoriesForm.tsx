@@ -52,10 +52,10 @@ const ProductCategoriesForm = ({ visible, category, onCancel }: ProductCategorie
 
   const onFinish = () => {
     if (!isEmpty(category)) {
-      categoryMutation.mutate({ ...form.getFieldsValue(), type: ['stock'], id: category.id });
+      categoryMutation.mutate({ ...form.getFieldsValue(), id: category.id });
       return;
     }
-    categoryMutation.mutate({ ...form.getFieldsValue(), type: ['stock'] });
+    categoryMutation.mutate({ ...form.getFieldsValue() });
   };
   return (
     <Modal

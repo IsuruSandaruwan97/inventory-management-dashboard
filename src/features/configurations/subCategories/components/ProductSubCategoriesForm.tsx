@@ -1,4 +1,5 @@
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants';
+import { STORE_STEPS_DROPDOWN } from '@configs/index';
 import { queryClient } from '@configs/react-query.config';
 import { fetchCategories } from '@features/configurations/categories/services';
 import { TProductSubCategories } from '@features/configurations/configs/types';
@@ -39,7 +40,9 @@ const ProductSubCategoriesForm = ({ visible, subCategory, onCancel }: ProductSub
   useEffect(() => {
     if (!isEmpty(subCategory)) {
       form.setFieldsValue(subCategory);
+      return;
     }
+    form.setFieldValue('status', true);
   }, [subCategory, visible]);
 
   const productCategories = categories?.map((category) => ({ label: category.name, value: category.id }));
@@ -73,10 +76,9 @@ const ProductSubCategoriesForm = ({ visible, subCategory, onCancel }: ProductSub
   const onFinish = () => {
     if (isUpdate) {
       subCategoriesMutation.mutate({ ...form.getFieldsValue(), id: subCategory.id });
-
       return;
     }
-    subCategoriesMutation.mutate(form.getFieldsValue());
+    subCategoriesMutation.mutate({ ...form.getFieldsValue() });
   };
   return (
     <Modal
@@ -92,13 +94,22 @@ const ProductSubCategoriesForm = ({ visible, subCategory, onCancel }: ProductSub
           <Input />
         </Form.Item>
         <Form.Item label={'Category'} name={'category'} rules={[{ required: true, message: 'Category is required' }]}>
-          <Select loading={categoriesIsLoading} options={productCategories} />
+          <Select loading={categoriesIsLoading || subCategoriesMutation.isPending} options={productCategories} />
         </Form.Item>
         <Form.Item label={'Code'} name={'code'} rules={[{ required: true, message: 'Code is required' }]}>
           <Input />
         </Form.Item>
+        <Form.Item label={'Type'} name={'type'} rules={[{ required: true, message: 'Category is required' }]}>
+          <Select
+            mode="multiple"
+            allowClear
+            disabled={isUpdate}
+            loading={categoriesIsLoading || subCategoriesMutation.isPending}
+            options={STORE_STEPS_DROPDOWN}
+          />
+        </Form.Item>
         <Form.Item label={'Status'} name={'status'}>
-          <Switch defaultValue={true} checkedChildren="Active" unCheckedChildren="Inactive" />
+          <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
         <Flex justify="end" gap={8}>
           <Form.Item style={{ marginBottom: '4px' }}>

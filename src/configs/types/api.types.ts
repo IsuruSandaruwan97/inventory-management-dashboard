@@ -23,3 +23,5 @@ export type TStockItems = {
   last_order?: Date;
   quantity?: number;
 };
+
+export type TStockSteps = 'store' | 'production' | 'delivery' | 'damage' | 'return' | 'stock';

@@ -2,16 +2,18 @@ import { Api } from '@configs/axios.config';
 import { API_PATH } from '@configs/constants/api.constants';
 import { TProductSubCategories } from '@features/configurations/configs/types';
 
-export const fetchSubCategories = async (id: number): Promise<TProductSubCategories[]> => {
-  return await Api.get(`${API_PATH.SUB_CATEGORIES}/${id}`).then((response) => {
+export const fetchSubCategories = async (id?: number): Promise<TProductSubCategories[]> => {
+  return await Api.get(`${API_PATH.SUB_CATEGORIES}${id ? `/${id}` : ''}`).then((response) => {
     return (
       response?.data?.data?.map((item: any) => {
         return {
           id: item.id,
-          Category: item.Category,
+          category: item.mainCategory?.id,
+          categoryName: item.mainCategory?.name,
           code: item.code,
           name: item.name,
           status: item.status,
+          type: item?.type || [],
         };
       }) || []
     );

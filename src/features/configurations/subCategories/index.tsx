@@ -5,44 +5,60 @@ import { TProductSubCategories } from '@features/configurations/configs/types';
 import ProductSubCategoriesForm from '@features/configurations/subCategories/components/ProductSubCategoriesForm';
 import { useToastApi } from '@hooks/useToastApi';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Row, TableProps, Tag } from 'antd';
-import { CSSProperties, useEffect, useState } from 'react';
+import { Button, Row, Space, TableProps, Tag } from 'antd';
+import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { fetchCategories } from '../categories/services';
 import { fetchSubCategories } from './services';
 
-const columns: TableProps<any>['columns'] = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Category',
-    dataIndex: 'ategory',
-    key: 'category',
-  },
-  {
-    title: 'Category Code',
-    dataIndex: 'code',
-    key: 'code',
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    dataIndex: 'status',
-    render: (_, { status, itemId }) => (
-      <div key={itemId}>
-        <Tag color={status ? 'green' : 'red'} key={`product_subcategory_${itemId}`}>
-          {status ? 'Active' : 'InActive'}
-        </Tag>
-      </div>
-    ),
-  },
-];
+const getColumns = (categories: any): TableProps<any>['columns'] => {
+  return [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Category',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
+      filters: categories,
+      onFilter: (value: any, record) => record?.category === value,
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+      render: (_, { type }) => {
+        return (
+          <Space>
+            {type?.map((item: string, i: number) => (
+              <Tag key={i} color={'default'} className={'first-letter'}>
+                {item}
+              </Tag>
+            ))}
+          </Space>
+        );
+      },
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, { status, itemId }) => (
+        <div key={itemId}>
+          <Tag color={status ? 'green' : 'red'} key={`product_subcategory_${itemId}`}>
+            {status ? 'Active' : 'InActive'}
+          </Tag>
+        </div>
+      ),
+    },
+  ];
+};
 
 const ProductSubCategory = () => {
   const styles = useStyles();
@@ -56,16 +72,35 @@ const ProductSubCategory = () => {
     error: subCategoriesError,
   } = useQuery({
     queryKey: ['subCategories'],
-    queryFn: () => fetchSubCategories(1),
+    queryFn: () => fetchSubCategories(),
   });
+
+  const {
+    data: categories,
+    isLoading: categoriesIsLoading,
+    error: categoriesError,
+  } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => fetchCategories(),
+  });
+
+  const columns = useMemo(() => {
+    return getColumns(
+      categories?.map((item) => ({
+        text: item.name,
+        value: item.id,
+      }))
+    );
+  }, [categories]);
+
   useEffect(() => {
     if (subCategoriesError) {
       toast.open({
-        content: subCategoriesError?.message || DEFAULT_ERROR_MESSAGE,
+        content: categoriesError?.message || subCategoriesError?.message || DEFAULT_ERROR_MESSAGE,
         type: 'error',
       });
     }
-  }, [subCategoriesError]);
+  }, [subCategoriesError, categoriesError]);
 
   return (
     <>
@@ -81,7 +116,7 @@ const ProductSubCategory = () => {
             setSelectedProdSubCategory(record as any);
           },
         })}
-        loading={subCategoriesIsLoading}
+        loading={subCategoriesIsLoading || categoriesIsLoading}
         rowKey={'id'}
         columns={columns}
         dataSource={subCategories}

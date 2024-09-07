@@ -60,3 +60,7 @@ html {
     color: #ff0000 !important;
     font-weight: 600;
 }
+
+.first-letter {
+    text-transform: capitalize;
+}

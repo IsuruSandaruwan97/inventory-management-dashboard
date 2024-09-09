@@ -1,7 +1,8 @@
 export const API_PATH = {
   LOGIN: 'auth/login',
   LOGOUT: 'auth/logout',
-  STOCK_ITEMS: 'stock',
+  USERS: 'users',
+  STOCK_ITEMS: 'items',
   CATEGORIES: 'categories',
   SUB_CATEGORIES: 'subcategories',
 };

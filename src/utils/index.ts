@@ -1,4 +1,5 @@
 import { DEFAULT_CURRENCY } from '@configs/index';
+import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
 import { KEY_CODES } from '../configs/keycodes.ts';
@@ -55,4 +56,24 @@ export const getJwtData = (): any => {
   } catch (e: any) {
     return null;
   }
+};
+
+export const validatePin = (code: string): boolean => {
+  try {
+    const pin = getJwtData().pin;
+    if (!pin) return true;
+    return String(pin) === code;
+  } catch (e) {
+    return true;
+  }
+};
+
+export const encryptData = (data: any): string => {
+  if (typeof data !== 'string') data = JSON.stringify(data);
+  return CryptoJS.AES.encrypt(data, import.meta.env.VITE_SECRET).toString();
+};
+
+export const decryptData = (data: string): any => {
+  const rememberBytes = CryptoJS.AES.decrypt(data, import.meta.env.VITE_SECRET).toString(CryptoJS.enc.Utf8);
+  return JSON.parse(rememberBytes);
 };

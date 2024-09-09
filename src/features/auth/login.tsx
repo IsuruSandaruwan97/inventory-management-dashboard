@@ -3,9 +3,9 @@ import { KEY_CODES } from '@configs/keycodes';
 import { TUserLoginRequest } from '@configs/types/api.types.ts';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation } from '@tanstack/react-query';
+import { decryptData, encryptData } from '@utils/index.ts';
 import { Button, Card, Checkbox, Flex, Form, Input, theme, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import CryptoJS from 'crypto-js';
 import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -52,8 +52,7 @@ const Login = () => {
     try {
       let isRemember = localStorage.getItem(KEY_CODES.REMEMBER);
       if (isRemember && !isEmpty(isRemember)) {
-        const rememberBytes = CryptoJS.AES.decrypt(isRemember, import.meta.env.VITE_SECRET).toString(CryptoJS.enc.Utf8);
-        const data = JSON.parse(rememberBytes);
+        const data = decryptData(isRemember);
         form.setFieldsValue(data);
       }
     } catch (e) {}
@@ -64,11 +63,7 @@ const Login = () => {
     navigate('/dashboard');
     if (form.getFieldValue('remember')) {
       let rememberValues = form.getFieldsValue();
-
-      localStorage.setItem(
-        KEY_CODES.REMEMBER,
-        CryptoJS.AES.encrypt(JSON.stringify(rememberValues), import.meta.env.VITE_SECRET).toString()
-      );
+      localStorage.setItem(KEY_CODES.REMEMBER, encryptData(rememberValues));
       return;
     }
     localStorage.removeItem(KEY_CODES.REMEMBER);

@@ -14,6 +14,7 @@ export type TCommonFilters = {
 export type TStockItems = {
   id: number;
   name?: string;
+  code?: string;
   image?: string;
   category?: number;
   sub_category?: number;
@@ -22,6 +23,7 @@ export type TStockItems = {
   unit_price?: number;
   last_order?: Date;
   quantity?: number;
+  status?: boolean;
 };
 
 export type TStockSteps = 'store' | 'production' | 'delivery' | 'damage' | 'return' | 'stock';

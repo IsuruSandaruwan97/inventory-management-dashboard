@@ -90,20 +90,12 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     responsive: ['md'],
   },
   {
-    title: 'Unit Price(Rs)',
-    dataIndex: 'unitPrice',
-    key: 'unitPrice',
-    width: 100,
-    responsive: ['md'],
-  },
-  {
     title: 'Total Price(Rs)',
     dataIndex: 'totalPrice',
     width: 100,
     key: 'totalPrice',
     responsive: ['md'],
   },
-
   {
     title: 'Last Order',
     dataIndex: 'lastOrder',
@@ -122,7 +114,8 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     render: (_, { status, itemId, reorderLevel, quantity }) => (
       <Space direction="vertical" key={`user_status_${itemId}`}>
         <Tag color={status ? 'green' : 'red'}>{status ? 'Active' : 'InActive'}</Tag>
-        {reorderLevel && quantity && quantity < reorderLevel && <Tag color="orange">Low Stock</Tag>}
+        {quantity === 0 && <Tag color="orange">Empty Stock</Tag>}
+        {quantity > 0 && reorderLevel > quantity && <Tag color="orange">Low Stock</Tag>}
       </Space>
     ),
   },
@@ -191,6 +184,7 @@ const Inventory = () => {
           <Table
             loading={stockItemLoading}
             scroll={{ x: 1000 }}
+            expandable={{ expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p> }}
             pagination={{
               current: filters.page,
               pageSize: PAGE_SIZES.INVENTORY,

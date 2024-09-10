@@ -1,14 +1,10 @@
 import { Api } from '@configs/axios.config';
 import { API_PATH } from '@configs/constants/api.constants.ts';
-import { TCommonFilters, TStockItems, TStockSteps } from '@configs/types/api.types.ts';
-import { formatCurrency } from '@utils/index.ts';
-import { TStockData } from '../Inventory.tsx';
+import { TCommonFilters, TStockItems } from '@configs/types/api.types.ts';
+import { TStockData } from '../index.tsx';
 
-export const fetchStockItems = async (
-  payload: TCommonFilters,
-  type?: TStockSteps
-): Promise<{ records: TStockData[]; total: number }> => {
-  return await Api.get(`${API_PATH.STOCK}${type ? `/${type}` : ''}`, { params: { ...payload } }).then((response) => {
+export const fetchStockItems = async (payload: TCommonFilters): Promise<{ records: TStockData[]; total: number }> => {
+  return await Api.get(API_PATH.STOCK_ITEMS, { params: { ...payload } }).then((response) => {
     return {
       records:
         response.data?.data?.records?.map((item: any) => {
@@ -20,12 +16,10 @@ export const fetchStockItems = async (
             category: item?.itemCategory?.name,
             subCategory: item?.itemSubCategory?.name,
             description: item?.description || '-',
-            quantity: item.quantity || 0,
             reorderLevel: item?.reorder_level,
-            unitPrice: formatCurrency(item.unit_price),
-            totalPrice: formatCurrency(item.total) || 0,
+            updatedBy: item.updater?.name || '-',
             status: item?.status,
-            lastOrder: item.last_order,
+            types: item.itemSubCategory.type,
           };
         }) || [],
       total: response?.data?.data?.count || 0,
@@ -35,6 +29,12 @@ export const fetchStockItems = async (
 
 export const updateStockItems = async (payload: TStockItems): Promise<void> => {
   return await Api.put(API_PATH.STOCK_ITEMS, payload).then((response) => {
+    return response?.data;
+  });
+};
+
+export const createStockItems = async (payload: TStockItems): Promise<void> => {
+  return await Api.post(API_PATH.STOCK_ITEMS, payload).then((response) => {
     return response?.data;
   });
 };

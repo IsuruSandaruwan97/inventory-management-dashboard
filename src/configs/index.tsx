@@ -19,3 +19,17 @@ export const PAGE_SIZES = {
 };
 
 export const DEFAULT_CURRENCY = 'Rs';
+
+export const STORE_STEPS = {
+  STORE: 'store',
+  STOCK: 'stock',
+  PRODUCTION: 'production',
+  DELIVERY: 'delivery',
+};
+
+export const STORE_STEPS_DROPDOWN = [
+  { label: 'Store', value: 'store' },
+  { label: 'Stock', value: 'stock' },
+  { label: 'Production', value: 'production' },
+  { label: 'Delivery', value: 'delivery' },
+];

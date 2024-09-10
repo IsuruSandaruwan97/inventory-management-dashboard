@@ -1,53 +1,106 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
-import { productSubCategoriesData } from '@data/configurations/product_categories';
-import { ProductSubCategoriesDataType } from '@features/configurations/configs/types';
+import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants';
+import { TProductSubCategories } from '@features/configurations/configs/types';
 import ProductSubCategoriesForm from '@features/configurations/subCategories/components/ProductSubCategoriesForm';
-import { Button, Row, TableProps, Tag } from 'antd';
-import { findIndex } from 'lodash';
-import { CSSProperties, useState } from 'react';
+import { useToastApi } from '@hooks/useToastApi';
+import { useQuery } from '@tanstack/react-query';
+import { Button, Row, Space, TableProps, Tag } from 'antd';
+import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { fetchCategories } from '../categories/services';
+import { fetchSubCategories } from './services';
 
-const columns: TableProps<any>['columns'] = [
-  {
-    title: 'ID',
-    dataIndex: 'itemId',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Category',
-    dataIndex: 'catName',
-    key: 'name',
-  },
-  {
-    title: 'Category Code',
-    dataIndex: 'code',
-    key: 'code',
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    dataIndex: 'status',
-    render: (_, { status, itemId }) => (
-      <div key={itemId}>
-        <Tag color={status ? 'green' : 'red'} key={`product_subcategory_${itemId}`}>
-          {status ? 'Active' : 'InActive'}
-        </Tag>
-      </div>
-    ),
-  },
-];
+const getColumns = (categories: any): TableProps<any>['columns'] => {
+  return [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Category',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
+      filters: categories,
+      onFilter: (value: any, record) => record?.category === value,
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+      render: (_, { type }) => {
+        return (
+          <Space>
+            {type?.map((item: string, i: number) => (
+              <Tag key={i} color={'default'} className={'first-letter'}>
+                {item}
+              </Tag>
+            ))}
+          </Space>
+        );
+      },
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, { status, itemId }) => (
+        <div key={itemId}>
+          <Tag color={status ? 'green' : 'red'} key={`product_subcategory_${itemId}`}>
+            {status ? 'Active' : 'InActive'}
+          </Tag>
+        </div>
+      ),
+    },
+  ];
+};
 
 const ProductSubCategory = () => {
   const styles = useStyles();
-  const [productSubCategories, setProductSubCategories] =
-    useState<ProductSubCategoriesDataType[]>(productSubCategoriesData);
+  const toast = useToastApi();
   const [showProdSubCategoryModal, setShowProdSubCategoryModal] = useState<boolean>(false);
-  const [selectedProdSubCategory, setSelectedProdSubCategory] = useState<ProductSubCategoriesDataType | null>(null);
+  const [selectedProdSubCategory, setSelectedProdSubCategory] = useState<TProductSubCategories | null>(null);
+
+  const {
+    data: subCategories,
+    isLoading: subCategoriesIsLoading,
+    error: subCategoriesError,
+  } = useQuery({
+    queryKey: ['subCategories'],
+    queryFn: () => fetchSubCategories(),
+  });
+
+  const {
+    data: categories,
+    isLoading: categoriesIsLoading,
+    error: categoriesError,
+  } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => fetchCategories(),
+  });
+
+  const columns = useMemo(() => {
+    return getColumns(
+      categories?.map((item) => ({
+        text: item.name,
+        value: item.id,
+      }))
+    );
+  }, [categories]);
+
+  useEffect(() => {
+    if (subCategoriesError) {
+      toast.open({
+        content: categoriesError?.message || subCategoriesError?.message || DEFAULT_ERROR_MESSAGE,
+        type: 'error',
+      });
+    }
+  }, [subCategoriesError, categoriesError]);
 
   return (
     <>
@@ -63,9 +116,10 @@ const ProductSubCategory = () => {
             setSelectedProdSubCategory(record as any);
           },
         })}
+        loading={subCategoriesIsLoading || categoriesIsLoading}
         rowKey={'id'}
         columns={columns}
-        dataSource={productSubCategories}
+        dataSource={subCategories}
       />
       {showProdSubCategoryModal && (
         <ProductSubCategoriesForm
@@ -74,24 +128,6 @@ const ProductSubCategory = () => {
           onCancel={() => {
             setShowProdSubCategoryModal(false);
             setSelectedProdSubCategory(null);
-          }}
-          onInsertSubCategory={(productSubCategory) => {
-            setProductSubCategories([productSubCategory, ...productSubCategories]);
-          }}
-          onUpdateSubCategory={(productSubCategory) => {
-            const productSubCategoriesIndex = findIndex(
-              productSubCategories,
-              (item) => item.itemId === productSubCategory.itemId
-            );
-
-            if (productSubCategoriesIndex !== -1) {
-              const updatedProductSubCategories = [
-                ...productSubCategories.slice(0, productSubCategoriesIndex),
-                productSubCategory,
-                ...productSubCategories.slice(productSubCategoriesIndex + 1),
-              ];
-              setProductSubCategories(updatedProductSubCategories);
-            }
           }}
         />
       )}

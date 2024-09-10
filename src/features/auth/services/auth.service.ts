@@ -7,3 +7,7 @@ export const userLogin = async (payload: TUserLoginRequest) => {
     return response?.data?.data;
   });
 };
+
+export const userLogout = async () => {
+  return await Api.get(API_PATH.LOGOUT);
+};

@@ -1,7 +1,11 @@
 export const API_PATH = {
   LOGIN: 'auth/login',
-
-  STOCK_ITEMS: 'stock',
+  LOGOUT: 'auth/logout',
+  USERS: 'users',
+  STOCK: 'stock',
+  STOCK_ITEMS: 'items',
+  CATEGORIES: 'categories',
+  SUB_CATEGORIES: 'subcategories',
 };
 
 export const DEFAULT_ERROR_MESSAGE = 'Something went wrong!';

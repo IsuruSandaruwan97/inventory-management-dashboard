@@ -139,7 +139,7 @@ const Items = () => {
     isLoading: stockItemLoading,
     error: stockItemError,
   } = useQuery({
-    queryKey: ['stock-items', filters.search, filters.page],
+    queryKey: ['items', filters.search, filters.page],
     queryFn: () => fetchStockItems(filters),
   });
 

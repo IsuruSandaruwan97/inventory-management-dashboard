@@ -42,7 +42,7 @@ const PageWrapper = ({ children }: TPageWrapper) => {
   });
 
   useEffect(() => {
-    if (!localStorage.getItem(KEY_CODES.PIN) && getJwtData().pin) {
+    if (!localStorage.getItem(KEY_CODES.PIN) || getJwtData().pin) {
       setPin(false);
       return;
     }

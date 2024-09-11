@@ -38,3 +38,9 @@ export const createStockItems = async (payload: TStockItems): Promise<void> => {
     return response?.data;
   });
 };
+
+export const fetchItemDropdown = async (type: string): Promise<void> => {
+  return await Api.get(`${API_PATH.STOCK_ITEMS}/list?type=${type}`).then((response) => {
+    return response?.data?.data || [];
+  });
+};

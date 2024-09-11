@@ -3,6 +3,7 @@ import { API_PATH } from '@configs/constants/api.constants.ts';
 import { TCommonFilters, TStockItems, TStockSteps } from '@configs/types/api.types.ts';
 import { formatCurrency } from '@utils/index.ts';
 import { TStockData } from '../Inventory.tsx';
+import { TItem } from '../components/forms/StockForm.tsx';
 
 export const fetchStockItems = async (
   payload: TCommonFilters,
@@ -34,7 +35,13 @@ export const fetchStockItems = async (
 };
 
 export const updateStockItems = async (payload: TStockItems): Promise<void> => {
-  return await Api.put(API_PATH.STOCK_ITEMS, payload).then((response) => {
+  return await Api.put(API_PATH.STOCK, payload).then((response) => {
+    return response?.data;
+  });
+};
+
+export const insertStockItems = async (payload: TItem[]): Promise<void> => {
+  return await Api.post(API_PATH.STOCK, { items: payload }).then((response) => {
     return response?.data;
   });
 };

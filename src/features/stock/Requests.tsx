@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import FilterItems from '@components/FilterItems';
 import { TABLE_STATUS } from '@configs/index';
+import { StyleSheet } from '@configs/stylesheet';
 import { TListType } from '@configs/types';
 import { stock_requests } from '@data/stock/stock_requests';
 import { Card, Collapse, Pagination, Space, Tag } from 'antd';
@@ -12,7 +13,7 @@ import ItemContent from './components/ItemContent';
 const maxCount: number = 5;
 const Stock = () => {
   const isMobile = useMediaQuery({ maxWidth: 769 });
-  const styles = useStyles();
+
   const [listType, setListType] = useState<TListType>(TABLE_STATUS[0].value as TListType);
 
   return (
@@ -40,7 +41,7 @@ const Stock = () => {
                       {item.title}
                       <Tag color="orange">New</Tag>
                     </Space>
-                    {!isMobile && listType !== 'history' && <ActionButtons />}
+                    <div>{!isMobile && listType !== 'history' && <ActionButtons />}</div>
                   </div>
                 ),
                 children: (
@@ -65,7 +66,7 @@ const Stock = () => {
 
 export default Stock;
 
-const useStyles = () => ({
+const styles = StyleSheet.create({
   space: {
     width: '100%',
   } as CSSProperties,
@@ -77,6 +78,8 @@ const useStyles = () => ({
   collaps: { width: '100%' } as CSSProperties,
   pagination: { justifyContent: 'center' } as CSSProperties,
   label: {
+    width: '100%',
+
     flexDirection: 'row',
     display: 'flex',
     alignItems: 'center',

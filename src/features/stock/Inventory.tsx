@@ -14,6 +14,7 @@ import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import ExpandContent from './components/ExpandCotent.tsx';
 import { fetchStockItems } from './services';
 
 const { Search } = Input;
@@ -184,11 +185,12 @@ const Inventory = () => {
           </Row>
           <Table
             loading={stockItemLoading}
-            expandable={{ expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p> }}
+            expandable={{ expandedRowRender: (record) => <ExpandContent record={record?.itemList || []} /> }}
             pagination={{
               current: filters.page,
               pageSize: PAGE_SIZES.INVENTORY,
               total: stockItems?.total,
+              align: 'center',
               onChange: (page: number) => {
                 setFilter((prev) => ({ ...prev, page }));
               },

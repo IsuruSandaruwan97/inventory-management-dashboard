@@ -27,3 +27,5 @@ export type TStockItems = {
 };
 
 export type TStockSteps = 'store' | 'production' | 'delivery' | 'damage' | 'return' | 'stock';
+
+export type TStockStatus = 'pending' | 'completed' | 'return' | 'damaged';

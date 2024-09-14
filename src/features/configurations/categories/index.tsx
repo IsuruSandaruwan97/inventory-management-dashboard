@@ -1,17 +1,19 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
+import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants';
 import { StyleSheet } from '@configs/stylesheet';
-import { productCategoriesData } from '@data/configurations/product_categories';
-import { ProductsCategoriesDataType } from '@features/configurations/configs/types';
+import { TProductsCategories } from '@features/configurations/configs/types';
+import { useToastApi } from '@hooks/useToastApi';
+import { useQuery } from '@tanstack/react-query';
 import { Button, Row, TableProps, Tag } from 'antd';
-import { findIndex } from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductCategoriesForm from './components/ProductCategoriesForm';
+import { fetchCategories } from './services';
 
 const columns: TableProps<any>['columns'] = [
   {
     title: 'ID',
-    dataIndex: 'itemId',
+    dataIndex: 'id',
     key: 'id',
   },
   {
@@ -39,9 +41,26 @@ const columns: TableProps<any>['columns'] = [
 ];
 
 const ProductCategory = () => {
-  const [productCategories, setProductCategories] = useState<ProductsCategoriesDataType[]>(productCategoriesData);
   const [showProdCategoryModal, setShowProdCategoryModal] = useState<boolean>(false);
-  const [selectedProdCategoty, setSelectedProdCategory] = useState<ProductsCategoriesDataType | null>(null);
+  const [selectedProdCategory, setSelectedProdCategory] = useState<TProductsCategories | null>(null);
+  const toastApi = useToastApi();
+  const {
+    data: categories,
+    isLoading: categoriesIsLoading,
+    error: categoriesError,
+  } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => fetchCategories(),
+  });
+  useEffect(() => {
+    if (categoriesError) {
+      toastApi.open({
+        content: categoriesError?.message || DEFAULT_ERROR_MESSAGE,
+        type: 'error',
+      });
+    }
+  }, [categoriesError]);
+
   return (
     <div>
       <Row style={styles.searchRow}>
@@ -50,6 +69,7 @@ const ProductCategory = () => {
         </Button>
       </Row>
       <Table
+        loading={categoriesIsLoading}
         onRow={(record) => ({
           onClick: () => {
             setShowProdCategoryModal(true);
@@ -58,33 +78,15 @@ const ProductCategory = () => {
         })}
         rowKey={'id'}
         columns={columns}
-        dataSource={productCategories}
+        dataSource={categories}
       />
       {showProdCategoryModal && (
         <ProductCategoriesForm
-          category={selectedProdCategoty}
+          category={selectedProdCategory}
           visible={showProdCategoryModal}
           onCancel={() => {
             setShowProdCategoryModal(false);
             setSelectedProdCategory(null);
-          }}
-          onInsertCategory={(productCategory) => {
-            setProductCategories([productCategory, ...productCategories]);
-          }}
-          onUpdateCategory={(productCategory) => {
-            const productCategoriesIndex = findIndex(
-              productCategories,
-              (item) => item.itemId === productCategory.itemId
-            );
-
-            if (productCategoriesIndex !== -1) {
-              const updatedProductCategories = [
-                ...productCategories.slice(0, productCategoriesIndex),
-                productCategory,
-                ...productCategories.slice(productCategoriesIndex + 1),
-              ];
-              setProductCategories(updatedProductCategories);
-            }
           }}
         />
       )}

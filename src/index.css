@@ -39,7 +39,7 @@ body {
 }
 
 .ant-space {
-    width: '100%' !important;
+    width: 100% !important;
 }
 
 html {
@@ -52,7 +52,15 @@ html {
     width: 100% !important;
 }
 
+.ant-input-number-handler-wrap{
+    display: none!important;
+}
+
 .reorder-row {
     color: #ff0000 !important;
     font-weight: 600;
+}
+
+.first-letter {
+    text-transform: capitalize;
 }

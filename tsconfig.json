@@ -56,6 +56,9 @@
       ],
       "@stylesheet": [
         "./src/configs/stylesheet/index"
+      ],
+      "@services": [
+        "./src/services/index.ts"
       ]
     },
     "moduleResolution": "bundler",

@@ -71,12 +71,7 @@ const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
         Add Item(s)
       </Typography.Title>
       <Form style={styles.form} onFinish={onSubmit} form={form} onValuesChange={onValueChange} layout="vertical">
-        <Form.Item
-          style={{}}
-          label="Item Name"
-          name="itemName"
-          rules={[{ required: true, message: 'Please select an Item!' }]}
-        >
+        <Form.Item label="Item Name" name="itemName" rules={[{ required: true, message: 'Please select an Item!' }]}>
           <Select
             options={getOptions()}
             onSelect={(_, option) => {
@@ -85,13 +80,12 @@ const InvoiceLineItemForm = ({ editItem }: InvoiceLineItemFormProps) => {
             }}
           />
         </Form.Item>
-        <Form.Item style={{}} label="Description" name="description">
+        <Form.Item label="Description" name="description">
           <TextArea placeholder="Enter Description" maxLength={100} />
         </Form.Item>
         <Flex gap={8}>
           <Form.Item label="Unit Price" name="unitPrice">
             <Input
-              //type="number"
               prefix={DEFAULT_CURRENCY}
               disabled={isEmpty(form.getFieldValue('itemName'))}
               value={formatCurrency(unitPrice || 0)?.toString() || '0'}

@@ -60,7 +60,7 @@ const UserForm = ({ visible, user, onCancel, onInsertUser, onUpdateUser }: UserF
           name={'empId'}
           rules={[{ required: true, message: 'Employee ID is required' }]}
         >
-          <Input disabled={isUpdate} />
+          <Input />
         </Form.Item>
         <Form.Item label={'Name'} name={'name'} rules={[{ required: true, message: 'Employee name is required' }]}>
           <Input />
@@ -73,14 +73,19 @@ const UserForm = ({ visible, user, onCancel, onInsertUser, onUpdateUser }: UserF
           name={'address'}
           rules={[{ required: true, message: 'Address number is required' }]}
         >
-          <Input />
+          <Input placeholder={'Type N/A if not applicable'} />
         </Form.Item>
         <Form.Item label={'Role'} name={'role'} rules={[{ required: true, message: 'User role is required' }]}>
-          <Select defaultValue={'user'} options={userRoles} />
+          <Select defaultValue={'user'} disabled={isUpdate && user.role?.includes('admin')} options={userRoles} />
         </Form.Item>
 
         <Form.Item label={'Status'} name={'status'}>
-          <Switch defaultValue={true} checkedChildren="Active" unCheckedChildren="Inactive" />
+          <Switch
+            disabled={isUpdate && user.role?.includes('admin')}
+            defaultValue={true}
+            checkedChildren="Active"
+            unCheckedChildren="Inactive"
+          />
         </Form.Item>
 
         {!isUpdate && (

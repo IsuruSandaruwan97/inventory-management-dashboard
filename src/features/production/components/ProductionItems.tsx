@@ -36,11 +36,7 @@ const columns: TableProps<any>['columns'] = [
 ];
 
 const ProductionItems = () => {
-  return (
-    <>
-      <Table columns={columns} rowKey={'id'} dataSource={PRODUCTION_DATA} />
-    </>
-  );
+  return <Table columns={columns} rowKey={'id'} dataSource={PRODUCTION_DATA} />;
 };
 
 export default ProductionItems;

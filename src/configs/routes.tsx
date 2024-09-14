@@ -20,6 +20,7 @@ const Delivery = lazy(() => import('@features/delivery'));
 
 const Categories = lazy(() => import('@features/configurations/categories'));
 const SubCategories = lazy(() => import('@features/configurations/subCategories'));
+const Items = lazy(() => import('@features/configurations/items'));
 
 const defaultIconStyle = { fontSize: 20 };
 
@@ -51,6 +52,7 @@ export const PATH = {
   //Sub paths
   STOCK_REQUESTS: '/requests',
   INVENTORY: '/inventory',
+  ITEMS: '/items',
 };
 
 export const ROUTES: TRoutes[] = [
@@ -98,6 +100,7 @@ export const ROUTES: TRoutes[] = [
     path: PATH.SETTINGS,
     icon: <SettingOutlined style={defaultIconStyle} />,
     children: [
+      { key: PATH.ITEMS, label: 'Items', element: <Items /> },
       { key: PATH.CATEGORIES, label: 'Category', element: <Categories /> },
       {
         key: PATH.SUB_CATEGORIES,

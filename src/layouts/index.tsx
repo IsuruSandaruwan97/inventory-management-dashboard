@@ -1,22 +1,39 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
 import FooterNav from '@components/Nav/FooterNav';
 import HeaderNav from '@components/Nav/HeaderNav';
 import SideNav from '@components/Nav/SideNav';
 import { NProgress } from '@components/Nprogress';
 import { PageHeader } from '@components/PageHeader/PageHeader';
 import Time from '@components/Time';
+import { KEY_CODES } from '@configs/keycodes.ts';
 import { ROUTES } from '@configs/routes';
+import { userLogout } from '@features/auth/services/auth.service.ts';
+import { useToastApi } from '@hooks/useToastApi.tsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { findRouteByPath } from '@utils/index';
-import { Button, Flex, Layout } from 'antd';
+import { getJwtData } from '@utils/index.ts';
+import { Avatar, Button, Dropdown, Flex, Layout, MenuProps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
+import { DEFAULT_ERROR_MESSAGE } from '../configs/constants/api.constants.ts';
 
 type TLayout = {
   children: ReactNode;
+};
+
+const getMenuItems = (onClick: any): MenuProps['items'] => {
+  return [
+    {
+      key: 'user-logout',
+      label: <span style={{ color: 'red' }}>Logout</span>,
+      icon: <LogoutOutlined style={{ color: 'red' }} />,
+      onClick,
+    },
+  ];
 };
 
 const DashboardLayout = ({ children }: TLayout) => {
@@ -24,10 +41,14 @@ const DashboardLayout = ({ children }: TLayout) => {
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const nodeRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [collapsed, setCollapsed] = useState<boolean>(true);
   const [navFill, setNavFill] = useState<boolean>(false);
   const styles = useStyles(collapsed, navFill);
+  const queryClient = useQueryClient();
+  const toast = useToastApi();
+  const { name } = getJwtData();
 
   useEffect(() => {
     setCollapsed(isMobile);
@@ -42,6 +63,36 @@ const DashboardLayout = ({ children }: TLayout) => {
       setNavFill(false);
     });
   }, []);
+
+  const logoutMutation = useMutation({
+    mutationFn: () => userLogout(),
+    onSuccess: async () => {
+      onLogoutSuccess().then(() => {
+        toast.open({
+          type: 'success',
+          content: 'Successfully Logged out!!',
+          duration: 4,
+        });
+      });
+    },
+    onError: () => {
+      toast.open({
+        type: 'error',
+        content: DEFAULT_ERROR_MESSAGE,
+        duration: 4,
+      });
+    },
+  });
+
+  const onLogoutSuccess = async () => {
+    setIsLoading(true);
+    localStorage.removeItem(KEY_CODES.AUTH_TOKEN);
+    localStorage.removeItem(KEY_CODES.REFRESH_TOKEN);
+    queryClient.clear();
+    await queryClient.resetQueries();
+    setTimeout(() => setIsLoading(false), 2000);
+    navigate('/');
+  };
 
   const activePage = ROUTES.find((route) => route.path === pathname);
 
@@ -58,6 +109,8 @@ const DashboardLayout = ({ children }: TLayout) => {
       },
     ];
   }, [pathname]);
+
+  const menuItems = useMemo(() => getMenuItems(() => logoutMutation.mutate()), [logoutMutation]);
 
   return (
     <>
@@ -83,6 +136,12 @@ const DashboardLayout = ({ children }: TLayout) => {
             <Flex align="center" gap="small">
               <Time />
             </Flex>
+
+            <Dropdown menu={{ items: menuItems }} trigger={['click']}>
+              <Flex>
+                {name ? <Avatar>{name.slice(0, 2)?.toUpperCase()}</Avatar> : <Avatar icon={<UserOutlined />} />}
+              </Flex>
+            </Dropdown>
           </HeaderNav>
           <Content style={styles.content}>
             <TransitionGroup>

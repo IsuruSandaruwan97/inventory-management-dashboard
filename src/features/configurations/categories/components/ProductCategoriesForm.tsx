@@ -1,61 +1,75 @@
-import { ProductsCategoriesDataType } from '@features/configurations/configs/types';
+import { DEFAULT_ERROR_MESSAGE, DEFAULT_SUCCESS_MESSAGE } from '@configs/constants/api.constants';
+import { queryClient } from '@configs/react-query.config';
+import { TProductsCategories } from '@features/configurations/configs/types';
+import { useToastApi } from '@hooks/useToastApi';
+import { useMutation } from '@tanstack/react-query';
 import { Button, Divider, Flex, Form, Input, Modal, Switch } from 'antd';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
+import { createCategory, updateCategory } from '../services';
 
 type ProductCategoriesFormProps = {
   visible: boolean;
-  category: ProductsCategoriesDataType | null;
+  category: TProductsCategories | null;
   onCancel: () => void;
-  onInsertCategory: (category: ProductsCategoriesDataType) => void;
-  onUpdateCategory: (category: ProductsCategoriesDataType) => void;
 };
 
-const ProductCategoriesForm = ({
-  visible,
-  category,
-  onCancel,
-  onInsertCategory,
-  onUpdateCategory,
-}: ProductCategoriesFormProps) => {
+const ProductCategoriesForm = ({ visible, category, onCancel }: ProductCategoriesFormProps) => {
   const [form] = Form.useForm();
+  const toast = useToastApi();
   const [loading] = useState<boolean>(false);
   useEffect(() => {
     if (!isEmpty(category)) {
       form.setFieldsValue(category);
+      return
     }
+    form.setFieldValue('status',true)
   }, [category, visible]);
+
+  const categoryMutation = useMutation({
+    mutationFn: (payload: TProductsCategories) =>
+      !isEmpty(category) ? updateCategory(payload) : createCategory(payload),
+    onSuccess: async () => {
+      toast.open({
+        type: 'success',
+        content: DEFAULT_SUCCESS_MESSAGE,
+        duration: 4,
+      });
+      onClose();
+      await queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+    onError: (error) => {
+      toast.open({
+        type: 'error',
+        content: error.message || DEFAULT_ERROR_MESSAGE,
+        duration: 4,
+      });
+    },
+  });
 
   const onClose = () => {
     form.resetFields();
     onCancel();
   };
-  const isUpdate = !isEmpty(category);
+
   const onFinish = () => {
-    let newCategory = form.getFieldsValue();
-    newCategory = { ...newCategory, status: true };
-    if (isUpdate) {
-      onUpdateCategory(newCategory);
-      onCancel();
+    if (!isEmpty(category)) {
+      categoryMutation.mutate({ ...form.getFieldsValue(), id: category.id });
       return;
     }
-    onInsertCategory(newCategory);
-    onCancel();
+    categoryMutation.mutate({ ...form.getFieldsValue() });
   };
   return (
     <Modal
       open={visible}
       onCancel={onClose}
       onClose={onClose}
-      title={!isUpdate ? 'Add new product category' : `Update ${category.name}`}
+      title={!!isEmpty(category) ? 'Add new product category' : `Update ${category.name}`}
       footer={null}
       closeIcon={false}
     >
       <Divider />
       <Form form={form} layout="horizontal" onFinish={onFinish} {...{ labelCol: { span: 6 } }}>
-        <Form.Item label={'ID'} name={'itemId'} rules={[{ required: true, message: 'Category ID is required' }]}>
-          <Input disabled={isUpdate} />
-        </Form.Item>
         <Form.Item label={'Name'} name={'name'} rules={[{ required: true, message: 'Category name is required' }]}>
           <Input />
         </Form.Item>
@@ -63,7 +77,7 @@ const ProductCategoriesForm = ({
           <Input />
         </Form.Item>
         <Form.Item label={'Status'} name={'status'}>
-          <Switch defaultValue={true} checkedChildren="Active" unCheckedChildren="Inactive" />
+          <Switch  checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
         <Flex justify="end" gap={8}>
           <Form.Item style={{ marginBottom: '4px' }}>
@@ -83,7 +97,7 @@ const ProductCategoriesForm = ({
                   .catch(() => {});
               }}
             >
-              {isUpdate ? 'Update' : 'Submit'}
+              {!isEmpty(category) ? 'Update' : 'Submit'}
             </Button>
           </Form.Item>
         </Flex>

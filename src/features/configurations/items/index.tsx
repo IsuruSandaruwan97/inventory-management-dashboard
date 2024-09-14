@@ -5,17 +5,15 @@ import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { PAGE_SIZES } from '@configs/index';
 import { StyleSheet } from '@configs/stylesheet';
 import { TCommonFilters } from '@configs/types/api.types.ts';
-import StockForm from '@features/stock/components/forms/StockForm';
+import ItemForm from '@features/configurations/items/components/ItemForm';
 import useScreenSize from '@hooks/useScreenSize';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { fetchStockItems } from '@services';
 import { useQuery } from '@tanstack/react-query';
-import { formatDate } from '@utils/index';
-import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
+import { Button, Card, Col, Flex, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import ExpandContent from './components/ExpandCotent.tsx';
 
 const { Search } = Input;
 
@@ -41,13 +39,14 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     dataIndex: 'itemId',
     key: 'itemId',
     fixed: 'left',
-    width: 100,
+    width: 150,
   },
   {
     title: 'Image',
     dataIndex: 'image',
     key: 'image',
     fixed: 'left',
+    align: 'center',
     width: 100,
     render: (value) => {
       if (!value) return <DropboxOutlined />;
@@ -59,14 +58,15 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     dataIndex: 'name',
     key: 'name',
     fixed: 'left',
-    width: 200,
+    width: 250,
   },
   {
     title: 'Category',
     dataIndex: 'category',
     key: 'category',
     responsive: ['md'],
-    width: 150,
+    fixed: 'left',
+    width: 250,
   },
   {
     title: 'Sub Category',
@@ -79,71 +79,68 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     title: 'Description',
     dataIndex: 'description',
     key: 'description',
-    width: 200,
-    responsive: ['lg'],
+    width: 250,
+    responsive: ['md'],
+  },
+  {
+    title: 'Availability',
+    dataIndex: 'types',
+    key: 'availability',
+    width: 250,
+    responsive: ['md'],
+    render: (_, { types }) => (
+      <Flex style={styles.availabilityContainer}>
+        {types?.map((type: any, i: number) => (
+          <Tag className={'first-letter'} key={i}>
+            {type}
+          </Tag>
+        ))}
+      </Flex>
+    ),
+  },
+  {
+    title: 'Updated by',
+    dataIndex: 'updatedBy',
+    key: 'updatedBy',
+    width: 150,
   },
   {
     title: 'Reorder level',
     dataIndex: 'reorderLevel',
     key: 'reorderLevel',
     width: 100,
-    responsive: ['lg'],
-  },
-  {
-    title: 'Total Price(Rs)',
-    dataIndex: 'totalPrice',
-    width: 120,
-    key: 'totalPrice',
-    responsive: ['lg'],
-  },
-  {
-    title: 'Last Stock',
-    dataIndex: 'lastOrder',
-    key: 'lastOrder',
-    width: 150,
-    responsive: ['lg'],
-    render: (record: Date) => {
-      return formatDate(record);
-    },
+    responsive: ['md'],
   },
   {
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    responsive: ['md'],
     fixed: 'right',
+    width: 100,
     render: (_, { status, itemId, reorderLevel, quantity }) => (
       <Space direction="vertical" key={`user_status_${itemId}`}>
         <Tag color={status ? 'green' : 'red'}>{status ? 'Active' : 'InActive'}</Tag>
-        {quantity === 0 && <Tag color="orange">Empty Stock</Tag>}
-        {quantity > 0 && reorderLevel > quantity && <Tag color="orange">Low Stock</Tag>}
+        {reorderLevel && quantity && quantity < reorderLevel && <Tag color="orange">Low Stock</Tag>}
       </Space>
     ),
   },
-  {
-    title: 'Quantity',
-    dataIndex: 'quantity',
-    key: 'quantity',
-    fixed: 'right',
-    width: 100,
-  },
 ];
 
-const Inventory = () => {
+const Items = () => {
   const { width } = useScreenSize();
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const toastApi = useToastApi();
+  const [itemFormVisible, setItemFormVisible] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<TStockData | null>(null);
   const [filters, setFilter] = useState<TCommonFilters>({ ...DEFAULT_FILTERS, limit: PAGE_SIZES.INVENTORY });
-  const [stockForm, setStockForm] = useState<boolean>(false);
 
   const {
     data: stockItems,
     isLoading: stockItemLoading,
     error: stockItemError,
-    refetch: refetchStockItems,
   } = useQuery({
-    queryKey: ['stock-items', filters.search, filters.page],
-    queryFn: () => fetchStockItems(filters, 'stock'),
+    queryKey: ['items', filters.search, filters.page],
+    queryFn: () => fetchStockItems(filters),
   });
 
   useEffect(() => {
@@ -155,26 +152,18 @@ const Inventory = () => {
     }
   }, [stockItemError]);
 
-  const onSearch = async (search: string | null) => {
-    if (isEmpty(search) || !search) {
-      return;
-    }
-    setFilter((prevState) => ({ ...prevState, search }));
-    await refetchStockItems();
-  };
-
   return (
     <>
       <Card>
         <Space style={styles.space} size={'middle'} direction="vertical">
           <Row style={styles.headerRow}>
             <Col>
-              <Button onClick={() => setStockForm(true)}>New Stock</Button>
+              <Button onClick={() => setItemFormVisible(true)}>New Item</Button>
             </Col>
             <Col style={styles.search}>
               <Search
                 placeholder="Search..."
-                onSearch={onSearch}
+                onSearch={(search) => setFilter((prev) => ({ ...prev, search }))}
                 onChange={(e) => {
                   if (isEmpty(e.target.value)) setFilter((prev) => ({ ...prev, search: null }));
                 }}
@@ -185,12 +174,11 @@ const Inventory = () => {
           </Row>
           <Table
             loading={stockItemLoading}
-            expandable={{ expandedRowRender: (record) => <ExpandContent record={record?.itemList || []} /> }}
+            scroll={{ x: 1000 }}
             pagination={{
               current: filters.page,
               pageSize: PAGE_SIZES.INVENTORY,
               total: stockItems?.total,
-              align: 'center',
               onChange: (page: number) => {
                 setFilter((prev) => ({ ...prev, page }));
               },
@@ -202,15 +190,31 @@ const Inventory = () => {
             columns={inventoryTableColumns}
             dataSource={stockItems?.records}
             rowClassName={(item) => (item.quantity < item.reorderLevel ? 'reorder-row' : '')}
+            onRow={(record) => ({
+              onClick: () => {
+                setItemFormVisible(true);
+                setSelectedItem(record as TStockData);
+              },
+            })}
           />
         </Space>
       </Card>
-      {stockForm && <StockForm visible={stockForm} onCancel={() => setStockForm(false)} />}
+      {itemFormVisible && (
+        <ItemForm
+          item={selectedItem}
+          visible={itemFormVisible}
+          isUpdate={!isEmpty(selectedItem)}
+          onCancel={() => {
+            setItemFormVisible(false);
+            setSelectedItem(null);
+          }}
+        />
+      )}
     </>
   );
 };
 
-export default Inventory;
+export default Items;
 
 const styles = StyleSheet.create({
   search: {
@@ -218,4 +222,8 @@ const styles = StyleSheet.create({
   },
   space: { width: '100%' },
   headerRow: { justifyContent: 'space-between' },
+  availabilityContainer: {
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
 });

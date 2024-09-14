@@ -1,5 +1,8 @@
 import { DEFAULT_CURRENCY } from '@configs/index';
+import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
+import { jwtDecode } from 'jwt-decode';
+import { KEY_CODES } from '../configs/keycodes.ts';
 
 export const randomPassword = (passwordLength: number = 12): string => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -33,11 +36,48 @@ export const findRouteByPath = (routes: any[], path: string): any => {
   return undefined;
 };
 
-export const formatCurrency = (value: number, showSymbol: boolean = false): string => {
+export const formatCurrency = (value: number | string, showSymbol: boolean = false): string => {
+  if (typeof value === 'string') value = parseFloat(value);
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'LKR',
   })
     .format(value)
     .replace('LKR', showSymbol ? DEFAULT_CURRENCY : '');
+};
+
+export const thousandSeparator = (value: string | number | null): string => {
+  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || '';
+};
+
+export const getJwtData = (): any => {
+  try {
+    const token = localStorage.getItem(KEY_CODES.AUTH_TOKEN);
+
+    if (!token) return null;
+    return jwtDecode(token);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e: any) {
+    return null;
+  }
+};
+
+export const validatePin = (code: string): boolean => {
+  try {
+    const pin = getJwtData().pin;
+    if (!pin) return true;
+    return String(pin) === code;
+  } catch (e) {
+    return true;
+  }
+};
+
+export const encryptData = (data: any): string => {
+  if (typeof data !== 'string') data = JSON.stringify(data);
+  return CryptoJS.AES.encrypt(data, import.meta.env.VITE_SECRET).toString();
+};
+
+export const decryptData = (data: string): any => {
+  const rememberBytes = CryptoJS.AES.decrypt(data, import.meta.env.VITE_SECRET).toString(CryptoJS.enc.Utf8);
+  return JSON.parse(rememberBytes);
 };

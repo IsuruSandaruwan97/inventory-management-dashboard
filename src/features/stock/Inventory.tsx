@@ -8,6 +8,7 @@ import { TCommonFilters } from '@configs/types/api.types.ts';
 import StockForm from '@features/stock/components/forms/StockForm';
 import useScreenSize from '@hooks/useScreenSize';
 import { useToastApi } from '@hooks/useToastApi.tsx';
+import { fetchStockItems } from '@services';
 import { useQuery } from '@tanstack/react-query';
 import { formatDate } from '@utils/index';
 import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
@@ -15,7 +16,6 @@ import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import ExpandContent from './components/ExpandCotent.tsx';
-import { fetchStockItems } from './services';
 
 const { Search } = Input;
 

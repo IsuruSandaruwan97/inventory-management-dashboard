@@ -8,10 +8,10 @@ import { TCommonFilters } from '@configs/types/api.types.ts';
 import InvoiceModal from '@features/stock/components/InvoiceModal';
 import ReturnItemsFormModal from '@features/store/components/forms/ReturnItemsForm';
 import { useToastApi } from '@hooks/useToastApi.tsx';
+import { fetchStockItems } from '@services';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, Row, Segmented, Space, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { fetchStockItems } from '../stock/services';
 
 const columns: TableProps<any>['columns'] = [
   {

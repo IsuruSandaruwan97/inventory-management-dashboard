@@ -22,10 +22,12 @@ type TStockFormProps = {
 };
 
 export type TItem = {
+  index?: number;
   item_id: string;
-  quantity: number;
+  quantity?: number;
   unit_price: number;
   type: TStockSteps;
+  note?: string;
 };
 
 type TGetColumns = {
@@ -88,7 +90,7 @@ const getColumns = ({ items, setEditItem, onDeleteItem }: TGetColumns): TablePro
             size="small"
             icon={<EditOutlined />}
             onClick={() => {
-              setEditItem(record);
+              setEditItem({ ...record, index });
             }}
           ></Button>
           <Popconfirm
@@ -151,7 +153,11 @@ const StockForm = ({ visible, onCancel }: TStockFormProps) => {
   }, [itemListError]);
 
   useEffect(() => {
-    if (!isEmpty(selectedItem)) form.setFieldsValue(selectedItem);
+    if (!isEmpty(selectedItem)) {
+      form.setFieldsValue(selectedItem);
+      return;
+    }
+    form.resetFields();
   }, [selectedItem]);
 
   const onDeleteItem = (id: number) => {
@@ -179,6 +185,13 @@ const StockForm = ({ visible, onCancel }: TStockFormProps) => {
       setItems((prevState) => [...(prevState || []), values]);
       form.resetFields();
       return;
+    }
+    if (items && selectedItem) {
+      const index: number = selectedItem.index || 0;
+      const updatedItems = [...items];
+      updatedItems[index] = values;
+      setItems(updatedItems);
+      form.resetFields();
     }
   };
 

@@ -21,7 +21,9 @@ const ProductCategoriesForm = ({ visible, category, onCancel }: ProductCategorie
   useEffect(() => {
     if (!isEmpty(category)) {
       form.setFieldsValue(category);
+      return
     }
+    form.setFieldValue('status',true)
   }, [category, visible]);
 
   const categoryMutation = useMutation({
@@ -75,7 +77,7 @@ const ProductCategoriesForm = ({ visible, category, onCancel }: ProductCategorie
           <Input />
         </Form.Item>
         <Form.Item label={'Status'} name={'status'}>
-          <Switch defaultValue={true} checkedChildren="Active" unCheckedChildren="Inactive" />
+          <Switch  checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
         <Flex justify="end" gap={8}>
           <Form.Item style={{ marginBottom: '4px' }}>

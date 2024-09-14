@@ -94,7 +94,11 @@ const ProductSubCategoriesForm = ({ visible, subCategory, onCancel }: ProductSub
           <Input />
         </Form.Item>
         <Form.Item label={'Category'} name={'category'} rules={[{ required: true, message: 'Category is required' }]}>
-          <Select loading={categoriesIsLoading || subCategoriesMutation.isPending} options={productCategories} />
+          <Select
+            {...(!isUpdate && { mode: 'multiple' })}
+            loading={categoriesIsLoading || subCategoriesMutation.isPending}
+            options={productCategories}
+          />
         </Form.Item>
         <Form.Item label={'Code'} name={'code'} rules={[{ required: true, message: 'Code is required' }]}>
           <Input />

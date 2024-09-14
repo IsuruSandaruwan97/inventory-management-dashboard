@@ -4,7 +4,11 @@ const NumberInput = ({ currency, ...props }: InputNumberProps & { currency?: boo
   return (
     <InputNumber
       onKeyDown={(event) => {
-        if (!/[0-9]/.test(event.key)) {
+        if (!/[0-9]/.test(event.key) && event.key !== '.' && event.key !== 'Backspace') {
+          event.preventDefault();
+        }
+        // Prevent multiple decimal points
+        if (event.key === '.' && event.currentTarget.value.includes('.')) {
           event.preventDefault();
         }
       }}

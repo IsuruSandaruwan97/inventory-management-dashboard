@@ -28,3 +28,9 @@ export const fetchProductionItems = async (
     }
   );
 };
+
+export const requestItems = async (items: any): Promise<void> => {
+  return await Api.post(API_PATH.REQUEST_ITEMS, { items }).then((response: any) => {
+    return response.data;
+  });
+};

@@ -5,16 +5,17 @@ import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { PAGE_SIZES } from '@configs/index';
 import { StyleSheet } from '@configs/stylesheet';
 import { TCommonFilters } from '@configs/types/api.types.ts';
-import ItemForm from '@features/stock/components/forms/ItemForm';
+import StockForm from '@features/stock/components/forms/StockForm';
 import useScreenSize from '@hooks/useScreenSize';
 import { useToastApi } from '@hooks/useToastApi.tsx';
+import { fetchStockItems } from '@services';
 import { useQuery } from '@tanstack/react-query';
 import { formatDate } from '@utils/index';
-import { Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
+import { Button, Card, Col, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { fetchStockItems } from './services';
+import ExpandContent from './components/ExpandCotent.tsx';
 
 const { Search } = Input;
 
@@ -79,29 +80,28 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     dataIndex: 'description',
     key: 'description',
     width: 200,
-    responsive: ['md'],
+    responsive: ['lg'],
   },
-
   {
     title: 'Reorder level',
     dataIndex: 'reorderLevel',
     key: 'reorderLevel',
     width: 100,
-    responsive: ['md'],
+    responsive: ['lg'],
   },
   {
     title: 'Total Price(Rs)',
     dataIndex: 'totalPrice',
-    width: 100,
+    width: 120,
     key: 'totalPrice',
-    responsive: ['md'],
+    responsive: ['lg'],
   },
   {
-    title: 'Last Order',
+    title: 'Last Stock',
     dataIndex: 'lastOrder',
     key: 'lastOrder',
     width: 150,
-    responsive: ['md'],
+    responsive: ['lg'],
     render: (record: Date) => {
       return formatDate(record);
     },
@@ -111,6 +111,7 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     dataIndex: 'status',
     key: 'status',
     responsive: ['md'],
+    fixed: 'right',
     render: (_, { status, itemId, reorderLevel, quantity }) => (
       <Space direction="vertical" key={`user_status_${itemId}`}>
         <Tag color={status ? 'green' : 'red'}>{status ? 'Active' : 'InActive'}</Tag>
@@ -132,9 +133,8 @@ const Inventory = () => {
   const { width } = useScreenSize();
   const isMobile = useMediaQuery({ maxWidth: 769 });
   const toastApi = useToastApi();
-  const [itemFormVisible, setItemFormVisible] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<TStockData | null>(null);
   const [filters, setFilter] = useState<TCommonFilters>({ ...DEFAULT_FILTERS, limit: PAGE_SIZES.INVENTORY });
+  const [stockForm, setStockForm] = useState<boolean>(false);
 
   const {
     data: stockItems,
@@ -168,7 +168,9 @@ const Inventory = () => {
       <Card>
         <Space style={styles.space} size={'middle'} direction="vertical">
           <Row style={styles.headerRow}>
-            <Col />
+            <Col>
+              <Button onClick={() => setStockForm(true)}>New Stock</Button>
+            </Col>
             <Col style={styles.search}>
               <Search
                 placeholder="Search..."
@@ -183,12 +185,12 @@ const Inventory = () => {
           </Row>
           <Table
             loading={stockItemLoading}
-            scroll={{ x: 1000 }}
-            expandable={{ expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p> }}
+            expandable={{ expandedRowRender: (record) => <ExpandContent record={record?.itemList || []} /> }}
             pagination={{
               current: filters.page,
               pageSize: PAGE_SIZES.INVENTORY,
               total: stockItems?.total,
+              align: 'center',
               onChange: (page: number) => {
                 setFilter((prev) => ({ ...prev, page }));
               },
@@ -200,26 +202,10 @@ const Inventory = () => {
             columns={inventoryTableColumns}
             dataSource={stockItems?.records}
             rowClassName={(item) => (item.quantity < item.reorderLevel ? 'reorder-row' : '')}
-            onRow={(record) => ({
-              onClick: () => {
-                setItemFormVisible(true);
-                setSelectedItem(record as TStockData);
-              },
-            })}
           />
         </Space>
       </Card>
-      {itemFormVisible && (
-        <ItemForm
-          item={selectedItem}
-          visible={itemFormVisible}
-          isUpdate={!isEmpty(selectedItem)}
-          onCancel={() => {
-            setItemFormVisible(false);
-            setSelectedItem(null);
-          }}
-        />
-      )}
+      {stockForm && <StockForm visible={stockForm} onCancel={() => setStockForm(false)} />}
     </>
   );
 };

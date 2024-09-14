@@ -46,6 +46,10 @@ export const formatCurrency = (value: number | string, showSymbol: boolean = fal
     .replace('LKR', showSymbol ? DEFAULT_CURRENCY : '');
 };
 
+export const thousandSeparator = (value: string | number | null): string => {
+  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || '';
+};
+
 export const getJwtData = (): any => {
   try {
     const token = localStorage.getItem(KEY_CODES.AUTH_TOKEN);

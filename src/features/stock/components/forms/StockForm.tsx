@@ -1,38 +1,34 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import NumberInput from '@components/NumberInput.tsx';
 import Table from '@components/Table';
 import { DEFAULT_ERROR_MESSAGE, DEFAULT_SUCCESS_MESSAGE } from '@configs/constants/api.constants.ts';
-import { queryClient } from '@configs/react-query.config.ts';
+import { DEFAULT_CURRENCY } from '@configs/index';
+import { queryClient } from '@configs/react-query.config';
 import { StyleSheet } from '@configs/stylesheet';
 import { KeyValuePair } from '@configs/types.ts';
+import { TStockSteps } from '@configs/types/api.types.ts';
 import { fetchItemDropdown } from '@features/configurations/items/services';
-import { requestItems } from '@features/production/services';
-import { TItem } from '@features/stock/components/forms/StockForm.tsx';
+import { insertStockItems } from '@features/stock/services';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  Button,
-  Card,
-  Col,
-  Flex,
-  Form,
-  Input,
-  Modal,
-  ModalProps,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  TableProps,
-  Typography,
-} from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import TextArea from 'antd/es/input/TextArea';
+import { formatCurrency } from '@utils/index';
+import { Button, Card, Col, Flex, Form, Modal, Popconfirm, Row, Select, Space, TableProps, Typography } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useMemo, useState } from 'react';
 
-type TRequestItemsModal = {
+type TStockFormProps = {
+  visible: boolean;
   onCancel: () => void;
-} & ModalProps;
+};
+
+export type TItem = {
+  index?: number;
+  item_id: string;
+  quantity?: number;
+  unit_price: number;
+  type: TStockSteps;
+  note?: string;
+};
 
 type TGetColumns = {
   items: KeyValuePair[];
@@ -53,17 +49,39 @@ const getColumns = ({ items, setEditItem, onDeleteItem }: TGetColumns): TablePro
     showSorterTooltip: false,
   },
   {
-    title: 'Item',
+    title: 'Item Name',
     dataIndex: 'item_id',
     key: 'item_id',
     render: (value) => items?.find((item) => item.value === value)?.label || '-',
+    width: '35%',
   },
-  { title: 'Quantity', dataIndex: 'quantity', key: 'quantity', width: '15%' },
-  { title: 'Note', dataIndex: 'note', key: 'note' },
+  {
+    title: 'Quantity',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    render: (value) => formatCurrency(value) || '-',
+    width: '14%',
+  },
+  {
+    title: `Unit Price (${DEFAULT_CURRENCY})`,
+    align: 'right',
+    dataIndex: 'unit_price',
+    key: 'unit_price',
+    render: (value) => formatCurrency(value),
+    width: '19%',
+  },
+  {
+    title: `Total Price (${DEFAULT_CURRENCY})`,
+    align: 'right',
+    key: 'total_price',
+    render: (_, { unit_price, quantity }) => formatCurrency(unit_price * quantity),
+    width: '20%',
+  },
   {
     title: 'Actions',
     key: 'actions',
-    width: '12%',
+    align: 'center',
+    width: '15%',
     render: (_, record, index) => {
       return (
         <Space size="middle" style={styles.actionButtonContainer}>
@@ -89,29 +107,30 @@ const getColumns = ({ items, setEditItem, onDeleteItem }: TGetColumns): TablePro
     },
   },
 ];
-const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
-  const [form] = useForm();
-  const toastApi = useToastApi();
+
+const StockForm = ({ visible, onCancel }: TStockFormProps) => {
+  const [form] = Form.useForm();
   const [items, setItems] = useState<TItem[] | null>(null);
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
+  const toastApi = useToastApi();
   const {
     data: itemList,
     isLoading: itemListLoading,
     error: itemListError,
   } = useQuery({
     queryKey: ['item-dropdown'],
-    queryFn: () => fetchItemDropdown('production'),
+    queryFn: () => fetchItemDropdown('stock'),
   });
 
   const mutation = useMutation({
-    mutationFn: (payload: TItem[]) => requestItems(payload),
-    onSuccess: async (response: any) => {
+    mutationFn: (payload: TItem[]) => insertStockItems(payload),
+    onSuccess: async () => {
       toastApi.open({
         type: 'success',
-        content: response?.message || DEFAULT_SUCCESS_MESSAGE,
+        content: DEFAULT_SUCCESS_MESSAGE,
         duration: 4,
       });
-      onCancelForm();
+      onClose();
       await queryClient.invalidateQueries({ queryKey: ['stock-items'] });
     },
     onError: (error) => {
@@ -141,27 +160,6 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
     form.resetFields();
   }, [selectedItem]);
 
-  const onCancelForm = () => {
-    form.resetFields();
-    onCancel();
-  };
-
-  const onFillForm = () => {
-    const values = form.getFieldsValue();
-    if (isEmpty(selectedItem)) {
-      setItems((prevState) => [...(prevState || []), { ...values, type: 'store', quantity: Number(values.quantity) }]);
-      form.resetFields();
-      return;
-    }
-    if (items && selectedItem) {
-      const index: number = selectedItem.index || 0;
-      const updatedItems = [...items];
-      updatedItems[index] = { ...values, type: 'store', quantity: Number(values.quantity) };
-      setItems(updatedItems);
-      form.resetFields();
-    }
-  };
-
   const onDeleteItem = (id: number) => {
     setItems((prevItems) => {
       return (prevItems || [])?.filter((_, index) => index !== id);
@@ -170,37 +168,59 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
   };
 
   const columns = useMemo(
-    () =>
-      getColumns({
-        items: itemList as unknown as KeyValuePair[],
-        setEditItem: setSelectedItem,
-        onDeleteItem,
-      }),
+    () => getColumns({ items: itemList as unknown as KeyValuePair[], setEditItem: setSelectedItem, onDeleteItem }),
     [itemList]
   );
 
-  const submitPayload = () => {
+  const onClose = () => {
+    form.resetFields();
+    setSelectedItem(null);
+    setItems(null);
+    onCancel();
+  };
+
+  const onFillForm = () => {
+    const values = form.getFieldsValue();
+    if (isEmpty(selectedItem)) {
+      setItems((prevState) => [...(prevState || []), values]);
+      form.resetFields();
+      return;
+    }
+    if (items && selectedItem) {
+      const index: number = selectedItem.index || 0;
+      const updatedItems = [...items];
+      updatedItems[index] = values;
+      setItems(updatedItems);
+      form.resetFields();
+    }
+  };
+
+  const submitForm = () => {
     if (!items || isEmpty(items)) {
       toastApi.open({
-        content: 'Please add at least one item!',
+        content: 'Please select at least one item',
         type: 'error',
         duration: 4,
       });
       return;
     }
-    mutation.mutate(items);
+    mutation.mutate(
+      items?.map((item) => {
+        item.type = 'stock';
+        return item;
+      })
+    );
   };
 
   return (
     <>
       <Modal
         loading={itemListLoading}
+        open={visible}
+        onCancel={onClose}
+        title={'New Stock'}
         style={styles.modal}
         footer={null}
-        title={'Request Items'}
-        onCancel={() => onCancelForm()}
-        onClose={() => onCancelForm()}
-        {...others}
       >
         <Row gutter={8}>
           <Col xs={24} md={24} lg={18}>
@@ -209,44 +229,42 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
                 <Table rowKey={'id'} dataSource={items || []} columns={columns} scroll={{ y: 200 }} />
               </div>
               <Space style={styles.submitButtonContainer}>
-                <Button
-                  onClick={() => submitPayload()}
-                  loading={mutation.isPending}
-                  style={styles.submitButton}
-                  type={'primary'}
-                >
+                <Button onClick={submitForm} style={styles.submitButton} type={'primary'} loading={mutation.isPending}>
                   Submit
                 </Button>
               </Space>
             </Card>
           </Col>
-
           <Col lg={6}>
             <Card style={styles.cardContainer}>
               <Typography.Title level={5} style={styles.formTitle}>
                 Add Item(s)
               </Typography.Title>
-              <Form onFinish={onFillForm} form={form} layout="vertical" style={styles.itemInsertForm}>
+              <Form onFinish={onFillForm} form={form} layout={'vertical'} style={styles.form}>
                 <Form.Item label={'Item'} name={'item_id'} rules={[{ required: true, message: 'Item is required' }]}>
-                  <Select placeholder={'Select Item'} showSearch options={itemList as unknown as KeyValuePair[]} />
+                  <Select showSearch options={itemList as unknown as KeyValuePair[]} />
                 </Form.Item>
                 <Form.Item
                   label={'Quantity'}
                   name={'quantity'}
                   rules={[{ required: true, message: 'Quantity is required' }]}
                 >
-                  <Input placeholder="Quantity" type="number" />
+                  <NumberInput />
                 </Form.Item>
-                <Form.Item label={'Note'} name={'note'}>
-                  <TextArea placeholder="Note" />
+                <Form.Item
+                  label={'Unit Price(Rs)'}
+                  name={'unit_price'}
+                  rules={[{ required: true, message: 'Unit price is required' }]}
+                >
+                  <NumberInput />
                 </Form.Item>
+
                 <Flex justify="end" gap={8} style={styles.buttonContainer}>
                   <Form.Item style={styles.button}>
                     <Button
                       style={styles.buttonContainer}
                       icon={<DeleteOutlined />}
                       type="default"
-                      loading={mutation.isPending}
                       onClick={() => {
                         setSelectedItem(null);
                         form.resetFields();
@@ -278,22 +296,9 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
   );
 };
 
-export default RequestItemsModal;
+export default StockForm;
 
 const styles = StyleSheet.create({
-  plusIcon: {
-    fontSize: 25,
-    color: 'blue',
-    cursor: 'pointer',
-  },
-  itemInsertForm: {
-    marginBottom: 16,
-  },
-  buttonSpace: {
-    marginTop: 16,
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
   modal: {
     minWidth: '80%',
   },

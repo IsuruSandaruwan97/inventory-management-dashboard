@@ -226,6 +226,20 @@
     border-left-color: green;
 }
 
+.small-font-table {
+    font-size: 10px;
+}
+
+.small-font-table .ant-table-cell {
+    font-size: 10px;
+    padding: 4px 8px!important;;
+}
+
+.small-font-table .ant-table-thead > tr > th {
+    padding: 4px 8px!important;
+    font-weight: 550;
+}
+
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
     .overflow-scroll {

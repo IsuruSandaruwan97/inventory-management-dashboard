@@ -8,12 +8,12 @@ import { TCommonFilters } from '@configs/types/api.types.ts';
 import ItemForm from '@features/configurations/items/components/ItemForm';
 import useScreenSize from '@hooks/useScreenSize';
 import { useToastApi } from '@hooks/useToastApi.tsx';
+import { fetchStockItems } from '@services';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, Col, Flex, Input, Row, Space, TableProps, Tag } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { fetchStockItems } from './services';
 
 const { Search } = Input;
 
@@ -139,7 +139,7 @@ const Items = () => {
     isLoading: stockItemLoading,
     error: stockItemError,
   } = useQuery({
-    queryKey: ['stock-items', filters.search, filters.page],
+    queryKey: ['items', filters.search, filters.page],
     queryFn: () => fetchStockItems(filters),
   });
 

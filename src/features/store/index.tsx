@@ -80,12 +80,16 @@ const Store = () => {
     <>
       <Card>
         <Row style={styles.actionBar}>
-          <Space>
-            <Button>Delivery Order</Button>
-            <Button onClick={() => setShowInvoiceModal(true)}>Invoice</Button>
-            <Button onClick={() => setShowReturnModal(true)}>Return Items</Button>
-          </Space>
-          <Segmented options={options} value={option} onChange={(value) => setOption(value)} />
+          <div>
+            <Space>
+              <Button>Delivery Order</Button>
+              <Button onClick={() => setShowInvoiceModal(true)}>Invoice</Button>
+              <Button onClick={() => setShowReturnModal(true)}>Return Items</Button>
+            </Space>
+          </div>
+          <div>
+            <Segmented options={options} value={option} onChange={(value) => setOption(value)} />
+          </div>
         </Row>
       </Card>
       <Card style={styles.itemTableCard}>

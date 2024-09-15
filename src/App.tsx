@@ -35,7 +35,7 @@ const PageWrapper = ({ children }: TPageWrapper) => {
   };
 
   useIdleTimer({
-    timeout: 1000 * 120,
+    timeout: 120000,
     onIdle: handleOnIdle,
     debounce: 500,
     disabled: import.meta.env.VITE_ENABLE_IDLE === 'false',

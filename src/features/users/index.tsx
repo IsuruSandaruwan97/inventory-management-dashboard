@@ -132,10 +132,10 @@ const Users = () => {
               setShowUserModal(false);
               setSelectedUser(null);
             }}
-            onInsertUser={(user) => {
+            onInsertUser={() => {
               // setUsers([user, ...users]);
             }}
-            onUpdateUser={(user) => {
+            onUpdateUser={() => {
               // const userIndex = findIndex(users, (item) => item.empId === user.empId);
               //
               // if (userIndex !== -1) {

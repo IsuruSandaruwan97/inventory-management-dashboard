@@ -5,8 +5,11 @@ import SideNav from '@components/Nav/SideNav';
 import { NProgress } from '@components/Nprogress';
 import { PageHeader } from '@components/PageHeader/PageHeader';
 import Time from '@components/Time';
+import { DEFAULT_ROLE } from '@configs/constants';
+import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { KEY_CODES } from '@configs/keycodes.ts';
 import { ROUTES } from '@configs/routes';
+import { getRouts } from '@configs/routes.tsx';
 import { userLogout } from '@features/auth/services/auth.service.ts';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,7 +22,6 @@ import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
-import { DEFAULT_ERROR_MESSAGE } from '../configs/constants/api.constants.ts';
 
 type TLayout = {
   children: ReactNode;
@@ -45,10 +47,12 @@ const DashboardLayout = ({ children }: TLayout) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [collapsed, setCollapsed] = useState<boolean>(true);
   const [navFill, setNavFill] = useState<boolean>(false);
-  const styles = useStyles(collapsed, navFill);
   const queryClient = useQueryClient();
   const toast = useToastApi();
   const { name } = getJwtData();
+  const routes = useMemo(() => getRouts(DEFAULT_ROLE), []);
+
+  const styles = useStyles(collapsed, navFill, routes?.length <= 1);
 
   useEffect(() => {
     setCollapsed(isMobile);
@@ -116,13 +120,16 @@ const DashboardLayout = ({ children }: TLayout) => {
     <>
       <NProgress isAnimating={isLoading} key={location.key} />
       <Layout style={styles.mainLayout}>
-        <SideNav
-          trigger={null}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-          style={styles.sideNav}
-        />
+        {routes?.length > 1 && (
+          <SideNav
+            trigger={null}
+            collapsible
+            routes={routes}
+            collapsed={collapsed}
+            onCollapse={(value) => setCollapsed(value)}
+            style={styles.sideNav}
+          />
+        )}
         <Layout>
           <HeaderNav style={styles.headerNav}>
             <Flex align="center">
@@ -130,7 +137,7 @@ const DashboardLayout = ({ children }: TLayout) => {
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 onClick={() => setCollapsed(!collapsed)}
-                style={styles.collapsButton}
+                style={styles.collapseButton}
               />
             </Flex>
             <Flex align="center" gap="small">
@@ -179,13 +186,13 @@ const DashboardLayout = ({ children }: TLayout) => {
 
 export default DashboardLayout;
 
-const useStyles = (collapsed: boolean, navFill: boolean) => {
+const useStyles = (collapsed: boolean, navFill: boolean, isFull: boolean = false) => {
   return {
     mainLayout: {
       minHeight: '100vh',
     } as CSSProperties,
     headerNav: {
-      marginLeft: collapsed ? '50px' : '200px',
+      marginLeft: isFull ? 0 : collapsed ? '50px' : '200px',
       padding: '0 10px 0 0',
       background: 'white',
       backdropFilter: navFill ? 'blur(8px)' : 'none',
@@ -199,7 +206,7 @@ const useStyles = (collapsed: boolean, navFill: boolean) => {
       transition: 'all .25s',
     } as CSSProperties,
     childrenContainer: {
-      marginLeft: collapsed ? '40px' : 0,
+      marginLeft: isFull ? 0 : collapsed ? '40px' : 0,
       background: 'transparent',
     },
     sideNav: {
@@ -213,7 +220,7 @@ const useStyles = (collapsed: boolean, navFill: boolean) => {
       transition: 'all .2s',
     } as CSSProperties,
     content: {
-      margin: `0 0 0 ${collapsed ? 0 : '200px'}`,
+      margin: isFull ? 0 : `0 0 0 ${collapsed ? 0 : '200px'}`,
       transition: 'all .25s',
       padding: '10px 32px',
       borderTopRightRadius: 10,
@@ -222,10 +229,10 @@ const useStyles = (collapsed: boolean, navFill: boolean) => {
       borderBottomRightRadius: 10,
       backgroundColor: 'rgb(235, 237, 240)',
     } as CSSProperties,
-    collapsButton: { fontSize: '16px', width: 64, height: 64 } as CSSProperties,
+    collapseButton: { fontSize: '16px', width: 64, height: 64 } as CSSProperties,
     footer: {
       textAlign: 'center',
-      marginLeft: collapsed ? 0 : '200px',
+      marginLeft: isFull ? 0 : collapsed ? 0 : '200px',
       background: 'white',
     } as CSSProperties,
   };

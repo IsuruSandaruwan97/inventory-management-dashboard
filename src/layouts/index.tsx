@@ -5,7 +5,6 @@ import SideNav from '@components/Nav/SideNav';
 import { NProgress } from '@components/Nprogress';
 import { PageHeader } from '@components/PageHeader/PageHeader';
 import Time from '@components/Time';
-import { DEFAULT_ROLE } from '@configs/constants';
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { KEY_CODES } from '@configs/keycodes.ts';
 import { ROUTES } from '@configs/routes';
@@ -50,7 +49,11 @@ const DashboardLayout = ({ children }: TLayout) => {
   const queryClient = useQueryClient();
   const toast = useToastApi();
   const { name } = getJwtData();
-  const routes = useMemo(() => getRouts(DEFAULT_ROLE), []);
+  const token = localStorage?.getItem(KEY_CODES.AUTH_TOKEN);
+  const routes = useMemo(() => {
+    const defaultRole = token ? getJwtData().role : 'user';
+    return getRouts(defaultRole);
+  }, [token]);
 
   const styles = useStyles(collapsed, navFill, routes?.length <= 1);
 
@@ -133,12 +136,16 @@ const DashboardLayout = ({ children }: TLayout) => {
         <Layout>
           <HeaderNav style={styles.headerNav}>
             <Flex align="center">
-              <Button
-                type="text"
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed(!collapsed)}
-                style={styles.collapseButton}
-              />
+              {routes?.length > 1 ? (
+                <Button
+                  type="text"
+                  icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  onClick={() => setCollapsed(!collapsed)}
+                  style={styles.collapseButton}
+                />
+              ) : (
+                <div />
+              )}
             </Flex>
             <Flex align="center" gap="small">
               <Time />

@@ -50,9 +50,9 @@ export const thousandSeparator = (value: string | number | null): string => {
   return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || '';
 };
 
-export const getJwtData = (): any => {
+export const getJwtData = (token?: string | null): any => {
   try {
-    const token = localStorage.getItem(KEY_CODES.AUTH_TOKEN);
+    token = token || localStorage.getItem(KEY_CODES.AUTH_TOKEN);
 
     if (!token) return null;
     return jwtDecode(token);

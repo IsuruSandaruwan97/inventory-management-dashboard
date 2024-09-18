@@ -83,7 +83,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
         duration: 4,
       });
       onClose();
-      await queryClient.invalidateQueries({ queryKey: ['stock-items'] });
+      await queryClient.invalidateQueries({ queryKey: ['items', 'stock-items'] });
     },
     onError: (error) => {
       toast.open({

@@ -1,12 +1,12 @@
 import { ExperimentOutlined } from '@ant-design/icons';
 import { COLOR } from '@configs/colors';
-import { ROUTES } from '@configs/routes';
+import { TRoutes } from '@configs/routes.tsx';
 import { ConfigProvider, Menu, MenuProps, SiderProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { CSSProperties, Key, ReactNode, useEffect, useRef, useState } from 'react';
+import { CSSProperties, Key, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-type SideNavProps = SiderProps & { collapsed: boolean };
+type SideNavProps = SiderProps & { collapsed: boolean; routes: TRoutes[] };
 type MenuItem = Required<MenuProps>['items'][number];
 const getItem = (label: ReactNode, key: Key, icon?: ReactNode, children?: MenuItem[], type?: 'group'): MenuItem => {
   return {
@@ -20,13 +20,13 @@ const getItem = (label: ReactNode, key: Key, icon?: ReactNode, children?: MenuIt
 
 const rootSubmenuKeys = ['/settings', '/stock', '/user-profile'];
 
-const getNavbarItems = (): MenuProps['items'] => {
-  return ROUTES.map((route) => {
+const getNavbarItems = (routes: TRoutes[]): MenuProps['items'] => {
+  return routes?.map((route) => {
     return getItem(route.name, route.path, route.icon, route.children);
   });
 };
 
-const SideNav = ({ collapsed, ...others }: SideNavProps) => {
+const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
   const styles = useStyles();
   const nodeRef = useRef(null);
   const { pathname } = useLocation();
@@ -53,6 +53,8 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
     setCurrent(`/${paths[paths.length - 1]}`);
   }, [pathname]);
 
+  const items = useMemo(() => getNavbarItems(routes), [routes]);
+
   return (
     <Sider ref={nodeRef} breakpoint="lg" collapsedWidth="50" collapsed={collapsed} {...others}>
       <div style={styles.logo}>
@@ -72,7 +74,7 @@ const SideNav = ({ collapsed, ...others }: SideNavProps) => {
         <Menu
           key={'key'}
           mode="inline"
-          items={getNavbarItems()}
+          items={items}
           onClick={onClick}
           openKeys={!collapsed ? rootSubmenuKeys : openKeys}
           onOpenChange={onOpenChange}

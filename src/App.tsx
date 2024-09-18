@@ -35,13 +35,16 @@ const PageWrapper = ({ children }: TPageWrapper) => {
   };
 
   useIdleTimer({
-    timeout: 120000,
+    timeout: 1200000,
     onIdle: handleOnIdle,
     debounce: 500,
     disabled: import.meta.env.VITE_ENABLE_IDLE === 'false',
   });
 
   useEffect(() => {
+    if (import.meta.env.VITE_ENABLE_IDLE === 'false') {
+      return;
+    }
     if (!localStorage.getItem(KEY_CODES.PIN) || getJwtData().pin) {
       setPin(false);
       return;

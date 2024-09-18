@@ -152,8 +152,12 @@ const DashboardLayout = ({ children }: TLayout) => {
             </Flex>
 
             <Dropdown menu={{ items: menuItems }} trigger={['click']}>
-              <Flex>
-                {name ? <Avatar>{name.slice(0, 2)?.toUpperCase()}</Avatar> : <Avatar icon={<UserOutlined />} />}
+              <Flex style={styles.profileDropdown}>
+                {name ? (
+                  <Avatar className={'profileDropdown'}>{name.slice(0, 2)?.toUpperCase()}</Avatar>
+                ) : (
+                  <Avatar icon={<UserOutlined />} />
+                )}
               </Flex>
             </Dropdown>
           </HeaderNav>
@@ -241,6 +245,9 @@ const useStyles = (collapsed: boolean, navFill: boolean, isFull: boolean = false
       textAlign: 'center',
       marginLeft: isFull ? 0 : collapsed ? 0 : '200px',
       background: 'white',
+    } as CSSProperties,
+    profileDropdown: {
+      cursor: 'pointer',
     } as CSSProperties,
   };
 };

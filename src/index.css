@@ -7,6 +7,7 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif !important;
+    overflow-y: hidden!important;
 }
 
 .ant-table-title {

@@ -18,10 +18,9 @@ export const fetchStockItems = async (
           return {
             id: item.id,
             itemId: item.code,
-            name: item.name,
+            name: `${item?.itemCategory?.name ? `${item?.itemCategory?.name} - ` : ''}${item.name}`,
             image: item.image,
             category: item?.itemCategory?.name,
-            subCategory: item?.itemSubCategory?.name,
             description: item?.description || '-',
             quantity: item.quantity || 0,
             reorderLevel: item?.reorder_level,

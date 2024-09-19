@@ -34,13 +34,17 @@ export type TStockData = {
 };
 
 const inventoryTableColumns: TableProps<any>['columns'] = [
-  {
-    title: 'Item Code',
-    dataIndex: 'itemId',
-    key: 'itemId',
-    fixed: 'left',
-    width: 150,
-  },
+  // {
+  //   title: '#',
+  //   dataIndex: 'itemId',
+  //   key: 'id',
+  //   width: 50,
+  //   fixed: 'left',
+  //   render: (_id, _record, index) => {
+  //     ++index;
+  //     return index;
+  //   },
+  // },
   {
     title: 'Image',
     dataIndex: 'image',
@@ -60,20 +64,12 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     fixed: 'left',
     width: 250,
   },
+
   {
-    title: 'Category',
-    dataIndex: 'category',
-    key: 'category',
-    responsive: ['md'],
-    fixed: 'left',
+    title: 'Item Code',
+    dataIndex: 'itemId',
+    key: 'itemId',
     width: 250,
-  },
-  {
-    title: 'Sub Category',
-    dataIndex: 'subCategory',
-    key: 'subCategory',
-    width: 150,
-    responsive: ['md'],
   },
   {
     title: 'Description',
@@ -84,13 +80,13 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
   },
   {
     title: 'Availability',
-    dataIndex: 'types',
+    dataIndex: 'availability',
     key: 'availability',
     width: 250,
     responsive: ['md'],
-    render: (_, { types }) => (
+    render: (_, { availability }) => (
       <Flex style={styles.availabilityContainer}>
-        {types?.map((type: any, i: number) => (
+        {availability?.map((type: any, i: number) => (
           <Tag className={'first-letter'} key={i}>
             {type}
           </Tag>
@@ -110,6 +106,14 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     key: 'reorderLevel',
     width: 100,
     responsive: ['md'],
+  },
+  {
+    title: 'Category',
+    dataIndex: 'category',
+    key: 'category',
+    responsive: ['md'],
+    fixed: 'right',
+    width: 100,
   },
   {
     title: 'Status',
@@ -142,7 +146,6 @@ const Items = () => {
     queryKey: ['items', filters.search, filters.page],
     queryFn: () => fetchStockItems(filters),
   });
-
   useEffect(() => {
     if (stockItemError) {
       toastApi.open({

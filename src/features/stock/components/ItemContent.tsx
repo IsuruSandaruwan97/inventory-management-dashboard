@@ -56,27 +56,34 @@ const ItemContent = ({ styles, item, listType }: TItemContent) => {
 
   const columns: TableProps<any>['columns'] = [
     {
-      title: 'Request Id',
+      title: 'Id',
       dataIndex: 'id',
       key: 'id',
       responsive: ['md'],
+      width: 75,
     },
     {
       title: 'Item Name',
       dataIndex: 'stockItem',
       key: 'item',
-      render: (_, { stockItem }) => <>{stockItem.name}</>,
+      render: (_, { stockItem }) => (
+        <>
+          {stockItem.itemCategory?.name} - {stockItem.name}
+        </>
+      ),
     },
 
     {
       title: 'Item Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
+      width: 250,
       render: (_, { quantity }: { quantity: number }) => thousandSeparator(quantity),
     },
     {
       title: 'Actions',
       key: 'actions',
+      width: 250,
       render: (_, { status, id }) => {
         return status === 1 ? (
           <ActionButtons

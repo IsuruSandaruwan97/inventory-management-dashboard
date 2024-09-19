@@ -21,7 +21,6 @@ const Store = lazy(() => import('@features/store'));
 const Delivery = lazy(() => import('@features/delivery'));
 
 const Categories = lazy(() => import('@features/configurations/categories'));
-const SubCategories = lazy(() => import('@features/configurations/subCategories'));
 const Items = lazy(() => import('@features/configurations/items'));
 
 const defaultIconStyle = { fontSize: 20 };
@@ -112,11 +111,6 @@ export const ROUTES: TRoutes[] = [
     children: [
       { key: PATH.ITEMS, label: 'Items', element: <Items /> },
       { key: PATH.CATEGORIES, label: 'Category', element: <Categories /> },
-      {
-        key: PATH.SUB_CATEGORIES,
-        label: 'Sub-Category',
-        element: <SubCategories />,
-      },
     ],
   },
 ];

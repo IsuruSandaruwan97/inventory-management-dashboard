@@ -71,8 +71,8 @@ const Production = () => {
     isLoading: stockItemLoading,
     error: stockItemError,
   } = useQuery({
-    queryKey: ['store-items', option],
-    queryFn: () => fetchStockItems(DEFAULT_FILTERS, 'store', option.toLowerCase() as TStockStatus),
+    queryKey: ['production-items', option],
+    queryFn: () => fetchStockItems(DEFAULT_FILTERS, 'production', option.toLowerCase() as TStockStatus),
   });
 
   useEffect(() => {

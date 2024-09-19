@@ -15,7 +15,6 @@ export const ROLES = {
     'settings',
     'Items',
     'Category',
-    'Sub-Category',
     'Requests',
     'Inventory',
   ],
@@ -25,3 +24,10 @@ export const ROLES = {
   delivery_manager: ['Delivery'],
   production_manager: ['Production'],
 };
+
+export const AVAILABILITY_TYPES = [
+  { label: 'Stock', value: 'stock' },
+  { label: 'Production', value: 'production' },
+  { label: 'Store', value: 'store' },
+  { label: 'Delivery', value: 'delivery' },
+];

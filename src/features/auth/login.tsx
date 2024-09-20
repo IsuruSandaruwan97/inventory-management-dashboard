@@ -10,6 +10,8 @@ import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router';
+import { getRouts } from '../../configs/routes.tsx';
+import { getJwtData } from '../../utils';
 import { userLogin } from './services/auth.service.ts';
 
 type FieldType = {
@@ -45,8 +47,10 @@ const Login = () => {
   });
 
   useEffect(() => {
-    if (localStorage.getItem(KEY_CODES.AUTH_TOKEN)) {
-      navigate('/dashboard');
+    const token = localStorage.getItem(KEY_CODES.AUTH_TOKEN);
+    if (token) {
+      const routes = getRouts(getJwtData(token)?.role || 'user');
+      navigate(routes[0].path);
       return;
     }
     try {
@@ -60,7 +64,8 @@ const Login = () => {
 
   const directToDashboard = (token: string) => {
     localStorage.setItem(KEY_CODES.AUTH_TOKEN, token);
-    navigate('/dashboard');
+    const routes = getRouts(getJwtData(token)?.role || 'user');
+    navigate(routes[0].path);
     if (form.getFieldValue('remember')) {
       let rememberValues = form.getFieldsValue();
       localStorage.setItem(KEY_CODES.REMEMBER, encryptData(rememberValues));

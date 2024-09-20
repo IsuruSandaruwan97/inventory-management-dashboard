@@ -1,16 +1,15 @@
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { TStockData } from '@features/stock/Inventory';
 
 import NumberInput from '@components/NumberInput.tsx';
+import { AVAILABILITY_TYPES } from '@configs/constants';
 import { DEFAULT_ERROR_MESSAGE, DEFAULT_SUCCESS_MESSAGE } from '@configs/constants/api.constants.ts';
 import { TStockItems } from '@configs/types/api.types.ts';
 import { fetchCategories } from '@features/configurations/categories/services';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Divider, Flex, Form, Input, Modal, Select, Switch, Upload } from 'antd';
+import { Button, Divider, Flex, Form, Input, Modal, Select, Switch } from 'antd';
 import isEmpty from 'lodash/isEmpty';
-import { useEffect, useMemo, useState } from 'react';
-import { fetchSubCategories } from '../../subCategories/services';
+import { useEffect, useMemo } from 'react';
 import { createStockItems, updateStockItems } from '../services';
 
 const { TextArea } = Input;
@@ -23,18 +22,10 @@ type ItemFormProps = {
   mode?: 'admin' | 'stock';
 };
 
-const uploadButton = (loading: boolean) => (
-  <button style={{ border: 0, background: 'none' }} type="button">
-    {loading ? <LoadingOutlined /> : <PlusOutlined />}
-    <div style={{ marginTop: 8 }}>Upload</div>
-  </button>
-);
-
 const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
   const [form] = Form.useForm();
   const toast = useToastApi();
   const queryClient = useQueryClient();
-  const [category, setCategory] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isEmpty(item)) {
@@ -47,11 +38,6 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
   const { data: categories, isLoading: categoriesIsLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: () => fetchCategories(),
-  });
-
-  const { data: subCategories, isLoading: subCategoriesIsLoading } = useQuery({
-    queryKey: ['subCategories', category],
-    queryFn: () => fetchSubCategories(category),
   });
 
   const updateFormMutation = useMutation({
@@ -83,7 +69,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
         duration: 4,
       });
       onClose();
-      await queryClient.invalidateQueries({ queryKey: ['stock-items'] });
+      await queryClient.invalidateQueries({ queryKey: ['items', 'stock-items'] });
     },
     onError: (error) => {
       toast.open({
@@ -101,13 +87,6 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
     }));
   }, [categories]);
 
-  const itemSubCategories = useMemo(() => {
-    return subCategories?.map((item) => ({
-      label: item.name,
-      value: item.id,
-    }));
-  }, [subCategories]);
-
   const onClose = () => {
     form.resetFields();
     onCancel();
@@ -120,15 +99,15 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
       reorder_level: formValues.reorderLevel,
       name: formValues.name,
       code: formValues.itemId,
-      image: formValues.image,
+      availability: formValues.availability,
+      image: formValues.image || null,
       status: formValues.status,
       ...(!isUpdate && {
         category: formValues.category,
-        sub_category: formValues.subCategory,
       }),
     };
     if (!isUpdate) {
-      createFormMutation.mutate(payload as TStockItems);
+      createFormMutation.mutate(payload as any);
       return;
     }
     if (!item?.id) {
@@ -155,7 +134,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
       <Divider />
       <Form form={form} layout="horizontal" onFinish={onFinish} {...{ labelCol: { span: 6 } }}>
         <Form.Item label={'Item Code'} name={'itemId'} rules={[{ required: true, message: 'Item ID is required' }]}>
-          <Input />
+          <Input placeholder={'Item code + category after submit'} />
         </Form.Item>
         <Form.Item label={'Item Name'} name={'name'} rules={[{ required: true, message: 'Item Name is required' }]}>
           <Input />
@@ -168,21 +147,9 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
           <TextArea />
         </Form.Item>
         <Form.Item label={'Category'} name={'category'} rules={[{ required: true, message: 'Category is required' }]}>
-          <Select
-            onChange={(value) => setCategory(value)}
-            onClear={() => setCategory(null)}
-            disabled={isUpdate}
-            options={itemCategories}
-            loading={categoriesIsLoading}
-          />
+          <Select disabled={isUpdate} options={itemCategories} loading={categoriesIsLoading} mode={'multiple'} />
         </Form.Item>
-        <Form.Item
-          label={'Sub Category'}
-          name={'subCategory'}
-          rules={[{ required: true, message: 'Sub Category is required' }]}
-        >
-          <Select disabled={isUpdate || !category} options={itemSubCategories} loading={subCategoriesIsLoading} />
-        </Form.Item>
+
         <Form.Item
           label={'Reorder Level'}
           name={'reorderLevel'}
@@ -191,14 +158,12 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
           <NumberInput />
         </Form.Item>
 
-        <Form.Item label={'Image'} name={'image'}>
-          <Upload name="avatar" listType="picture-card" className="avatar-uploader" showUploadList={false}>
-            {item?.image ? (
-              <img src={item.image} alt="avatar" style={{ width: '100%' }} />
-            ) : (
-              uploadButton(updateFormMutation.isPending)
-            )}
-          </Upload>
+        <Form.Item
+          label={'Availability'}
+          name={'availability'}
+          rules={[{ required: true, message: 'Please select at least one' }]}
+        >
+          <Select disabled={isUpdate} options={AVAILABILITY_TYPES} loading={categoriesIsLoading} mode={'multiple'} />
         </Form.Item>
 
         <Form.Item label={'Status'} name={'status'}>

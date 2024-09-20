@@ -37,13 +37,6 @@ export type TStockData = {
 
 const inventoryTableColumns: TableProps<any>['columns'] = [
   {
-    title: 'Item Code',
-    dataIndex: 'itemId',
-    key: 'itemId',
-    fixed: 'left',
-    width: 100,
-  },
-  {
     title: 'Image',
     dataIndex: 'image',
     key: 'image',
@@ -69,11 +62,10 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     width: 150,
   },
   {
-    title: 'Sub Category',
-    dataIndex: 'subCategory',
-    key: 'subCategory',
-    width: 150,
-    responsive: ['md'],
+    title: 'Item Code',
+    dataIndex: 'itemId',
+    key: 'itemId',
+    width: 100,
   },
   {
     title: 'Description',

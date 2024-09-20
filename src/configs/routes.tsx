@@ -7,6 +7,8 @@ import {
   TruckOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
+import { ROLES } from '@configs/constants';
+import { TRole } from '@configs/types/api.types.ts';
 import { lazy, ReactNode } from 'react';
 // eslint-disable-next-line react-refresh/only-export-components
 const Dashboard = lazy(() => import('@features/dashboard'));
@@ -19,11 +21,9 @@ const Store = lazy(() => import('@features/store'));
 const Delivery = lazy(() => import('@features/delivery'));
 
 const Categories = lazy(() => import('@features/configurations/categories'));
-const SubCategories = lazy(() => import('@features/configurations/subCategories'));
 const Items = lazy(() => import('@features/configurations/items'));
 
 const defaultIconStyle = { fontSize: 20 };
-
 type TChildren = {
   key: string;
   label: string;
@@ -53,6 +53,15 @@ export const PATH = {
   STOCK_REQUESTS: '/requests',
   INVENTORY: '/inventory',
   ITEMS: '/items',
+};
+
+export const getRouts = (role: TRole): TRoutes[] => {
+  let roleWidgets = [];
+  if (Object.prototype.hasOwnProperty.call(ROLES, role)) {
+    // @ts-ignore
+    roleWidgets = ROLES[role];
+  }
+  return ROUTES.filter((item) => roleWidgets.includes(item.name));
 };
 
 export const ROUTES: TRoutes[] = [
@@ -102,11 +111,6 @@ export const ROUTES: TRoutes[] = [
     children: [
       { key: PATH.ITEMS, label: 'Items', element: <Items /> },
       { key: PATH.CATEGORIES, label: 'Category', element: <Categories /> },
-      {
-        key: PATH.SUB_CATEGORIES,
-        label: 'Sub-Category',
-        element: <SubCategories />,
-      },
     ],
   },
 ];

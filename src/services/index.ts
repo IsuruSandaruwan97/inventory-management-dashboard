@@ -6,7 +6,7 @@ import { formatCurrency } from '@utils/index';
 
 export const fetchStockItems = async (
   payload: TCommonFilters,
-  type?: TStockSteps,
+  type: TStockSteps = 'stock',
   status: TStockStatus = 'pending'
 ): Promise<{ records: TStockData[]; total: number }> => {
   return await Api.get(`${API_PATH.STOCK}${type ? `/${type}` : ''}${status ? `/${status}` : ''}`, {
@@ -18,10 +18,9 @@ export const fetchStockItems = async (
           return {
             id: item.id,
             itemId: item.code,
-            name: item.name,
+            name: `${item?.itemCategory?.name ? `${item?.itemCategory?.name} - ` : ''}${item.name}`,
             image: item.image,
             category: item?.itemCategory?.name,
-            subCategory: item?.itemSubCategory?.name,
             description: item?.description || '-',
             quantity: item.quantity || 0,
             reorderLevel: item?.reorder_level,

@@ -13,7 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button, Card, Row, Segmented, Space, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 
-const options = ['Pending', 'Completed'];
+const options = ['Pending', 'Completed', 'Damaged'];
 
 const columns: TableProps<any>['columns'] = [
   {
@@ -71,8 +71,8 @@ const Production = () => {
     isLoading: stockItemLoading,
     error: stockItemError,
   } = useQuery({
-    queryKey: ['store-items', option],
-    queryFn: () => fetchStockItems(DEFAULT_FILTERS, 'store', option.toLowerCase() as TStockStatus),
+    queryKey: ['production-items', option],
+    queryFn: () => fetchStockItems(DEFAULT_FILTERS, 'production', option.toLowerCase() as TStockStatus),
   });
 
   useEffect(() => {

@@ -1,8 +1,11 @@
 import { ExperimentOutlined } from '@ant-design/icons';
 import { COLOR } from '@configs/colors';
 import { TRoutes } from '@configs/routes.tsx';
-import { ConfigProvider, Menu, MenuProps, SiderProps } from 'antd';
+import { getPendingReqCount } from '@services';
+import { useQuery } from '@tanstack/react-query';
+import { Badge, ConfigProvider, Menu, MenuProps, SiderProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
+import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, Key, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -20,7 +23,22 @@ const getItem = (label: ReactNode, key: Key, icon?: ReactNode, children?: MenuIt
 
 const rootSubmenuKeys = ['/settings', '/stock', '/user-profile'];
 
-const getNavbarItems = (routes: TRoutes[]): MenuProps['items'] => {
+const getNavbarItems = (routes: TRoutes[], count: number | undefined): MenuProps['items'] => {
+  if (count && count > 0) {
+    routes.find(({ children, name }) => {
+      if (name === 'Stock' && children && !isEmpty(children)) {
+        const index = children?.findIndex((child) => child.key === '/requests');
+        if (index > -1) {
+          // @ts-ignore
+          children[index].label = (
+            <Badge offset={[10, 0]} count={count} size={'small'}>
+              {children[index].label}
+            </Badge>
+          );
+        }
+      }
+    });
+  }
   return routes?.map((route) => {
     return getItem(route.name, route.path, route.icon, route.children);
   });
@@ -34,6 +52,10 @@ const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
   const [openKeys, setOpenKeys] = useState<string[]>();
   const [current, setCurrent] = useState<string>('');
 
+  const { data: count } = useQuery({
+    queryKey: ['request-count', pathname],
+    queryFn: () => getPendingReqCount(),
+  });
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key) navigate(key);
   };
@@ -53,7 +75,7 @@ const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
     setCurrent(`/${paths[paths.length - 1]}`);
   }, [pathname]);
 
-  const items = useMemo(() => getNavbarItems(routes), [routes]);
+  const items = useMemo(() => getNavbarItems(routes, count), [routes, count]);
 
   return (
     <Sider ref={nodeRef} breakpoint="lg" collapsedWidth="50" collapsed={collapsed} {...others}>

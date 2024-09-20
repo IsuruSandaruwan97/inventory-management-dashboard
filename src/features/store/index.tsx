@@ -20,11 +20,6 @@ const columns: TableProps<any>['columns'] = [
     key: 'id',
   },
   {
-    title: 'Item Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
     title: 'Image',
     dataIndex: 'image',
     key: 'image',
@@ -34,14 +29,14 @@ const columns: TableProps<any>['columns'] = [
     },
   },
   {
+    title: 'Item Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
     title: 'Category',
     dataIndex: 'category',
     key: 'category',
-  },
-  {
-    title: 'Sub Category',
-    dataIndex: 'subCategory',
-    key: 'subCategory',
   },
   {
     title: 'Quantity Available',

@@ -11,8 +11,8 @@ import { fetchItemDropdown } from '@features/configurations/items/services';
 import { insertStockItems } from '@features/stock/services';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { formatCurrency } from '@utils/index';
-import { Button, Card, Col, Flex, Form, Modal, Popconfirm, Row, Select, Space, TableProps, Typography } from 'antd';
+import { convertItemObject, formatCurrency } from '@utils/index';
+import { Button, Card, Col, Flex, Form, Modal, Popconfirm, Row, Space, TableProps, TreeSelect, Typography } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -172,6 +172,8 @@ const StockForm = ({ visible, onCancel }: TStockFormProps) => {
     [itemList]
   );
 
+  const itemTree = useMemo(() => convertItemObject(itemList || []), [itemList]);
+
   const onClose = () => {
     form.resetFields();
     setSelectedItem(null);
@@ -242,7 +244,7 @@ const StockForm = ({ visible, onCancel }: TStockFormProps) => {
               </Typography.Title>
               <Form onFinish={onFillForm} form={form} layout={'vertical'} style={styles.form}>
                 <Form.Item label={'Item'} name={'item_id'} rules={[{ required: true, message: 'Item is required' }]}>
-                  <Select showSearch options={itemList as unknown as KeyValuePair[]} />
+                  <TreeSelect treeLine treeData={itemTree} />
                 </Form.Item>
                 <Form.Item
                   label={'Quantity'}

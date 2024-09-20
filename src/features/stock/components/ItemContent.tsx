@@ -34,7 +34,7 @@ const ItemContent = ({ styles, item, listType }: TItemContent) => {
           content: 'Some items are not approved, Please check the stock and try again',
           duration: 4,
         });
-        await queryClient.invalidateQueries({ queryKey: ['requests'] });
+        await queryClient.invalidateQueries({ queryKey: ['requests', 'request-count'] });
         return;
       }
       toast.open({
@@ -43,7 +43,7 @@ const ItemContent = ({ styles, item, listType }: TItemContent) => {
         duration: 4,
       });
 
-      await queryClient.invalidateQueries({ queryKey: ['requests'] });
+      await queryClient.invalidateQueries({ queryKey: ['requests', 'request-count'] });
     },
     onError: (error) => {
       toast.open({

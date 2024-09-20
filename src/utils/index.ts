@@ -1,8 +1,17 @@
 import { DEFAULT_CURRENCY } from '@configs/index';
+import { KEY_CODES } from '@configs/keycodes.ts';
+import { queryClient } from '@configs/react-query.config.ts';
+import { TStockData } from '@features/stock/Inventory.tsx';
 import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
-import { KEY_CODES } from '../configs/keycodes.ts';
+export const logout = () => {
+  localStorage.removeItem(KEY_CODES.AUTH_TOKEN);
+  localStorage.removeItem(KEY_CODES.PIN);
+  localStorage.removeItem(KEY_CODES.REFRESH_TOKEN);
+  queryClient.removeQueries();
+  location.href = '/';
+};
 
 export const randomPassword = (passwordLength: number = 12): string => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -80,4 +89,27 @@ export const encryptData = (data: any): string => {
 export const decryptData = (data: string): any => {
   const rememberBytes = CryptoJS.AES.decrypt(data, import.meta.env.VITE_SECRET).toString(CryptoJS.enc.Utf8);
   return JSON.parse(rememberBytes);
+};
+
+export const convertItemObject = (items: TStockData[] | any[], titleSelectable: boolean = false) => {
+  const categorizedData = items.reduce((acc: any, current) => {
+    const { category, id, name, label, value } = current;
+    let categoryGroup = acc.find((group: any) => group.title === category);
+
+    if (!categoryGroup) {
+      categoryGroup = {
+        title: category,
+        value: category,
+        selectable: titleSelectable,
+        children: [],
+      };
+      acc.push(categoryGroup);
+    }
+
+    categoryGroup.children.push({ title: label || name, value: value || id });
+
+    return acc;
+  }, []);
+
+  return categorizedData || [];
 };

@@ -9,6 +9,7 @@ import { requestItems } from '@features/production/services';
 import { TItem } from '@features/stock/components/forms/StockForm.tsx';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { convertItemObject } from '@utils/index';
 import {
   Button,
   Card,
@@ -20,9 +21,9 @@ import {
   ModalProps,
   Popconfirm,
   Row,
-  Select,
   Space,
   TableProps,
+  TreeSelect,
   Typography,
 } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -191,6 +192,8 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
     mutation.mutate(items);
   };
 
+  const dropdownItems = useMemo(() => convertItemObject(itemList || []), [itemList]);
+
   return (
     <>
       <Modal
@@ -228,7 +231,7 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
               </Typography.Title>
               <Form onFinish={onFillForm} form={form} layout="vertical" style={styles.itemInsertForm}>
                 <Form.Item label={'Item'} name={'item_id'} rules={[{ required: true, message: 'Item is required' }]}>
-                  <Select placeholder={'Select Item'} showSearch options={itemList as unknown as KeyValuePair[]} />
+                  <TreeSelect treeLine placeholder={'Select Item'} treeData={dropdownItems} />
                 </Form.Item>
                 <Form.Item
                   label={'Quantity'}

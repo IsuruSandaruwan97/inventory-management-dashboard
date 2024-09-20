@@ -1,3 +1,5 @@
+import { logout } from '@utils/index.ts';
+import { message } from 'antd';
 import axios from 'axios';
 import { KEY_CODES } from './keycodes.ts';
 
@@ -27,6 +29,12 @@ Api.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (error.response.status === 401) {
+      message.error('Please login again!').then(() => {
+        logout();
+        return Promise.reject();
+      });
+    }
     return Promise.reject(error?.response?.data || error?.response || error);
   }
 );

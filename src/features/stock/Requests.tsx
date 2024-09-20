@@ -8,7 +8,7 @@ import { TListType } from '@configs/types';
 import { TCommonFilters } from '@configs/types/api.types.ts';
 import ItemContent from '@features/stock/components/ItemContent';
 import { fetchItemRequests } from '@features/stock/services';
-import { getTagColor } from '@features/stock/utils/index';
+import { getTagColor } from '@features/stock/utils';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Collapse, Empty, Flex, Pagination, Space, Tag } from 'antd';

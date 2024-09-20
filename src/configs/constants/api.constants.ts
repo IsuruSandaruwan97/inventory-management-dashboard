@@ -9,6 +9,8 @@ export const API_PATH = {
   SUB_CATEGORIES: 'subcategories',
   ACCEPT_OR_REJECT_REQ: 'transactions/action',
   REQUEST_ITEMS: 'transactions/request',
+  GET_REQ_COUNT: 'transactions/req-count',
+  MARK_DAMAGE_ITEMS: 'transactions/damage',
 };
 
 export const DEFAULT_ERROR_MESSAGE = 'Something went wrong!';

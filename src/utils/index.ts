@@ -92,7 +92,6 @@ export const decryptData = (data: string): any => {
 };
 
 export const convertItemObject = (items: TStockData[] | any[], titleSelectable: boolean = false) => {
-  console.log(items);
   const categorizedData = items.reduce((acc: any, current) => {
     const { category, id, name, label, value } = current;
     let categoryGroup = acc.find((group: any) => group.title === category);

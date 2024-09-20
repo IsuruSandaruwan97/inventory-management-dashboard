@@ -1,3 +1,11 @@
+export type TDefaultResponse = {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data?: any;
+  timestamp: string;
+};
+
 export type TUserLoginRequest = {
   username: string;
   password: string;
@@ -24,6 +32,13 @@ export type TStockItems = {
   last_order?: Date;
   quantity?: number;
   status?: boolean;
+};
+
+export type TMarkAsDamaged = {
+  item: number;
+  quantity: number;
+  reason: string;
+  type: TStockSteps;
 };
 
 export type TStockSteps = 'store' | 'production' | 'delivery' | 'damage' | 'return' | 'stock';

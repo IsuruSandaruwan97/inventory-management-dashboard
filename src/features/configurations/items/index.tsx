@@ -63,8 +63,16 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     key: 'name',
     fixed: 'left',
     width: 250,
+    render: (_, { itemCategory, name }) => `${itemCategory?.name ? `${itemCategory?.name} - ` : ''}${name}`,
   },
-
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+    fixed: 'left',
+    width: 100,
+    render: (_, { type }) => <Tag className={'first-letter'}>{type}</Tag>,
+  },
   {
     title: 'Item Code',
     dataIndex: 'itemId',

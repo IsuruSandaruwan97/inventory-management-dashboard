@@ -1,7 +1,7 @@
 import { TStockData } from '@features/stock/Inventory';
 
 import NumberInput from '@components/NumberInput.tsx';
-import { AVAILABILITY_TYPES } from '@configs/constants';
+import { AVAILABILITY_TYPES, DEFAULT_ITEM_TYPES } from '@configs/constants';
 import { DEFAULT_ERROR_MESSAGE, DEFAULT_SUCCESS_MESSAGE } from '@configs/constants/api.constants.ts';
 import { TStockItems } from '@configs/types/api.types.ts';
 import { fetchCategories } from '@features/configurations/categories/services';
@@ -99,6 +99,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
       reorder_level: formValues.reorderLevel,
       name: formValues.name,
       code: formValues.itemId,
+      type: formValues.type,
       availability: formValues.availability,
       image: formValues.image || null,
       status: formValues.status,
@@ -138,6 +139,9 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
         </Form.Item>
         <Form.Item label={'Item Name'} name={'name'} rules={[{ required: true, message: 'Item Name is required' }]}>
           <Input />
+        </Form.Item>
+        <Form.Item label={'Type'} name={'type'} rules={[{ required: true, message: 'Type is required' }]}>
+          <Select options={DEFAULT_ITEM_TYPES} loading={categoriesIsLoading} />
         </Form.Item>
         <Form.Item
           label={'Description'}

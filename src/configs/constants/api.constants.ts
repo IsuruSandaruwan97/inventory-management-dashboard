@@ -3,6 +3,7 @@ export const API_PATH = {
   LOGOUT: 'auth/logout',
   USERS: 'users',
   STOCK: 'stock',
+  COMPLETE_ITEMS: 'stock/complete',
   TRANSACTIONS: 'transactions',
   STOCK_ITEMS: 'items',
   CATEGORIES: 'categories',

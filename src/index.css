@@ -13,6 +13,10 @@ body {
     padding: 0 !important;
 }
 
+.ant-form-item {
+    margin-bottom: 8px;
+}
+
 /* Override the Ant design dropdown default button */
 .disable-dropdown-default-btn .ant-btn-compact-first-item {
     background-color: #f5f5f5;

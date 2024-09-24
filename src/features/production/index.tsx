@@ -28,13 +28,6 @@ const columns: TableProps<any>['columns'] = [
     showSorterTooltip: false,
   },
   {
-    title: 'Item Code',
-    dataIndex: 'itemId',
-    key: 'itemId',
-    fixed: 'left',
-    width: '20%',
-  },
-  {
     title: 'Image',
     dataIndex: 'image',
     key: 'image',
@@ -92,8 +85,8 @@ const Production = () => {
           <Row style={styles.actionBar}>
             <div>
               <Space>
-                <Button onClick={() => setCompleteItemsModal(true)}>Complete Items</Button>
                 <Button onClick={() => setRequestModal(true)}>Request Items</Button>
+                <Button onClick={() => setCompleteItemsModal(true)}>Complete Items</Button>
                 <Button onClick={() => setShowDamageModal(true)}>Damaged Items</Button>
               </Space>
             </div>

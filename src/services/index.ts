@@ -11,7 +11,7 @@ import { TStockData } from '@features/stock/Inventory.tsx';
 import { formatCurrency } from '@utils/index';
 
 export const fetchStockItems = async (
-  payload: TCommonFilters,
+  payload: (TCommonFilters & { category?: number | null }) | null,
   type: TStockSteps = 'stock',
   status: TStockStatus = 'pending'
 ): Promise<{ records: TStockData[]; total: number }> => {
@@ -26,6 +26,7 @@ export const fetchStockItems = async (
             itemId: item.code,
             name: `${item?.itemCategory?.name ? `${item?.itemCategory?.name} - ` : ''}${item.name}`,
             image: item.image,
+            type: item.type,
             category: item?.itemCategory?.name,
             description: item?.description || '-',
             quantity: item.quantity || 0,

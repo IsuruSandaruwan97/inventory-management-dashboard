@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import Table from '@components/Table';
+import ItemTable from '@components/ItemTable';
 import { DEFAULT_ERROR_MESSAGE, DEFAULT_SUCCESS_MESSAGE } from '@configs/constants/api.constants.ts';
 import { queryClient } from '@configs/react-query.config.ts';
 import { StyleSheet } from '@configs/stylesheet';
@@ -90,6 +90,7 @@ const getColumns = ({ items, setEditItem, onDeleteItem }: TGetColumns): TablePro
     },
   },
 ];
+
 const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
   const [form] = useForm();
   const toastApi = useToastApi();
@@ -113,7 +114,7 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
         duration: 4,
       });
       onCancelForm();
-      await queryClient.invalidateQueries({ queryKey: ['stock-items'] });
+      await queryClient.invalidateQueries({ queryKey: ['stock-items', 'request-count'] });
     },
     onError: (error) => {
       toastApi.open({
@@ -207,21 +208,12 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
       >
         <Row gutter={8}>
           <Col xs={24} md={24} lg={18}>
-            <Card style={styles.cardContainer}>
-              <div style={styles.tableContainer}>
-                <Table rowKey={'id'} dataSource={items || []} columns={columns} scroll={{ y: 200 }} />
-              </div>
-              <Space style={styles.submitButtonContainer}>
-                <Button
-                  onClick={() => submitPayload()}
-                  loading={mutation.isPending}
-                  style={styles.submitButton}
-                  type={'primary'}
-                >
-                  Submit
-                </Button>
-              </Space>
-            </Card>
+            <ItemTable
+              items={items || []}
+              columns={columns}
+              loading={itemListLoading}
+              onSubmit={() => submitPayload()}
+            />
           </Col>
 
           <Col lg={6}>
@@ -305,25 +297,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-  tableContainer: {
-    flexGrow: 1,
-    minHeight: '290px',
-  },
-  submitButtonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '16px 0',
-  },
-  submitButton: {
-    width: 150,
-  },
-  button: {
-    width: '50%',
-  },
-  actionButtonContainer: {
-    justifyContent: 'center',
-    display: 'flex',
-  },
   formTitle: {
     margin: 0,
   },
@@ -331,7 +304,14 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 16,
   },
+  button: {
+    width: '50%',
+  },
 
+  actionButtonContainer: {
+    justifyContent: 'center',
+    display: 'flex',
+  },
   buttonContainer: {
     width: '100%',
   },

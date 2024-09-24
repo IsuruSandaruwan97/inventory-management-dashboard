@@ -31,3 +31,9 @@ export const AVAILABILITY_TYPES = [
   { label: 'Store', value: 'store' },
   { label: 'Delivery', value: 'delivery' },
 ];
+
+export const DEFAULT_ITEM_TYPES = [
+  { label: 'Bottle', value: 'bottle' },
+  { label: 'Lid', value: 'lid' },
+  { label: 'Label', value: 'label' },
+];

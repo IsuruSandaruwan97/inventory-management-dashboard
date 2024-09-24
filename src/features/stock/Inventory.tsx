@@ -33,6 +33,7 @@ export type TStockData = {
   totalPrice: number;
   status: boolean;
   lastOrder: Date;
+  type?: string;
 };
 
 const inventoryTableColumns: TableProps<any>['columns'] = [

@@ -11,14 +11,16 @@ export const fetchStockItems = async (payload: TCommonFilters): Promise<{ record
           return {
             id: item.id,
             itemId: item.code,
-            name: `${item?.itemCategory?.name ? `${item?.itemCategory?.name} - ` : ''}${item.name}`,
+            name: item.name,
             image: item.image,
             category: item?.itemCategory?.name,
+            type: item.type,
             description: item?.description || '-',
             reorderLevel: item?.reorder_level,
             updatedBy: item.updater?.name || '-',
             status: item?.status,
             availability: item.availability,
+            itemCategory: item.itemCategory,
           };
         }) || [],
       total: response?.data?.data?.count || 0,

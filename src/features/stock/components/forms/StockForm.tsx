@@ -11,7 +11,7 @@ import { fetchItemDropdown } from '@features/configurations/items/services';
 import { insertStockItems } from '@features/stock/services';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { convertItemObject, formatCurrency } from '@utils/index';
+import { convertItemObject, formatCurrency, thousandSeparator } from '@utils/index';
 import { Button, Card, Col, Flex, Form, Modal, Popconfirm, Row, Space, TableProps, TreeSelect, Typography } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useMemo, useState } from 'react';
@@ -59,7 +59,7 @@ const getColumns = ({ items, setEditItem, onDeleteItem }: TGetColumns): TablePro
     title: 'Quantity',
     dataIndex: 'quantity',
     key: 'quantity',
-    render: (value) => formatCurrency(value) || '-',
+    render: (value) => thousandSeparator(value) || '-',
     width: '14%',
   },
   {

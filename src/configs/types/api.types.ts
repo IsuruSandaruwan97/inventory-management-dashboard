@@ -46,3 +46,11 @@ export type TStockSteps = 'store' | 'production' | 'delivery' | 'damage' | 'retu
 export type TStockStatus = 'pending' | 'completed' | 'return' | 'damaged';
 
 export type TRole = 'admin' | 'user' | 'store_manager' | 'stock_manger' | 'production_manager' | 'delivery_manager';
+
+export type TCompleteItems = {
+  item: number;
+  bottle: number;
+  label: number;
+  lid: number;
+  quantity: number;
+};

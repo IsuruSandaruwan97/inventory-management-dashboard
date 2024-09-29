@@ -1,13 +1,16 @@
 import { ExperimentOutlined } from '@ant-design/icons';
 import { COLOR } from '@configs/colors';
 import { TRoutes } from '@configs/routes.tsx';
+import { StyleSheet } from '@configs/stylesheet';
 import { getPendingReqCount } from '@services';
 import { useQuery } from '@tanstack/react-query';
+import { getJwtData } from '@utils/index.ts';
 import { Badge, ConfigProvider, Menu, MenuProps, SiderProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import isEmpty from 'lodash/isEmpty';
-import { CSSProperties, Key, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { Key, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
 
 type SideNavProps = SiderProps & { collapsed: boolean; routes: TRoutes[] };
 type MenuItem = Required<MenuProps>['items'][number];
@@ -23,15 +26,20 @@ const getItem = (label: ReactNode, key: Key, icon?: ReactNode, children?: MenuIt
 
 const rootSubmenuKeys = ['/settings', '/stock', '/user-profile'];
 
-const getNavbarItems = (routes: TRoutes[], count: number | undefined): MenuProps['items'] => {
-  if (count && count > 0) {
+const getNavbarItems = (
+  routes: TRoutes[],
+  count: number | undefined,
+  isSideNav: boolean = false
+): MenuProps['items'] => {
+  if (count || count === 0) {
     routes.find(({ children, name }) => {
       if (name === 'Stock' && children && !isEmpty(children)) {
         const index = children?.findIndex((child) => child.key === '/requests');
-        if (index > -1) {
+
+        if (index > -1 && isSideNav) {
           // @ts-ignore
           children[index].label = (
-            <Badge offset={[10, 0]} count={count} size={'small'}>
+            <Badge status={'success'} offset={[10, 0]} color={'red'} count={count} size={'small'} showZero={true}>
               {children[index].label}
             </Badge>
           );
@@ -45,17 +53,50 @@ const getNavbarItems = (routes: TRoutes[], count: number | undefined): MenuProps
 };
 
 const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
-  const styles = useStyles();
   const nodeRef = useRef(null);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [openKeys, setOpenKeys] = useState<string[]>();
   const [current, setCurrent] = useState<string>('');
+  const [count, setCount] = useState<number>(0);
 
-  const { data: count } = useQuery({
+  const isStockManager = (): boolean => {
+    const { role } = getJwtData();
+    return role && role.includes('stock_manager');
+  };
+
+  const { data: reqCount } = useQuery({
     queryKey: ['request-count', pathname],
     queryFn: () => getPendingReqCount(),
+    enabled: isStockManager(),
   });
+  useEffect(() => {
+    const paths = pathname.split('/');
+    setOpenKeys(paths);
+    setCurrent(`/${paths[paths.length - 1]}`);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (reqCount && Number.isInteger(Number(reqCount))) setCount(reqCount);
+  }, [reqCount]);
+
+  useEffect(() => {
+    let socket;
+    if (!isStockManager()) {
+      return;
+    }
+    socket = io(import.meta.env.VITE_API_URL.replace(/\/$/, ''));
+    socket.on('message', (message) => {
+      try {
+        const reqCount = Number(message);
+        if (Number.isInteger(reqCount)) setCount(reqCount);
+      } catch (e) {}
+    });
+    return () => {
+      socket?.disconnect();
+    };
+  }, []);
+
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key) navigate(key);
   };
@@ -69,13 +110,7 @@ const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
   };
 
-  useEffect(() => {
-    const paths = pathname.split('/');
-    setOpenKeys(paths);
-    setCurrent(`/${paths[paths.length - 1]}`);
-  }, [pathname]);
-
-  const items = useMemo(() => getNavbarItems(routes, count), [routes, count]);
+  const items = useMemo(() => getNavbarItems(routes, count, true), [routes, count]);
 
   return (
     <Sider ref={nodeRef} breakpoint="lg" collapsedWidth="50" collapsed={collapsed} {...others}>
@@ -110,19 +145,23 @@ const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
 
 export default SideNav;
 
-const useStyles = () => {
-  return {
-    menuContainer: {
-      border: 'none',
-      minHeight: '100vh',
-    } as CSSProperties,
-    logo: {
-      height: '5em',
-      backgroundColor: 'white',
-      textAlign: 'center',
-      flex: 1,
-      alignContent: 'center',
-      alignItems: 'center',
-    } as CSSProperties,
-  };
-};
+const styles = StyleSheet.create({
+  menuContainer: {
+    border: 'none',
+    minHeight: '100vh',
+  },
+  logo: {
+    height: '5em',
+    backgroundColor: 'white',
+    textAlign: 'center',
+    flex: 1,
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  countBadge: {
+    backgroundColor: 'transparent',
+    color: 'transparent',
+    border: 'none',
+    boxShadow: 'none',
+  },
+});

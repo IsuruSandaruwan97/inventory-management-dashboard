@@ -34,6 +34,18 @@ export type TStockData = {
   status: boolean;
   lastOrder: Date;
   type?: string;
+  createdAt: Date;
+};
+
+export type TCompletedItems = {
+  id: number;
+  category: number;
+  item: string[];
+  quantity: number;
+  createdAt: string;
+  updatedAt: string | null;
+  userId: string;
+  itemCategory: { name: string; code: string };
 };
 
 const inventoryTableColumns: TableProps<any>['columns'] = [

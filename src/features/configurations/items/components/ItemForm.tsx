@@ -9,7 +9,7 @@ import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Divider, Flex, Form, Input, Modal, Select, Switch } from 'antd';
 import isEmpty from 'lodash/isEmpty';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createStockItems, updateStockItems } from '../services';
 
 const { TextArea } = Input;
@@ -26,6 +26,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
   const [form] = Form.useForm();
   const toast = useToastApi();
   const queryClient = useQueryClient();
+  const [type, setType] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isEmpty(item)) {
@@ -88,6 +89,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
   }, [categories]);
 
   const onClose = () => {
+    setType(null);
     form.resetFields();
     onCancel();
   };
@@ -123,6 +125,22 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
     updateFormMutation.mutate({ ...payload, id: item.id } as TStockItems);
   };
 
+  const availabilityOptions = useMemo(() => {
+    if (type) {
+      form.setFieldValue(
+        'availability',
+        type === 'bottle' ? ['stock', 'production', 'store', 'delivery'] : ['stock', 'production', 'store']
+      );
+    }
+    return type === 'bottle'
+      ? AVAILABILITY_TYPES
+      : [
+          { label: 'Stock', value: 'stock' },
+          { label: 'Production', value: 'production' },
+          { label: 'Store', value: 'store' },
+        ];
+  }, [type, form]);
+
   return (
     <Modal
       open={visible}
@@ -141,7 +159,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
           <Input />
         </Form.Item>
         <Form.Item label={'Type'} name={'type'} rules={[{ required: true, message: 'Type is required' }]}>
-          <Select options={DEFAULT_ITEM_TYPES} loading={categoriesIsLoading} />
+          <Select options={DEFAULT_ITEM_TYPES} onChange={(e) => setType(e)} loading={categoriesIsLoading} />
         </Form.Item>
         <Form.Item
           label={'Description'}
@@ -167,7 +185,12 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
           name={'availability'}
           rules={[{ required: true, message: 'Please select at least one' }]}
         >
-          <Select disabled={isUpdate} options={AVAILABILITY_TYPES} loading={categoriesIsLoading} mode={'multiple'} />
+          <Select
+            disabled={isUpdate || !type || !!(type && type === 'bottle')}
+            options={availabilityOptions}
+            loading={categoriesIsLoading}
+            mode={'multiple'}
+          />
         </Form.Item>
 
         <Form.Item label={'Status'} name={'status'}>

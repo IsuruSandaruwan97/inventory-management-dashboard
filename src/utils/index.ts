@@ -23,8 +23,8 @@ export const randomPassword = (passwordLength: number = 12): string => {
   return password;
 };
 
-export const formatDate = (date: Date): string => {
-  return dayjs(date).format('DD/MM/YYYY');
+export const formatDate = (date: Date, format: string = 'DD/MM/YYYY'): string => {
+  return dayjs(date).format(format);
 };
 
 export const findRouteByPath = (routes: any[], path: string): any => {

@@ -17,11 +17,12 @@ export type TItemContent = {
   styles: any;
   item: TRequestItems;
   listType: TListType;
+  refetchData: () => void;
 };
 
 const { Text } = Typography;
 
-const ItemContent = ({ styles, item, listType }: TItemContent) => {
+const ItemContent = ({ styles, item, listType, refetchData }: TItemContent) => {
   const toast = useToastApi();
   const acceptRequest = useMutation({
     mutationFn: ({ action, id }: { action: number; id?: number }) =>
@@ -34,15 +35,15 @@ const ItemContent = ({ styles, item, listType }: TItemContent) => {
           content: 'Some items are not approved, Please check the stock and try again',
           duration: 4,
         });
-        await queryClient.invalidateQueries({ queryKey: ['requests', 'request-count'] });
         return;
       }
+
       toast.open({
         type: 'success',
         content: message || DEFAULT_SUCCESS_MESSAGE,
         duration: 4,
       });
-
+      refetchData();
       await queryClient.invalidateQueries({ queryKey: ['requests', 'request-count'] });
     },
     onError: (error) => {

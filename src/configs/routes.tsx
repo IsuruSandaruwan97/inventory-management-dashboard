@@ -55,13 +55,17 @@ export const PATH = {
   ITEMS: '/items',
 };
 
-export const getRouts = (role: TRole): TRoutes[] => {
-  let roleWidgets = [];
-  if (Object.prototype.hasOwnProperty.call(ROLES, role)) {
-    // @ts-ignore
-    roleWidgets = ROLES[role];
-  }
-  return ROUTES.filter((item) => roleWidgets.includes(item.name));
+export const getRouts = (role: TRole | TRole[]): TRoutes[] => {
+  let roleWidgets: string[] = [];
+  let userRoles: string[] = typeof role === 'string' ? [role] : role;
+  userRoles?.map((role) => {
+    if (Object.prototype.hasOwnProperty.call(ROLES, role)) {
+      // @ts-ignore
+      roleWidgets = [...roleWidgets, ...ROLES[role]];
+    }
+  });
+  roleWidgets = Array.from(new Set(roleWidgets));
+  return ROUTES.filter((item) => roleWidgets?.includes(item.name));
 };
 
 export const ROUTES: TRoutes[] = [

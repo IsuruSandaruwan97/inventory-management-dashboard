@@ -2,20 +2,24 @@ import { DropboxOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { DEFAULT_FILTERS } from '@configs/constants';
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
+import { PAGE_SIZES } from '@configs/index.tsx';
 import { StyleSheet } from '@configs/stylesheet';
-import { TStockStatus } from '@configs/types/api.types.ts';
+import { TCommonFilters, TStockStatus } from '@configs/types/api.types.ts';
 import CompleteItemsModal from '@features/production/components/forms/CompleteItemsModal';
 import DamageItemsModal from '@features/production/components/forms/DamageItemsModal';
 import RequestItemsModal from '@features/production/components/forms/RequestItemsModal';
+import { fetchCompletedItems } from '@features/production/services';
 import { useToastApi } from '@hooks/useToastApi.tsx';
-import { fetchStockItems } from '@services';
+import { fetchDamagedItems, fetchStockItems } from '@services';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Card, Row, Segmented, Space, TableProps } from 'antd';
-import { useEffect, useState } from 'react';
+import { formatDate } from '@utils/index.ts';
+import { Button, Card, Row, Segmented, Space, TableProps, Tag } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 
+const colors = ['cyan', 'geekblue', 'gold'];
 const options = ['Pending', 'Completed', 'Damaged'];
 
-const columns: TableProps<any>['columns'] = [
+const getColumns = (type: string): TableProps<any>['columns'] => [
   {
     title: '#',
     dataIndex: 'id',
@@ -39,16 +43,49 @@ const columns: TableProps<any>['columns'] = [
     },
   },
   {
-    title: 'Item Name',
+    title: 'Item',
     dataIndex: 'name',
     key: 'name',
   },
-
+  ...(type === 'completed'
+    ? [
+        {
+          title: 'List',
+          dataIndex: 'list',
+          key: 'list',
+          render: (_: any, { list }: any) => (
+            <>
+              {list.map((item: any, index: number) => (
+                <Tag color={colors[index % colors.length]} key={index}>
+                  {item}
+                </Tag>
+              ))}
+            </>
+          ),
+        },
+      ]
+    : []),
   {
-    title: 'Quantity Available',
+    title: 'Quantity',
     dataIndex: 'quantity',
     key: 'quantity',
     width: '15%',
+  },
+  ...(type === 'damaged'
+    ? [
+        {
+          title: 'Reason',
+          dataIndex: 'reason',
+          key: 'reason',
+        },
+      ]
+    : []),
+  {
+    title: 'Date',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    width: '20%',
+    render: (_, { createdAt }) => formatDate(createdAt, 'YYYY-MM-DD hh:mm:ss a'),
   },
 ];
 
@@ -58,16 +95,37 @@ const Production = () => {
   const [completeItemsModal, setCompleteItemsModal] = useState<boolean>(false);
   const [requestModal, setRequestModal] = useState<boolean>(false);
   const [showDamageModal, setShowDamageModal] = useState<boolean>(false);
+  const [filters, setFilters] = useState<TCommonFilters>(DEFAULT_FILTERS);
 
   const {
     data: stockItems,
     isLoading: stockItemLoading,
     error: stockItemError,
   } = useQuery({
-    queryKey: ['production-items', option],
+    queryKey: ['production-items', option, filters.page, filters.search],
     queryFn: () => fetchStockItems(DEFAULT_FILTERS, 'production', option.toLowerCase() as TStockStatus),
+    enabled: option === 'Pending',
   });
 
+  const {
+    data: completedItems,
+    isLoading: completedItemsLoading,
+    error: completedItemError,
+  } = useQuery({
+    queryKey: ['production-items', option, filters.page, filters.search],
+    queryFn: () => fetchCompletedItems(DEFAULT_FILTERS),
+    enabled: option === 'Completed',
+  });
+
+  const {
+    data: damagedItems,
+    isLoading: damagedItemsLoading,
+    error: damagedItemsError,
+  } = useQuery({
+    queryKey: ['production-items', option, filters.page, filters.search],
+    queryFn: () => fetchDamagedItems('production', DEFAULT_FILTERS),
+    enabled: option === 'Damaged',
+  });
   useEffect(() => {
     if (stockItemError) {
       toastApi.open({
@@ -76,8 +134,24 @@ const Production = () => {
         duration: 4,
       });
     }
-  }, [stockItemError]);
+    if (completedItemError) {
+      toastApi.open({
+        content: completedItemError.message || DEFAULT_ERROR_MESSAGE,
+        type: 'error',
+        duration: 4,
+      });
+    }
+    if (damagedItemsError) {
+      toastApi.open({
+        content: damagedItemsError.message || DEFAULT_ERROR_MESSAGE,
+        type: 'error',
+        duration: 4,
+      });
+    }
+  }, [stockItemError, completedItemError, damagedItemsError]);
 
+  const columns = useMemo(() => getColumns(option.toLowerCase()), [option]);
+  const data: any = option === 'Completed' ? completedItems : option === 'Damaged' ? damagedItems : stockItems;
   return (
     <>
       <Space direction="vertical" style={styles.space}>
@@ -87,7 +161,7 @@ const Production = () => {
               <Space>
                 <Button onClick={() => setRequestModal(true)}>Request Items</Button>
                 <Button onClick={() => setCompleteItemsModal(true)}>Complete Items</Button>
-                <Button onClick={() => setShowDamageModal(true)}>Damaged Items</Button>
+                <Button onClick={() => setShowDamageModal(true)}>Damage Items</Button>
               </Space>
             </div>
 
@@ -96,7 +170,17 @@ const Production = () => {
             </div>
           </Row>
         </Card>
-        <Table loading={stockItemLoading} columns={columns} rowKey={'id'} dataSource={stockItems?.records || []} />
+        <Table
+          loading={stockItemLoading || completedItemsLoading || damagedItemsLoading}
+          columns={columns}
+          rowKey={'id'}
+          pagination={{
+            pageSize: PAGE_SIZES.INVENTORY,
+            total: data?.count || 0,
+            onChange: (page) => setFilters((prev) => ({ ...prev, page })),
+          }}
+          dataSource={data?.records || []}
+        />
       </Space>
       {completeItemsModal && (
         <CompleteItemsModal open={completeItemsModal} onCancel={() => setCompleteItemsModal(false)} />

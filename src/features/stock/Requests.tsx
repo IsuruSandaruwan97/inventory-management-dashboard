@@ -27,6 +27,7 @@ const Stock = () => {
     data: requestData,
     isLoading: requestLoading,
     error: requestError,
+    refetch: requestRefetch,
   } = useQuery({
     queryKey: ['requests', filters.page, filters.search, listType],
     queryFn: () => fetchItemRequests({ ...filters, status: listType }),
@@ -73,7 +74,15 @@ const Stock = () => {
                       </Space>
                     </div>
                   ),
-                  children: <ItemContent styles={styles} isMobile={isMobile} item={item} listType={listType} />,
+                  children: (
+                    <ItemContent
+                      styles={styles}
+                      isMobile={isMobile}
+                      item={item}
+                      listType={listType}
+                      refetchData={() => requestRefetch()}
+                    />
+                  ),
                 };
               })}
             />

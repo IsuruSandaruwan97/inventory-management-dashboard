@@ -16,8 +16,14 @@ import { useEffect, useState } from 'react';
 const columns: TableProps<any>['columns'] = [
   {
     title: '#',
-    dataIndex: 'id',
+    dataIndex: 'itemId',
     key: 'id',
+    width: 50,
+    fixed: 'left',
+    render: (_id, _record, index) => {
+      ++index;
+      return index;
+    },
   },
   {
     title: 'Image',

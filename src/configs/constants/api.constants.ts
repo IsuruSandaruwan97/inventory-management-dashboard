@@ -12,6 +12,8 @@ export const API_PATH = {
   REQUEST_ITEMS: 'transactions/request',
   GET_REQ_COUNT: 'transactions/req-count',
   MARK_DAMAGE_ITEMS: 'transactions/damage',
+  COMPLETED_ITEMS: 'items/completed',
+  DAMAGED_ITEMS: 'items/damaged',
 };
 
 export const DEFAULT_ERROR_MESSAGE = 'Something went wrong!';

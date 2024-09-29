@@ -2,6 +2,7 @@ import { Api } from '@configs/axios.config.ts';
 import { API_PATH } from '@configs/constants/api.constants.ts';
 import {
   TCommonFilters,
+  TDamageItems,
   TDefaultResponse,
   TMarkAsDamaged,
   TStockStatus,
@@ -36,6 +37,7 @@ export const fetchStockItems = async (
             status: item?.status,
             lastOrder: item.last_order,
             itemList: item.ItemQuantity || [],
+            createdAt: item.createdAt,
           };
         }) || [],
       total: response?.data?.data?.count || 0,
@@ -49,4 +51,8 @@ export const getPendingReqCount = async (): Promise<number> => {
 
 export const markDamageItems = async (payload: TMarkAsDamaged): Promise<TDefaultResponse> => {
   return await Api.put(API_PATH.MARK_DAMAGE_ITEMS, payload).then((response) => response?.data);
+};
+
+export const fetchDamagedItems = async (type: TStockSteps, params: TCommonFilters): Promise<TDamageItems> => {
+  return await Api.get(`${API_PATH.DAMAGED_ITEMS}/${type}`, { params }).then((response) => response?.data?.data);
 };

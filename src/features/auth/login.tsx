@@ -1,17 +1,16 @@
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
 import { KEY_CODES } from '@configs/keycodes';
+import { getRouts } from '@configs/routes.tsx';
 import { TUserLoginRequest } from '@configs/types/api.types.ts';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useMutation } from '@tanstack/react-query';
-import { decryptData, encryptData } from '@utils/index.ts';
+import { decryptData, encryptData, getJwtData } from '@utils/index.ts';
 import { Button, Card, Checkbox, Flex, Form, Input, theme, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router';
-import { getRouts } from '../../configs/routes.tsx';
-import { getJwtData } from '../../utils';
 import { userLogin } from './services/auth.service.ts';
 
 type FieldType = {

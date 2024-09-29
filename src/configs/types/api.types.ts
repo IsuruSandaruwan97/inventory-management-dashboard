@@ -54,3 +54,17 @@ export type TCompleteItems = {
   lid: number;
   quantity: number;
 };
+
+export type TDamageItems = {
+  count: number;
+  records: {
+    id: number;
+    item_id: number;
+    type: string;
+    quantity: number;
+    reason: string;
+    userId: string;
+    createdAt: Date;
+    item: string;
+  }[];
+};

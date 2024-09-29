@@ -86,7 +86,7 @@ const DamageItemsModal = ({ onCancel, ...others }: TDamageItemsModal) => {
     <>
       <Modal
         footer={null}
-        title={'Mark Damaged Items'}
+        title={'Mark Damage Items'}
         onCancel={() => onCancelForm()}
         onClose={() => onCancelForm()}
         loading={stockItemLoading}

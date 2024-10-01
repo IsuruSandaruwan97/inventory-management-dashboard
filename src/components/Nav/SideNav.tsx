@@ -62,7 +62,7 @@ const SideNav = ({ collapsed, routes, ...others }: SideNavProps) => {
 
   const isStockManager = (): boolean => {
     const { role } = getJwtData();
-    return role && role.includes('stock_manager');
+    return role && (role.includes('stock_manager') || role.includes('admin'));
   };
 
   const { data: reqCount } = useQuery({

@@ -58,7 +58,7 @@ const PageWrapper = ({ children }: TPageWrapper) => {
       toastApi.error('You should login to the system');
       navigate('/');
     }
-  }, [location?.pathname]);
+  }, [location?.pathname, navigate, toastApi]);
 
   const onAddPin = (code: string) => {
     const isValid = validatePin(code);

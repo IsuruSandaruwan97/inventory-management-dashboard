@@ -49,7 +49,8 @@ const Login = () => {
     const token = localStorage.getItem(KEY_CODES.AUTH_TOKEN);
     if (token) {
       const routes = getRouts(getJwtData(token)?.role || 'user');
-      navigate(routes[0].path);
+      const firstChildKey = routes?.[0]?.children?.[0]?.key;
+      navigate(firstChildKey || routes?.[0]?.path);
       return;
     }
     try {
@@ -64,7 +65,8 @@ const Login = () => {
   const directToDashboard = (token: string) => {
     localStorage.setItem(KEY_CODES.AUTH_TOKEN, token);
     const routes = getRouts(getJwtData(token)?.role || 'user');
-    navigate(routes[0].path);
+    const firstChildKey = routes?.[0]?.children?.[0]?.key;
+    navigate(firstChildKey || routes?.[0]?.path);
     if (form.getFieldValue('remember')) {
       let rememberValues = form.getFieldsValue();
       localStorage.setItem(KEY_CODES.REMEMBER, encryptData(rememberValues));

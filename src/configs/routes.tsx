@@ -58,6 +58,7 @@ export const PATH = {
 export const getRouts = (role: TRole | TRole[]): TRoutes[] => {
   let roleWidgets: string[] = [];
   let userRoles: string[] = typeof role === 'string' ? [role] : role;
+
   userRoles?.map((role) => {
     if (Object.prototype.hasOwnProperty.call(ROLES, role)) {
       // @ts-ignore
@@ -80,8 +81,8 @@ export const ROUTES: TRoutes[] = [
     path: PATH.STOCK,
     icon: <StockOutlined style={defaultIconStyle} />,
     children: [
-      { key: PATH.STOCK_REQUESTS, label: 'Requests', element: <Stock /> },
       { key: PATH.INVENTORY, label: 'Inventory', element: <Inventory /> },
+      { key: PATH.STOCK_REQUESTS, label: 'Requests', element: <Stock /> },
     ],
   },
   {

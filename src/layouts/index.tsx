@@ -16,6 +16,7 @@ import { findRouteByPath } from '@utils/index';
 import { getJwtData } from '@utils/index.ts';
 import { Avatar, Button, Dropdown, Flex, Layout, MenuProps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
+import isEmpty from 'lodash/isEmpty';
 import { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router';
@@ -54,8 +55,6 @@ const DashboardLayout = ({ children }: TLayout) => {
     const defaultRole = token ? getJwtData().role : 'user';
     return getRouts(defaultRole);
   }, [token]);
-
-  const styles = useStyles(collapsed, navFill, routes?.length <= 1);
 
   useEffect(() => {
     setCollapsed(isMobile);
@@ -118,12 +117,15 @@ const DashboardLayout = ({ children }: TLayout) => {
   }, [pathname]);
 
   const menuItems = useMemo(() => getMenuItems(() => logoutMutation.mutate()), [logoutMutation]);
-
+  const sideNavVisible: boolean = useMemo(() => {
+    return routes?.length > 1 || (routes?.length === 1 && !isEmpty(routes[0].children));
+  }, [routes]);
+  const styles = useStyles(collapsed, navFill, !sideNavVisible);
   return (
     <>
       <NProgress isAnimating={isLoading} key={location.key} />
       <Layout style={styles.mainLayout}>
-        {routes?.length > 1 && (
+        {sideNavVisible && (
           <SideNav
             trigger={null}
             collapsible
@@ -136,7 +138,7 @@ const DashboardLayout = ({ children }: TLayout) => {
         <Layout>
           <HeaderNav style={styles.headerNav}>
             <Flex align="center">
-              {routes?.length > 1 ? (
+              {sideNavVisible ? (
                 <Button
                   type="text"
                   icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

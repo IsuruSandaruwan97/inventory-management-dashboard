@@ -5,7 +5,6 @@ import {
   StockOutlined,
   SyncOutlined,
   TruckOutlined,
-  UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { ROLES } from '@configs/constants';
 import { TRole } from '@configs/types/api.types.ts';
@@ -43,7 +42,7 @@ export const PATH = {
   STOCK: '/stock',
   PRODUCTION: '/production',
   STORE: '/store',
-  USERS: '/users',
+
   CATEGORIES: '/categories',
   DELIVERY: '/delivery',
   SUB_CATEGORIES: '/sub-categories',
@@ -53,6 +52,7 @@ export const PATH = {
   STOCK_REQUESTS: '/requests',
   INVENTORY: '/inventory',
   ITEMS: '/items',
+  USERS: '/users',
 };
 
 export const getRouts = (role: TRole | TRole[]): TRoutes[] => {
@@ -102,12 +102,7 @@ export const ROUTES: TRoutes[] = [
     icon: <TruckOutlined style={defaultIconStyle} />,
     component: <Delivery />,
   },
-  {
-    name: 'Users',
-    path: PATH.USERS,
-    icon: <UsergroupAddOutlined style={defaultIconStyle} />,
-    component: <Users />,
-  },
+
   {
     name: 'settings',
     path: PATH.SETTINGS,
@@ -115,6 +110,7 @@ export const ROUTES: TRoutes[] = [
     children: [
       { key: PATH.ITEMS, label: 'Items', element: <Items /> },
       { key: PATH.CATEGORIES, label: 'Category', element: <Categories /> },
+      { key: PATH.USERS, label: 'Users', element: <Users /> },
     ],
   },
 ];

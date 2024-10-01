@@ -55,7 +55,7 @@ const getColumns = (type: string): TableProps<any>['columns'] => [
           key: 'list',
           render: (_: any, { list }: any) => (
             <>
-              {list.map((item: any, index: number) => (
+              {list?.map((item: any, index: number) => (
                 <Tag color={colors[index % colors.length]} key={index}>
                   {item}
                 </Tag>

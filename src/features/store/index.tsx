@@ -1,4 +1,4 @@
-import { DropboxOutlined } from '@ant-design/icons';
+import ItemIcon from '@components/ItemIcon.tsx';
 import Table from '@components/Table';
 import { DEFAULT_FILTERS } from '@configs/constants';
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
@@ -27,12 +27,10 @@ const columns: TableProps<any>['columns'] = [
   },
   {
     title: 'Image',
-    dataIndex: 'image',
+    align: 'center',
     key: 'image',
-    render: (value) => {
-      if (!value) return <DropboxOutlined />;
-      return <img src={value} height={40} width={40} alt="item-image" />;
-    },
+    width: 50,
+    render: (_, { image, type }) => <ItemIcon type={type} url={image} />,
   },
   {
     title: 'Item Name',

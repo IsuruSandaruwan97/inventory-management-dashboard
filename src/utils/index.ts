@@ -5,6 +5,7 @@ import { TStockData } from '@features/stock/Inventory.tsx';
 import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
+
 export const logout = () => {
   localStorage.removeItem(KEY_CODES.AUTH_TOKEN);
   localStorage.removeItem(KEY_CODES.PIN);

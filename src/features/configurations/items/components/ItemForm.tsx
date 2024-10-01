@@ -15,14 +15,15 @@ import { createStockItems, updateStockItems } from '../services';
 const { TextArea } = Input;
 
 type ItemFormProps = {
-  item?: TStockData | null;
+  item: TStockData | null;
   visible: boolean;
   isUpdate: boolean;
   onCancel: () => void;
   mode?: 'admin' | 'stock';
+  refetch: () => void;
 };
 
-const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
+const ItemForm = ({ item, visible, isUpdate, onCancel, refetch }: ItemFormProps) => {
   const [form] = Form.useForm();
   const toast = useToastApi();
   const queryClient = useQueryClient();
@@ -51,6 +52,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
       });
       onClose();
       await queryClient.invalidateQueries({ queryKey: ['items'] });
+      refetch();
     },
     onError: (error) => {
       toast.open({
@@ -71,6 +73,7 @@ const ItemForm = ({ item, visible, isUpdate, onCancel }: ItemFormProps) => {
       });
       onClose();
       await queryClient.invalidateQueries({ queryKey: ['items', 'stock-items'] });
+      refetch();
     },
     onError: (error) => {
       toast.open({

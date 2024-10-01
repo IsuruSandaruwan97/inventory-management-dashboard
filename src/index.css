@@ -7,6 +7,13 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif !important;
+    -ms-overflow-style: none!important;;
+    scrollbar-width: none!important;;
+    overflow-y: scroll!important;;
+}
+
+body::-webkit-scrollbar {
+    display: none!important;
 }
 
 .ant-table-title {

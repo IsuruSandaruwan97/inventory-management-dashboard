@@ -1,4 +1,4 @@
-import { DropboxOutlined } from '@ant-design/icons';
+import ItemIcon from '@components/ItemIcon.tsx';
 import Table from '@components/Table';
 import { DEFAULT_FILTERS } from '@configs/constants';
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants.ts';
@@ -6,6 +6,7 @@ import { PAGE_SIZES } from '@configs/index';
 import { StyleSheet } from '@configs/stylesheet';
 import { TCommonFilters } from '@configs/types/api.types.ts';
 import ItemForm from '@features/configurations/items/components/ItemForm';
+import { TStockData } from '@features/stock/Inventory.tsx';
 import useScreenSize from '@hooks/useScreenSize';
 import { useToastApi } from '@hooks/useToastApi.tsx';
 import { useQuery } from '@tanstack/react-query';
@@ -16,22 +17,6 @@ import { useMediaQuery } from 'react-responsive';
 import { fetchStockItems } from './services';
 
 const { Search } = Input;
-
-export type TStockData = {
-  id?: number;
-  itemId: string;
-  name: string;
-  image: string;
-  category: string;
-  subCategory: string;
-  description: string;
-  quantity: number;
-  reorderLevel: number;
-  unitPrice: number;
-  totalPrice: number;
-  status: boolean;
-  lastOrder: Date;
-};
 
 const inventoryTableColumns: TableProps<any>['columns'] = [
   // {
@@ -47,15 +32,11 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
   // },
   {
     title: 'Image',
-    dataIndex: 'image',
     key: 'image',
     fixed: 'left',
     align: 'center',
     width: 100,
-    render: (value) => {
-      if (!value) return <DropboxOutlined />;
-      return <img src={value} height={40} width={40} alt="item-image" />;
-    },
+    render: (_, { image, type }) => <ItemIcon type={type} url={image} />,
   },
   {
     title: 'Name',
@@ -77,7 +58,7 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     title: 'Item Code',
     dataIndex: 'itemId',
     key: 'itemId',
-    width: 250,
+    width: 200,
   },
   {
     title: 'Description',
@@ -90,7 +71,7 @@ const inventoryTableColumns: TableProps<any>['columns'] = [
     title: 'Availability',
     dataIndex: 'availability',
     key: 'availability',
-    width: 250,
+    width: 450,
     responsive: ['md'],
     render: (_, { availability }) => (
       <Flex style={styles.availabilityContainer}>
@@ -150,6 +131,7 @@ const Items = () => {
     data: stockItems,
     isLoading: stockItemLoading,
     error: stockItemError,
+    refetch: stockItemRefetch,
   } = useQuery({
     queryKey: ['items', filters.search, filters.page],
     queryFn: () => fetchStockItems(filters),
@@ -219,6 +201,7 @@ const Items = () => {
             setItemFormVisible(false);
             setSelectedItem(null);
           }}
+          refetch={() => stockItemRefetch()}
         />
       )}
     </>

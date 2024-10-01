@@ -22,6 +22,7 @@ const Stock = () => {
   const toastApi = useToastApi();
   const [listType, setListType] = useState<TListType>(TABLE_STATUS[0].value as TListType);
   const [filters, setFilters] = useState<TCommonFilters>({ ...DEFAULT_FILTERS, limit: maxCount });
+  const [activeKey, setActiveKey] = useState<string | undefined>(undefined);
 
   const {
     data: requestData,
@@ -57,7 +58,9 @@ const Stock = () => {
         {!isEmpty(requestData?.records) ? (
           <Space direction="vertical" style={styles.space}>
             <Collapse
+              activeKey={activeKey}
               expandIcon={() => null}
+              onChange={(value) => setActiveKey(value && value[0] ? value[0] : undefined)}
               style={styles.collapse}
               accordion
               items={requestData?.records?.map((item, index) => {
@@ -80,7 +83,10 @@ const Stock = () => {
                       isMobile={isMobile}
                       item={item}
                       listType={listType}
-                      refetchData={() => requestRefetch()}
+                      refetchData={() => {
+                        requestRefetch();
+                        setActiveKey(undefined);
+                      }}
                     />
                   ),
                 };

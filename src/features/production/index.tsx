@@ -8,16 +8,18 @@ import { TCommonFilters, TStockStatus } from '@configs/types/api.types.ts';
 import CompleteItemsModal from '@features/production/components/forms/CompleteItemsModal';
 import DamageItemsModal from '@features/production/components/forms/DamageItemsModal';
 import RequestItemsModal from '@features/production/components/forms/RequestItemsModal';
+import RequestItems from '@features/production/components/RequestItems';
 import { fetchCompletedItems } from '@features/production/services';
+import { fetchItemRequests } from '@features/stock/services';
 import { useToastApi } from '@hooks/useToastApi.tsx';
-import { fetchDamagedItems, fetchStockItems } from '@services';
+import { fetchDamagedItems, fetchStockItems, getPendingReqCount } from '@services';
 import { useQuery } from '@tanstack/react-query';
 import { formatDate } from '@utils/index.ts';
-import { Button, Card, Row, Segmented, Space, TableProps, Tag } from 'antd';
+import { Badge, Button, Card, Row, Segmented, Space, TableProps, Tag } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 const colors = ['cyan', 'geekblue', 'gold'];
-const options = ['Pending', 'Completed', 'Damaged'];
+const options = ['Pending', 'Completed', 'Damaged', 'Requests'];
 
 const getColumns = (type: string): TableProps<any>['columns'] => [
   {
@@ -123,6 +125,18 @@ const Production = () => {
     queryFn: () => fetchDamagedItems('production', DEFAULT_FILTERS),
     enabled: option === 'Damaged',
   });
+
+  const { data: reqCount, refetch: refetchReqCount } = useQuery({
+    queryKey: ['request-count'],
+    queryFn: () => getPendingReqCount(),
+  });
+
+  const { refetch: refetchRequests } = useQuery({
+    queryKey: ['requests'],
+    queryFn: () => fetchItemRequests({ ...filters, status: 'pending' }),
+    enabled: option === 'Requests',
+  });
+
   useEffect(() => {
     if (stockItemError) {
       toastApi.open({
@@ -155,35 +169,65 @@ const Production = () => {
         <Card>
           <Row style={styles.actionBar}>
             <div>
-              <Space>
-                <Button onClick={() => setRequestModal(true)}>Request Items</Button>
-                <Button onClick={() => setCompleteItemsModal(true)}>Complete Items</Button>
-                <Button onClick={() => setShowDamageModal(true)}>Damage Items</Button>
-              </Space>
+              {option !== 'Requests' && (
+                <Space>
+                  <Button onClick={() => setRequestModal(true)}>Request Items</Button>
+                  <Button onClick={() => setCompleteItemsModal(true)}>Complete Items</Button>
+                  <Button onClick={() => setShowDamageModal(true)}>Damage Items</Button>
+                </Space>
+              )}
             </div>
 
             <div>
-              <Segmented value={option} onChange={(value) => setOption(value)} options={options} />
+              <Segmented
+                value={option}
+                onChange={(value) => setOption(value)}
+                options={options?.map((item) => {
+                  let label: any = item;
+                  if (item === 'Requests')
+                    label = (
+                      <Badge offset={[2, 7]} dot={true} status={reqCount && reqCount > 0 ? 'processing' : 'default'}>
+                        {label}
+                      </Badge>
+                    );
+                  return { label, value: item };
+                })}
+              />
             </div>
           </Row>
         </Card>
-        <Table
-          loading={stockItemLoading || completedItemsLoading || damagedItemsLoading}
-          columns={columns}
-          rowKey={'id'}
-          pagination={{
-            pageSize: PAGE_SIZES.INVENTORY,
-            total: data?.count || 0,
-            onChange: (page) => setFilters((prev) => ({ ...prev, page })),
-          }}
-          dataSource={data?.records || []}
-        />
+        <Card>
+          {option !== 'Requests' ? (
+            <Table
+              loading={stockItemLoading || completedItemsLoading || damagedItemsLoading}
+              columns={columns}
+              rowKey={'id'}
+              pagination={{
+                pageSize: PAGE_SIZES.INVENTORY,
+                total: data?.count || 0,
+                onChange: (page) => setFilters((prev) => ({ ...prev, page })),
+              }}
+              dataSource={data?.records || []}
+            />
+          ) : (
+            <RequestItems />
+          )}
+        </Card>
       </Space>
       {completeItemsModal && (
         <CompleteItemsModal open={completeItemsModal} onCancel={() => setCompleteItemsModal(false)} />
       )}
       {showDamageModal && <DamageItemsModal open={showDamageModal} onCancel={() => setShowDamageModal(false)} />}
-      {requestModal && <RequestItemsModal open={requestModal} onCancel={() => setRequestModal(false)} />}
+      {requestModal && (
+        <RequestItemsModal
+          open={requestModal}
+          onFinish={() => {
+            refetchReqCount();
+            refetchRequests();
+          }}
+          onCancel={() => setRequestModal(false)}
+        />
+      )}
     </>
   );
 };

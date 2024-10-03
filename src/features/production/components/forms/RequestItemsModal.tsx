@@ -33,6 +33,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 type TRequestItemsModal = {
   onCancel: () => void;
+  onFinish?: () => void;
 } & ModalProps;
 
 type TGetColumns = {
@@ -91,7 +92,7 @@ const getColumns = ({ items, setEditItem, onDeleteItem }: TGetColumns): TablePro
   },
 ];
 
-const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
+const RequestItemsModal = ({ onCancel, onFinish, ...others }: TRequestItemsModal) => {
   const [form] = useForm();
   const toastApi = useToastApi();
   const [items, setItems] = useState<TItem[] | null>(null);
@@ -115,6 +116,7 @@ const RequestItemsModal = ({ onCancel, ...others }: TRequestItemsModal) => {
       });
       onCancelForm();
       await queryClient.invalidateQueries({ queryKey: ['stock-items', 'request-count'] });
+      onFinish && onFinish();
     },
     onError: (error) => {
       toastApi.open({

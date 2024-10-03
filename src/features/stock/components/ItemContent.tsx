@@ -18,11 +18,12 @@ export type TItemContent = {
   item: TRequestItems;
   listType: TListType;
   refetchData: () => void;
+  isProduction?: boolean;
 };
 
 const { Text } = Typography;
 
-const ItemContent = ({ styles, item, listType, refetchData }: TItemContent) => {
+const ItemContent = ({ styles, item, listType, refetchData, isProduction }: TItemContent) => {
   const toast = useToastApi();
   const acceptRequest = useMutation({
     mutationFn: ({ action, id }: { action: number; id?: number }) =>
@@ -81,24 +82,28 @@ const ItemContent = ({ styles, item, listType, refetchData }: TItemContent) => {
       width: 250,
       render: (_, { quantity }: { quantity: number }) => thousandSeparator(quantity),
     },
-    {
-      title: 'Actions',
-      key: 'actions',
-      width: 250,
-      render: (_, { status, id }) => {
-        return status === 1 ? (
-          <ActionButtons
-            iconsOnly
-            onAccept={() => acceptRequest.mutate({ action: 2, id })}
-            onReject={() => acceptRequest.mutate({ action: 0, id })}
-          />
-        ) : (
-          <Tag color={status === 0 ? 'red' : status === 1 ? 'blue' : 'green'}>
-            {status === 0 ? 'Rejected' : status === 1 ? 'Pending' : 'Accepted'}
-          </Tag>
-        );
-      },
-    },
+    ...(!isProduction
+      ? [
+          {
+            title: 'Actions',
+            key: 'actions',
+            width: 250,
+            render: (_: any, { status, id }: any) => {
+              return status === 1 ? (
+                <ActionButtons
+                  iconsOnly
+                  onAccept={() => acceptRequest.mutate({ action: 2, id })}
+                  onReject={() => acceptRequest.mutate({ action: 0, id })}
+                />
+              ) : (
+                <Tag color={status === 0 ? 'red' : status === 1 ? 'blue' : 'green'}>
+                  {status === 0 ? 'Rejected' : status === 1 ? 'Pending' : 'Accepted'}
+                </Tag>
+              );
+            },
+          },
+        ]
+      : []),
   ];
   return (
     <Card>
@@ -119,7 +124,7 @@ const ItemContent = ({ styles, item, listType, refetchData }: TItemContent) => {
         )}
       </Space>
       <Table pagination={false} rowKey={'id'} columns={columns} dataSource={item.records} />
-      {listType === 'pending' && (
+      {listType === 'pending' && !isProduction && (
         <Flex justify={'flex-end'} style={styles.mobileActionButtons}>
           <ActionButtons
             onAccept={() => {

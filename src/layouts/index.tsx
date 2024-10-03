@@ -103,12 +103,19 @@ const DashboardLayout = ({ children }: TLayout) => {
   const activePage = ROUTES.find((route) => route.path === pathname);
 
   const breadcrumbObj = useMemo(() => {
+    function convertSubRoute(path: string) {
+      return path?.toString()?.replace(/\//g, '');
+    }
+
     const routes = findRouteByPath(ROUTES, pathname);
+
     return [
       {
         title:
           routes?.sub?.path && routes?.sub?.name ? (
-            <Link to={routes?.sub?.path}>{routes?.sub?.name}</Link>
+            <Link to={routes?.sub?.path}>
+              {typeof routes?.sub?.name === 'object' ? convertSubRoute(routes?.sub?.path) : routes?.sub?.name}
+            </Link>
           ) : (
             <Link to={routes?.main?.path}>{routes?.main?.name}</Link>
           ),
@@ -181,7 +188,14 @@ const DashboardLayout = ({ children }: TLayout) => {
                 >
                   {() => (
                     <div ref={nodeRef} style={styles.childrenContainer}>
-                      <PageHeader title={activePage?.name || ''} breadcrumbs={breadcrumbObj} />
+                      <PageHeader
+                        title={
+                          breadcrumbObj[0]?.title?.props?.children
+                            ? breadcrumbObj[0]?.title?.props?.children
+                            : activePage?.name || ''
+                        }
+                        breadcrumbs={breadcrumbObj}
+                      />
                       {children}
                     </div>
                   )}

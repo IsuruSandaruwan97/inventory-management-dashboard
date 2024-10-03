@@ -1,11 +1,10 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import Table from '@components/Table';
 import { DEFAULT_ERROR_MESSAGE } from '@configs/constants/api.constants';
-import { StyleSheet } from '@configs/stylesheet';
 import { TProductsCategories } from '@features/configurations/configs/types';
 import { useToastApi } from '@hooks/useToastApi';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Row, TableProps, Tag } from 'antd';
+import { Button, Card, Space, TableProps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import ProductCategoriesForm from './components/ProductCategoriesForm';
 import { fetchCategories } from './services';
@@ -62,43 +61,36 @@ const ProductCategory = () => {
   }, [categoriesError]);
 
   return (
-    <div>
-      <Row style={styles.searchRow}>
-        <Button onClick={() => setShowProdCategoryModal(true)} type="primary">
+    <Card>
+      <Space direction={'vertical'} size={'middle'}>
+        <Button onClick={() => setShowProdCategoryModal(true)}>
           <PlusCircleOutlined /> Add new category
         </Button>
-      </Row>
-      <Table
-        loading={categoriesIsLoading}
-        onRow={(record) => ({
-          onClick: () => {
-            setShowProdCategoryModal(true);
-            setSelectedProdCategory(record as any);
-          },
-        })}
-        rowKey={'id'}
-        columns={columns}
-        dataSource={categories}
-      />
-      {showProdCategoryModal && (
-        <ProductCategoriesForm
-          category={selectedProdCategory}
-          visible={showProdCategoryModal}
-          onCancel={() => {
-            setShowProdCategoryModal(false);
-            setSelectedProdCategory(null);
-          }}
+
+        <Table
+          loading={categoriesIsLoading}
+          onRow={(record) => ({
+            onClick: () => {
+              setShowProdCategoryModal(true);
+              setSelectedProdCategory(record as any);
+            },
+          })}
+          rowKey={'id'}
+          columns={columns}
+          dataSource={categories}
         />
-      )}
-    </div>
+        {showProdCategoryModal && (
+          <ProductCategoriesForm
+            category={selectedProdCategory}
+            visible={showProdCategoryModal}
+            onCancel={() => {
+              setShowProdCategoryModal(false);
+              setSelectedProdCategory(null);
+            }}
+          />
+        )}
+      </Space>
+    </Card>
   );
 };
 export default ProductCategory;
-
-const styles = StyleSheet.create({
-  searchRow: {
-    float: 'right',
-    marginTop: 8,
-    marginBottom: 8,
-  },
-});

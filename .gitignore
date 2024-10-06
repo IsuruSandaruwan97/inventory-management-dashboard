@@ -26,3 +26,5 @@ dist-ssr
 yarn.lock
 package-lock.json
 .env
+
+*storybook.log

@@ -20,7 +20,7 @@ const FilterItems = ({ items, value, onChangeValue, customStyles }: TFilters) =>
       label: item.label,
       icon: item?.icon,
     }));
-  }, [items, isMobile, value]);
+  }, [items, isMobile]);
   const selectedItem = menuItems.find((item) => item?.key === value);
   return isMobile ? (
     <Dropdown.Button
